@@ -11,4 +11,16 @@ class AppPresenter {
     String data = await model.fetchData();
     updateView(data);
   }
+
+  //handle adding calories
+  void addCalorieEntry(int calorie){
+    model.addCalories(calorie);
+    updateView('Calorie entry added. Total: ${model.getTotalCalories()}');
+  }
+
+  //display total calories
+  void showTotalCalories(){
+    int total = model.getTotalCalories();
+    updateView('Total Calories: $total');
+  }
 }
