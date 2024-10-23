@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'model.dart';
 import 'presenter.dart';
-import 'view.dart';
+import 'calorie_tracking_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,17 +15,42 @@ class MyApp extends StatelessWidget {
     AppPresenter presenter;
 
     return MaterialApp(
-      home: Builder(
-        builder: (context) {
-          // Connect the Presenter to the View
-          presenter = AppPresenter(model, (data) {
-            // Display the data as a SnackBar for simplicity
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(data)),
+      home: HomePage(model: model),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  final AppModel model;
+
+  HomePage({required this.model});
+
+  @override
+  Widget build(BuildContext context) {
+    AppPresenter presenter = AppPresenter(model, (data) {
+      // Show a SnackBar to display messages
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(data)),
+      );
+    });
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Main Menu'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // Navigate to Calorie Tracker Page
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CalorieTrackerPage(presenter),
+              ),
             );
-          });
-          return AppView(presenter);
-        },
+          },
+          child: Text('Go to Calorie Tracker'),
+        ),
       ),
     );
   }
