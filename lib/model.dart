@@ -7,21 +7,31 @@ class AppModel {
 
   }
 
-  List<int> _calories = [];
+  List<int> _solidCalories = [];
+  List<int> _liquidCalories = [];
 
-  //add calories to the list
-  void addCalories(int calorie){
-    _calories.add(calorie);
+  //add solid calories to the list
+  void addSolidCalories(int calorie){
+    _solidCalories.add(calorie);
   }
 
-  //get total calories
+  //add liquid calories to the list
+  void addLiquidCalories(int calorie){
+    _liquidCalories.add(calorie);
+  }
+
+  //get total solid calories
+  int getTotalSolidCalories(){
+    return _solidCalories.fold(0, (total,current) => total + current);
+  }
+
+  //get total liquid calories
+  int getTotalLiquidCalories(){
+    return _liquidCalories.fold(0, (total,current) => total + current);
+  }
+
+  //get the total calorie count
   int getTotalCalories(){
-    return _calories.fold(0, (total,current) => total + current);
+    return getTotalLiquidCalories() + getTotalSolidCalories();
   }
-
-  //get the list of all calorie entries
-  List<int> getAllCalorieEntries(){
-    return _calories;
-  }
-
 }
