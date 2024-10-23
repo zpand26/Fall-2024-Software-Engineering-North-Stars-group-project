@@ -23,9 +23,19 @@ class AppPresenter {
     model.addLiquidCalories(calorie);
     updateView('Liquid Calorie entry added Total: ${model.getTotalLiquidCalories()} (Liquid), ${model.getTotalCalories()} (Total)');
   }
-  //display total calories
-  void showTotalCalories(){
-    int total = model.getTotalCalories();
-    updateView('Total Calories: $total');
+  //display total liquid calories
+  void showTotalLiquidCalories(){
+    int total = model.getTotalLiquidCalories();
+    updateView('Total Liquid Calories: $total');
+  }
+
+  void showTotalSolidCalories(){
+    int total = model.getTotalSolidCalories();
+    updateView('Total Solid Calories: $total');
+  }
+
+  void showTotalLiquidCalories(){
+    int total = model.getTotalLiquidCalories();
+    updateView('Total Liquid Calories: $total');
   }
 }
