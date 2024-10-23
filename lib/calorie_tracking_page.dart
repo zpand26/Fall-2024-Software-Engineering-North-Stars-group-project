@@ -34,10 +34,33 @@ class _CalorieTrackerPageState extends State<CalorieTrackerPage> {
             ElevatedButton(
               onPressed: () {
                 int calories = int.tryParse(_calorieController.text) ?? 0;
-                widget.presenter.addCalorieEntry(calories);
+                widget.presenter.addSolidCalorieEntry(calories);
                 _calorieController.clear();
               },
-              child: Text('Add Calorie Entry'),
+              child: Text('Add Solid Calorie Entry'),
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                int calories = int.tryParse(_calorieController.text) ?? 0;
+                widget.presenter.addLiquidCalorieEntry(calories);
+                _calorieController.clear();
+              },
+              child: Text('Add Liquid Calorie Entry'),
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                widget.presenter.showTotalLiquidCalories();
+              },
+              child: Text('Show Total Liquid Calories'),
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                widget.presenter.showTotalSolidCalories();
+              },
+              child: Text('Show Total Solid Calories'),
             ),
             SizedBox(height: 16.0),
             ElevatedButton(

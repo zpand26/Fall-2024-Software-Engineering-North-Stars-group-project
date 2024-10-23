@@ -25,17 +25,17 @@ class AppPresenter {
   }
   //display total liquid calories
   void showTotalLiquidCalories(){
-    int total = model.getTotalLiquidCalories();
-    updateView('Total Liquid Calories: $total');
+    int totalLiquid = model.getTotalLiquidCalories();
+    updateView('Total Liquid Calories: $totalLiquid');
   }
 
   void showTotalSolidCalories(){
-    int total = model.getTotalSolidCalories();
-    updateView('Total Solid Calories: $total');
+    int totalSolid = model.getTotalSolidCalories();
+    updateView('Total Solid Calories: $totalSolid');
   }
 
-  void showTotalLiquidCalories(){
-    int total = model.getTotalLiquidCalories();
-    updateView('Total Liquid Calories: $total');
+  void showTotalCalories(){
+    int total = model.getTotalCalories();
+    updateView('Total Calories: $total');
   }
 }

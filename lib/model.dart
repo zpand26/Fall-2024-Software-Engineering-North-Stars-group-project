@@ -32,6 +32,6 @@ class AppModel {
 
   //get the total calorie count
   int getTotalCalories(){
-    return getTotalLiquidCalories() + getTotalSolidCalories();
+    return (getTotalLiquidCalories() + getTotalSolidCalories());
   }
 }
