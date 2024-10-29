@@ -2,13 +2,27 @@ import 'model.dart';
 
 class AppPresenter {
   final AppModel model;
-  final Function(String) updateView;
+  Function(String)? updateView; // Optional function reference
 
-  AppPresenter(this.model, this.updateView);
+  AppPresenter(this.model);
 
-  //data fetching
-  void loadData() async{
+  // Add calorie entry and update view
+  void addCalorieEntry(int calorie) {
+    model.addCalories(calorie);
+    int totalCalories = model.getTotalCalories();
+    updateView?.call('Calorie added: $calorie. Total: $totalCalories');
+  }
+
+  // Remove calorie entry and update view
+  void removeCalorieEntry(int calorie) {
+    model.removeCalories(calorie);
+    int totalCalories = model.getTotalCalories();
+    updateView?.call('Calorie removed: $calorie. Total: $totalCalories');
+  }
+
+  // Fetch data example
+  void loadData() async {
     String data = await model.fetchData();
-    updateView(data);
+    updateView?.call(data);
   }
 }
