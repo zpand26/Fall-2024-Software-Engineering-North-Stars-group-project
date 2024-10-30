@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'model.dart';
 
 class AppPresenter {
@@ -7,8 +9,8 @@ class AppPresenter {
   AppPresenter(this.model, this.updateView);
 
   //data fetching
-  void loadData() async{
-    String data = await model.fetchData();
+  void loadData(String query) async{
+    String data = await model.fetchData(query);
     updateView(data);
   }
 }
