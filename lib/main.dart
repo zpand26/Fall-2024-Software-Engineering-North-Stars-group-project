@@ -4,14 +4,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'model.dart';
 import 'presenter.dart';
 import 'view.dart';
-import 'calorie_tracking_page.dart';
+import 'data_entry_for_day.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super (key: key);
+  //const MyApp({Key? key}) : super (key: key);
   @override
   Widget build(BuildContext context) {
     // Initialize Model and Presenter
@@ -32,9 +32,14 @@ class MyApp extends StatelessWidget {
 
           );
         }
-        Widget loading = MaterialApp();
+        Widget loading = MaterialApp(
+          home: HomePage(model: model),
+        );
         return loading;
       });
+    return MaterialApp(
+      home: HomePage(model:model),
+    );
   }
 }
 
@@ -58,16 +63,16 @@ class HomePage extends StatelessWidget {
       ),
       body: Center(
         child: ElevatedButton(
-          onPressed: () {
-            // Navigate to Calorie Tracker Page
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CalorieTrackerPage(presenter),
-              ),
-            );
-          },
-          child: Text('Go to Calorie Tracker'),
+            onPressed: () {
+              //Navigate to dayEntryPage
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:(context) => dayEntryPage(presenter),
+                ),
+              );
+            },
+            child: Text('Enter data by day')
         ),
       ),
     );
