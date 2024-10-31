@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AppModel {
-  final String apiKey = 'Your-API-Key'; 
+  final String apiKey = '79n8vpyNTmXxllhKErgDaA==EC2OYSI7NOruHPat'; 
   //sample method to fetch or proccess data
   Future<String> fetchData(String query) async {
     //simulating a data fetch or api call

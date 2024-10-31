@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'nutrient_tracking_model.dart';
+import '../models/nutrient_tracking_model.dart';
 
 class AppPresenter {
   final AppModel model;

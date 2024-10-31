@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'model.dart';
-import 'presenter.dart';
-import 'view.dart';
+import 'nutrient_tracking_model.dart';
+import 'nutrient_tracking_presenter.dart';
+import 'nutrient_tracking_view.dart';
 void main() {
   runApp(MyApp());
 }
