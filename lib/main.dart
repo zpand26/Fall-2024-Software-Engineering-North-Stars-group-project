@@ -4,9 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'model.dart';
 import 'presenter.dart';
 import 'view.dart';
-import 'data_entry_for_day.dart';
-import 'calorie_tracking_page.dart';
-import 'home_page.dart';
+import 'pages/data_entry_for_day.dart';
+import 'pages/calorie_tracking_page.dart';
+import 'pages/home_page.dart';
 
 
 void main() {

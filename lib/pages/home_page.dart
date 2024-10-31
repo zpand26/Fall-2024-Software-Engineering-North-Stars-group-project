@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'presenter.dart';
+import '../presenter.dart';
 import 'calorie_tracking_page.dart';
 import 'data_entry_for_day.dart';
-import 'model.dart';
+import '../model.dart';
 
 
 
