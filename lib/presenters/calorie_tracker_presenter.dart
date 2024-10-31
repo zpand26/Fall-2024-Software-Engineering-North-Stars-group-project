@@ -1,62 +1,43 @@
-import '../models/model.dart';
+import '../models/calorie_tracker_model.dart';
 
-class AppPresenter {
-  final AppModel model;
+class CalorieTrackerPresenter {
+  final CalorieTrackerModel calorieTrackerModel;
   final Function(String) updateView;
 
-  AppPresenter(this.model, this.updateView);
+  CalorieTrackerPresenter(this.calorieTrackerModel, this.updateView);
 
   //data fetching
   void loadData() async{
-    String data = await model.fetchData();
+    String data = await calorieTrackerModel.fetchData();
     updateView(data);
   }
 
   //adding solid calories
   void addSolidCalorieEntry(int calorie){
-    model.addSolidCalories(calorie);
-    updateView('Solid calorie entry added. Total: ${model.getTotalSolidCalories()} (Solid), ${model.getTotalCalories()} (Total)');
+    calorieTrackerModel.addSolidCalories(calorie);
+    updateView('Solid calorie entry added. Total: ${calorieTrackerModel.getTotalSolidCalories()} (Solid), ${calorieTrackerModel.getTotalCalories()} (Total)');
   }
 
   // Add liquid calorie entry
   void addLiquidCalorieEntry(int calorie) {
-    model.addLiquidCalories(calorie);
-    updateView('Liquid Calorie entry added Total: ${model.getTotalLiquidCalories()} (Liquid), ${model.getTotalCalories()} (Total)');
+    calorieTrackerModel.addLiquidCalories(calorie);
+    updateView('Liquid Calorie entry added Total: ${calorieTrackerModel.getTotalLiquidCalories()} (Liquid), ${calorieTrackerModel.getTotalCalories()} (Total)');
   }
   //display total liquid calories
   void showTotalLiquidCalories(){
-    int totalLiquid = model.getTotalLiquidCalories();
+    int totalLiquid = calorieTrackerModel.getTotalLiquidCalories();
     updateView('Total Liquid Calories: $totalLiquid');
   }
 
   void showTotalSolidCalories(){
-    int totalSolid = model.getTotalSolidCalories();
+    int totalSolid = calorieTrackerModel.getTotalSolidCalories();
     updateView('Total Solid Calories: $totalSolid');
   }
 
   void showTotalCalories(){
-    int total = model.getTotalCalories();
+    int total = calorieTrackerModel.getTotalCalories();
     updateView('Total Calories: $total');
   }
-
-  void addDailyCalorieEntry(int calorie, String day){
-    model.addDailyCalories(calorie, day);
-    updateView('Calorie entries added.');
-  }
-
-  //display total calories
-  void showDailyCalories(){
-    List<int> total = model.getDailyCalories();
-    updateView('Daily Calories: $total');
-  }
-
-
-//adding calories for day
-/*void addCaloriesForDay(int dayCalorie){
-    model.addCaloriesForDay(dayCalorie);
-    updateView('Day updated. Day: ${model.getSpecificDay()}. Calories: $dayCalorie.');
-  }*/
-
 
 
 }

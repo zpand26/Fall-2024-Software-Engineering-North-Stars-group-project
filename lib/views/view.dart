@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../presenters/calorie_tracker_presenter.dart';
 
 class AppView extends StatelessWidget {
-  final AppPresenter presenter;
+  final CalorieTrackerPresenter presenter;
 
   AppView(this.presenter);
 
