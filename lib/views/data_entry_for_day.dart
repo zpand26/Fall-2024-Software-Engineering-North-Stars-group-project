@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:day_picker/day_picker.dart';
-import '../presenter.dart';
+import '../presenters/presenter.dart';
 
 class DayEntryPage extends StatefulWidget {
   final AppPresenter presenter;

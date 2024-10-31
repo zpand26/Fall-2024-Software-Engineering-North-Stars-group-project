@@ -1,4 +1,4 @@
-import 'model.dart';
+import '../models/model.dart';
 
 class AppPresenter {
   final AppModel model;
