@@ -12,13 +12,13 @@ class DayEntryPage extends StatefulWidget {
 }
 
 final List<DayInWeek> _days = [
-  DayInWeek("Mon", dayKey: "monday"),
-  DayInWeek("Tue", dayKey: "tuesday"),
-  DayInWeek("Wed", dayKey: "wednesday"),
-  DayInWeek("Thu", dayKey: "thursday"),
-  DayInWeek("Fri", dayKey: "friday"),
-  DayInWeek("Sat", dayKey: "saturday", isSelected: true),
-  DayInWeek("Sun", dayKey: "sunday", isSelected: true),
+  DayInWeek("Mon", dayKey: "mon"),
+  DayInWeek("Tue", dayKey: "tue"),
+  DayInWeek("Wed", dayKey: "wed"),
+  DayInWeek("Thu", dayKey: "thu"),
+  DayInWeek("Fri", dayKey: "fri"),
+  DayInWeek("Sat", dayKey: "sat", isSelected: false),
+  DayInWeek("Sun", dayKey: "sun", isSelected: false),
 ];
 
 List<String> listOfDays = [];

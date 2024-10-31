@@ -1,4 +1,5 @@
 import '../models/model.dart';
+import 'data_entry_for_day.presenter.dart';
 
 class AppPresenter {
   final AppModel model;
