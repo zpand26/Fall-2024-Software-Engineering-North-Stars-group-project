@@ -6,6 +6,8 @@ import 'presenter.dart';
 import 'view.dart';
 import 'data_entry_for_day.dart';
 import 'calorie_tracking_page.dart';
+import 'home_page.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -13,8 +15,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  //const MyApp({Key? key}) : super (key: key);
   @override
   Widget build(BuildContext context) {
     // Initialize Model and Presenter
@@ -49,55 +49,5 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
-  final AppModel model;
 
-  const HomePage({super.key, required this.model});
-
-  @override
-  Widget build(BuildContext context) {
-    AppPresenter presenter = AppPresenter(model, (data) {
-      // Show a SnackBar to display messages
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(data)),
-      );
-    });
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Main Menu'),
-      ),
-      body: Center(
-        child: Column(
-        children: [
-          ElevatedButton( //DataTrackerByDay
-            onPressed: () {
-              //Navigate to dayEntryPage
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:(context) => dayEntryPage(presenter),
-                ),
-              );
-            },
-            child: const Text('Enter data by day')
-        ),
-          ElevatedButton( //Calorie Tracker button
-            onPressed: () {
-              // Navigate to Calorie Tracker Page
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CalorieTrackerPage(presenter),
-                ),
-              );
-              },
-            child: const Text('Go to Calorie Tracker'),
-        ),
-      ],
-    ),
-      ),
-    );
-  }
-}
 
