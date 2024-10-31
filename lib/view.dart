@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'presenter.dart';
+import 'notification/home.dart';
 
 class AppView extends StatelessWidget {
   final AppPresenter presenter;
@@ -11,6 +12,26 @@ class AppView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('MVP Example'),
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (String choice) {
+              if (choice == 'Notifications') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Home()),
+                );
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return {'Notifications'}.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
+        ],
       ),
       body: Center(
         child: ElevatedButton(

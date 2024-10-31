@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'model.dart';
 import 'presenter.dart';
 import 'view.dart';
+import 'notification/home.dart';
+import 'notification/initialization.dart';
 
-void main() {
+void main() async {
+  await initializeApp();
   runApp(MyApp());
 }
 
@@ -24,7 +27,7 @@ class MyApp extends StatelessWidget {
               SnackBar(content: Text(data)),
             );
           });
-          return AppView(presenter);
+          return AppView(presenter);  // Pass presenter to AppView
         },
       ),
     );
