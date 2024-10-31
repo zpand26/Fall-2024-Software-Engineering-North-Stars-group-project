@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:day_picker/day_picker.dart';
 import '../presenter.dart';
 
-class dayEntryPage extends StatefulWidget {
+class DayEntryPage extends StatefulWidget {
   final AppPresenter presenter;
 
-  dayEntryPage(this.presenter);
+  DayEntryPage(this.presenter);
 
   @override
   _dayEntryPageState createState() => _dayEntryPageState();
@@ -23,7 +23,7 @@ final List<DayInWeek> _days = [
 
 List<String> listOfDays = [];
 
-class _dayEntryPageState extends State<dayEntryPage> {
+class _dayEntryPageState extends State<DayEntryPage> {
   final TextEditingController _dayEntryController = TextEditingController();
 
   @override

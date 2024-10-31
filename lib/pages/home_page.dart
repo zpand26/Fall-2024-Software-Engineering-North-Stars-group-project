@@ -9,15 +9,12 @@ import '../model.dart';
 class HomePage extends StatelessWidget {
   final AppModel model;
 
-  const HomePage({super.key, required this.model});
+  HomePage({Key? key, required this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    AppPresenter presenter = AppPresenter(model, (data) {
-      // Show a SnackBar to display messages
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(data)),
-      );
+    final AppPresenter presenter = AppPresenter(model, (data) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(data)));
     });
 
     return Scaffold(
@@ -26,22 +23,23 @@ class HomePage extends StatelessWidget {
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton( //DataTrackerByDay
-                onPressed: () {
-                  //Navigate to dayEntryPage
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder:(context) => dayEntryPage(presenter),
-                    ),
-                  );
-                },
-                child: const Text('Enter data by day')
-            ),
-            ElevatedButton( //Calorie Tracker button
+            //Navigate to DataEntry Page
+            ElevatedButton(
               onPressed: () {
-                // Navigate to Calorie Tracker Page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DayEntryPage(presenter),
+                  ),
+                );
+              },
+              child: const Text('Enter data by day'),
+            ),
+            ElevatedButton(
+              //Navigate to Calorie Tracker Page
+              onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
