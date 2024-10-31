@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'presenter.dart';
-import 'notification/home.dart';
+import '../presenter/presenter.dart';
+import '../notification/home.dart';
 
 class AppView extends StatelessWidget {
   final AppPresenter presenter;
