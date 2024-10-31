@@ -8,10 +8,12 @@ import 'data_entry_for_day.dart';
 import 'calorie_tracking_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   //const MyApp({Key? key}) : super (key: key);
   @override
   Widget build(BuildContext context) {
@@ -24,30 +26,33 @@ class MyApp extends StatelessWidget {
       builder: (context,snapshot){
         //Check for errors
         if (snapshot.hasError){
-          print("couldn't connect");
+          return const MaterialApp(
+            home: Scaffold(
+              body: Center(child: Text("Couldn't Connect to Firebase")),
+            ),
+          );
         }
         //Once complete, show application
         if (snapshot.connectionState == ConnectionState.done){
           return MaterialApp(
             home: HomePage(model: model),
-
           );
         }
-        Widget loading = MaterialApp(
-          home: HomePage(model: model),
+        //loading indicator
+        return const MaterialApp(
+          home: Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          ),
         );
-        return loading;
+
       });
-    return MaterialApp(
-      home: HomePage(model:model),
-    );
   }
 }
 
 class HomePage extends StatelessWidget {
   final AppModel model;
 
-  HomePage({required this.model});
+  const HomePage({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +65,7 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Main Menu'),
+        title: const Text('Main Menu'),
       ),
       body: Center(
         child: Column(
@@ -75,7 +80,7 @@ class HomePage extends StatelessWidget {
                 ),
               );
             },
-            child: Text('Enter data by day')
+            child: const Text('Enter data by day')
         ),
           ElevatedButton( //Calorie Tracker button
             onPressed: () {
@@ -87,7 +92,7 @@ class HomePage extends StatelessWidget {
                 ),
               );
               },
-            child: Text('Go to Calorie Tracker'),
+            child: const Text('Go to Calorie Tracker'),
         ),
       ],
     ),
