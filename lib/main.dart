@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'model.dart';
 import 'presenter.dart';
-import 'pages/home_page.dart';
+import 'views/home_page.dart';
 
 
 
