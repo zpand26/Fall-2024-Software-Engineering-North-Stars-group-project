@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'model/model.dart';
-import 'presenter/presenter.dart';
-import 'view/view.dart';
+import 'presenter/notification_presenter.dart';
+import 'view/notification_view.dart';
 import 'notification/home.dart';
 import 'notification/initialization.dart';
 
