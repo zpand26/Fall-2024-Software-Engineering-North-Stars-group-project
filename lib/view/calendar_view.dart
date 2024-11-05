@@ -3,14 +3,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'pages/basics_example.dart';
-import 'pages/complex_example.dart';
-import 'pages/events_example.dart';
-import 'pages/multi_example.dart';
-import 'pages/range_example.dart';
+import '../presenter/calendar_presenter.dart';
 
 void main() {
   initializeDateFormatting().then((_) => runApp(MyApp()));
@@ -54,37 +50,6 @@ class _StartPageState extends State<StartPage> {
               ),
             ),
             const SizedBox(height: 12.0),
-            ElevatedButton(
-              child: Text('Range Selection'),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => TableRangeExample()),
-              ),
-            ),
-            const SizedBox(height: 12.0),
-            ElevatedButton(
-              child: Text('Events'),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => TableEventsExample()),
-              ),
-            ),
-            const SizedBox(height: 12.0),
-            ElevatedButton(
-              child: Text('Multiple Selection'),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => TableMultiExample()),
-              ),
-            ),
-            const SizedBox(height: 12.0),
-            ElevatedButton(
-              child: Text('Complex'),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => TableComplexExample()),
-              ),
-            ),
             const SizedBox(height: 20.0),
           ],
         ),
