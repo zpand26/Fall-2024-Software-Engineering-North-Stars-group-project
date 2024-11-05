@@ -1,7 +1,7 @@
 import '../models/model.dart';
 
 class AppPresenter {
-  final AppModel model;
+  final NutrientTrackingModel model;
   final Function(String) updateView;
 
   AppPresenter(this.model, this.updateView);

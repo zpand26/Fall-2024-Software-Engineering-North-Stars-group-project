@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class AppModel {
+class NutrientTrackerModel {
   final String apiKey = '79n8vpyNTmXxllhKErgDaA==EC2OYSI7NOruHPat'; 
   //sample method to fetch or proccess data
   Future<String> fetchData(String query) async {

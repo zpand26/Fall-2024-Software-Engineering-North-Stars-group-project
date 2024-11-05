@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../presenters/nutrient_tracking_presenter.dart';
 
-class AppView extends StatelessWidget {
-  final AppPresenter presenter;
+class NutrientTrackingView extends StatelessWidget {
+  final NutrientTrackingPresenter presenter;
   final String data;
 
-  AppView(this.presenter, {required this.data});
+  NutrientTrackingView(this.presenter, {required this.data});
 
   final TextEditingController _queryController = TextEditingController();
 

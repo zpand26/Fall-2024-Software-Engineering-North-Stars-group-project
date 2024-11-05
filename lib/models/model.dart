@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 
-class AppModel {
+class NutrientTrackingModel {
   //sample method to fetch or proccess data
   Future<String> fetchData() async {
     //simulating a data fetch or api call

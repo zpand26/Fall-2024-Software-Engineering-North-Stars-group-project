@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:north_stars/presenters/nutrient_tracking_presenter.dart';
+import 'package:north_stars/views/nutrient_tracking_view.dart';
 import '../presenters/calorie_tracker_presenter.dart';
 import 'calorie_tracking_page.dart';
 import 'data_entry_for_day.dart';
 import '../models/model.dart';
+import '../models/nutrient_tracking_model.dart';
 
 
 
 class HomePage extends StatelessWidget {
-  final AppModel model;
+  final NutrientTrackingModel model;
 
   HomePage({Key? key, required this.model}) : super(key: key);
 
@@ -48,6 +51,20 @@ class HomePage extends StatelessWidget {
                 );
               },
               child: const Text('Go to Calorie Tracker'),
+            ),
+            ElevatedButton(
+              //Navigate to Calorie Tracker Page
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NutrientTrackerModel(model,updateView), 
+                      
+                      ),
+                    );
+                  },
+              
+              child: const Text('Go to Nutrient Tracking'),
             ),
           ],
         ),
