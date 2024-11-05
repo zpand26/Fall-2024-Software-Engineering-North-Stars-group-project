@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'model/model.dart';
+import 'presenter/notification_presenter.dart';
+import 'view/notification_view.dart';
+import 'notification/home.dart';
+import 'notification/initialization.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:north_stars/models/data_entry_for_day_model.dart';
@@ -9,7 +14,8 @@ import 'views/home_page_view.dart';
 
 
 
-void main() {
+void main() async {
+  await initializeApp();
   runApp(MyApp());
 }
 
@@ -48,6 +54,3 @@ class MyApp extends StatelessWidget {
       });
   }
 }
-
-
-
