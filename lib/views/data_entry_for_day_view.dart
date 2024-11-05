@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:day_picker/day_picker.dart';
-import '../presenters/presenter.dart';
+import 'package:north_stars/presenters/data_entry_for_day_presenter.dart';
+import '../presenters/calorie_tracker_presenter.dart';
 
 class DayEntryPage extends StatefulWidget {
-  final AppPresenter presenter;
+  final DataEntryForDayPresenter presenter;
 
   DayEntryPage(this.presenter);
 
