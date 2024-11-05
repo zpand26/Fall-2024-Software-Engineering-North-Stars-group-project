@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'models/notification_model.dart';
+import 'presenters/notification_presenter.dart';
+import 'views/notification_view.dart';
+import 'notification/home.dart';
+import 'notification/initialization.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'models/model.dart';
+import 'package:north_stars/models/data_entry_for_day_model.dart';
+import 'models/calorie_tracker_model.dart';
 import 'presenters/calorie_tracker_presenter.dart';
-import 'views/home_page.dart';
+import 'views/home_page_view.dart';
 
 
 
 
-void main() {
+void main() async {
+  await initializeApp();
   runApp(MyApp());
 }
 
@@ -29,7 +36,10 @@ class MyApp extends StatelessWidget {
         //Once complete, show application
         if (snapshot.connectionState == ConnectionState.done){
           return MaterialApp(
-            home: HomePage(model: model),
+            home: HomePage(
+              calorieTrackerModel: calorieTrackerModel,
+              dataEntryForDayModel: dataEntryForDayModel,
+            ),
           );
         }
         //loading indicator
@@ -42,6 +52,3 @@ class MyApp extends StatelessWidget {
       });
   }
 }
-
-
-

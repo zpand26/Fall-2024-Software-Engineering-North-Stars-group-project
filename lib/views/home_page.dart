@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppPresenter presenter = AppPresenter(model, (data) {
+    final CalorieTrackerPresenter presenter = CalorieTrackerPresenter(model, (data) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(data)));
     });
 

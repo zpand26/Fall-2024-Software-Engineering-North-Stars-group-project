@@ -1,7 +1,11 @@
 import 'dart:collection';
 
 
+<<<<<<< HEAD:lib/models/model.dart
 class NutrientTrackingModel {
+=======
+class CalorieTrackerModel {
+>>>>>>> 96d115df0c934d5d19942b2b3fd235add9ba9079:lib/models/calorie_tracker_model.dart
   //sample method to fetch or proccess data
   Future<String> fetchData() async {
     //simulating a data fetch or api call

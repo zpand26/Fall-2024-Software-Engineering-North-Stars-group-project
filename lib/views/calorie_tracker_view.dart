@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import '../presenters/calorie_tracker_presenter.dart';
 
-class CalorieTrackerPage extends StatefulWidget {
-  final AppPresenter presenter;
+class CalorieTrackingView extends StatefulWidget {
+  final CalorieTrackerPresenter calorieTrackerPresenter;
 
-  CalorieTrackerPage(this.presenter);
+  const CalorieTrackingView(this.calorieTrackerPresenter, {super.key});
 
   @override
-  _CalorieTrackerPageState createState() => _CalorieTrackerPageState();
+  _CalorieTrackingViewState createState() => _CalorieTrackingViewState();
 }
 
-class _CalorieTrackerPageState extends State<CalorieTrackerPage> {
+class _CalorieTrackingViewState extends State<CalorieTrackingView> {
   final TextEditingController _calorieController = TextEditingController();
 
   @override
@@ -34,7 +34,7 @@ class _CalorieTrackerPageState extends State<CalorieTrackerPage> {
             ElevatedButton(
               onPressed: () {
                 int calories = int.tryParse(_calorieController.text) ?? 0;
-                widget.presenter.addSolidCalorieEntry(calories);
+                widget.calorieTrackerPresenter.addSolidCalorieEntry(calories);
                 _calorieController.clear();
               },
               child: Text('Add Solid Calorie Entry'),
@@ -43,7 +43,7 @@ class _CalorieTrackerPageState extends State<CalorieTrackerPage> {
             ElevatedButton(
               onPressed: () {
                 int calories = int.tryParse(_calorieController.text) ?? 0;
-                widget.presenter.addLiquidCalorieEntry(calories);
+                widget.calorieTrackerPresenter.addLiquidCalorieEntry(calories);
                 _calorieController.clear();
               },
               child: Text('Add Liquid Calorie Entry'),
@@ -51,21 +51,21 @@ class _CalorieTrackerPageState extends State<CalorieTrackerPage> {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                widget.presenter.showTotalLiquidCalories();
+                widget.calorieTrackerPresenter.showTotalLiquidCalories();
               },
               child: Text('Show Total Liquid Calories'),
             ),
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                widget.presenter.showTotalSolidCalories();
+                widget.calorieTrackerPresenter.showTotalSolidCalories();
               },
               child: Text('Show Total Solid Calories'),
             ),
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                widget.presenter.showTotalCalories();
+                widget.calorieTrackerPresenter.showTotalCalories();
               },
               child: Text('Show Total Calories'),
             ),
@@ -75,8 +75,8 @@ class _CalorieTrackerPageState extends State<CalorieTrackerPage> {
                 // Pop the current page (CalorieTrackerPage) off the stack and go back to the HomePage
                 Navigator.pop(context);
               },
-              child: Text('Back to Home'),
               style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+              child: Text('Back to Home'),
             ),
           ],
         ),
