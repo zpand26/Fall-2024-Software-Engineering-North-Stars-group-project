@@ -1,4 +1,4 @@
-import '../model/model.dart';
+import '../models/notification_model.dart';
 
 class AppPresenter {
   final AppModel model;

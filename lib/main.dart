@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'model/model.dart';
-import 'presenter/notification_presenter.dart';
-import 'view/notification_view.dart';
+import 'models/notification_model.dart';
+import 'presenters/notification_presenter.dart';
+import 'views/notification_view.dart';
 import 'notification/home.dart';
 import 'notification/initialization.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
