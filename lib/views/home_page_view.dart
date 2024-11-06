@@ -16,6 +16,7 @@ class HomePage extends StatelessWidget {
   final CalorieTrackerPresenter calorieTrackerPresenter;
   final DataEntryForDayPresenter dataEntryForDayPresenter;
   final NutrientTrackingPresenter nutrientTrackingPresenter;
+  String nutrientData = "No nutrient data loaded";
 
   HomePage({
     Key? key,
@@ -76,7 +77,7 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => NutrientTrackingView(nutrientTrackingPresenter, data: "",),
+                    builder: (context) => NutrientTrackingView(nutrientTrackingPresenter),
                   ),
                 );
               },

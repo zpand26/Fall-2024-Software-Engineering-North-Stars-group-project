@@ -1,13 +1,30 @@
 import 'package:flutter/material.dart';
 import '../presenters/nutrient_tracking_presenter.dart';
 
-class NutrientTrackingView extends StatelessWidget {
+class NutrientTrackingView extends StatefulWidget {
   final NutrientTrackingPresenter presenter;
-  final String data;
 
-  NutrientTrackingView(this.presenter, {required this.data});
+  NutrientTrackingView(this.presenter, {Key? key}) : super(key: key);
 
+  @override
+  _NutrientTrackingViewState createState() => _NutrientTrackingViewState();
+}
+
+class _NutrientTrackingViewState extends State<NutrientTrackingView> {
   final TextEditingController _queryController = TextEditingController();
+  String data = ""; // To hold API response data
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Set the updateView callback to update the data in the state
+    widget.presenter.updateView = (String newData) {
+      setState(() {
+        data = newData;
+      });
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +41,15 @@ class NutrientTrackingView extends StatelessWidget {
               decoration: InputDecoration(hintText: 'Enter food items'),
             ),
             ElevatedButton(
-              onPressed: () => presenter.loadData(_queryController.text), 
-              child: Text('Showing Nutrient Summary'),
-              ),
-              SizedBox(height: 20), 
-              Text(data, style: TextStyle(fontSize: 18)),
+              onPressed: () => widget.presenter.loadData(_queryController.text),
+              child: Text('Show Nutrient Summary'),
+            ),
+            SizedBox(height: 20),
+            Text(
+              data,
+              style: TextStyle(fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       ),
