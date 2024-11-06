@@ -60,28 +60,28 @@ class _CalorieTrackerViewState extends State<CalorieTrackerView> {
               },
               child: Text('Add Liquid Calorie Entry'),
             ),
-            SizedBox(height: 16.0),
+            SizedBox(height: 15.0),
             ElevatedButton(
               onPressed: () {
                 widget.calorieTrackerPresenter.showTotalLiquidCalories();
               },
               child: Text('Show Total Liquid Calories'),
             ),
-            SizedBox(height: 16.0),
+            SizedBox(height: 15.0),
             ElevatedButton(
               onPressed: () {
                 widget.calorieTrackerPresenter.showTotalSolidCalories();
               },
               child: Text('Show Total Solid Calories'),
             ),
-            SizedBox(height: 16.0),
+            SizedBox(height: 15.0),
             ElevatedButton(
               onPressed: () {
                 widget.calorieTrackerPresenter.showTotalCalories();
               },
               child: Text('Show Total Calories'),
             ),
-            SizedBox(height: 16.0),
+            SizedBox(height: 15.0),
             ElevatedButton(
               onPressed: () {
                 // Pop the current page (CalorieTrackerPage) off the stack and go back to the HomePage
