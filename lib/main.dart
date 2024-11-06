@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:north_stars/models/nutrient_tracking_model.dart';
+import 'package:north_stars/views/login_page_view.dart';
 import 'models/notification_model.dart';
 import 'presenters/notification_presenter.dart';
 import 'views/notification_view.dart';
@@ -17,6 +18,8 @@ import 'views/home_page_view.dart';
 
 void main() async {
   await initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -40,11 +43,7 @@ class MyApp extends StatelessWidget {
         //Once complete, show application
         if (snapshot.connectionState == ConnectionState.done){
           return MaterialApp(
-            home: HomePage(
-              calorieTrackerModel: calorieTrackerModel,
-              dataEntryForDayModel: dataEntryForDayModel,
-              nutrientTrackerModel: nutrientTrackerModel,
-            ),
+            home: AuthPage(),
           );
         }
         //loading indicator
