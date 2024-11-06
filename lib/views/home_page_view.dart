@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:north_stars/presenters/calorie_tracker_presenter.dart';
 import 'package:north_stars/presenters/data_entry_for_day_presenter.dart';
-//import '/presenters/day_entry_presenter.dart';
+// import '/presenters/day_entry_presenter.dart';
 import 'calorie_tracker_view.dart';
 import 'data_entry_for_day_view.dart';
 import '../models/calorie_tracker_model.dart';
 import 'package:north_stars/models/data_entry_for_day_model.dart';
+
+// Only necessary import for the MealFilter feature
+import 'meal_filter_feature_view.dart';
+import '../presenters/meal_filter_feature_presenter.dart';
+import '../models/meal_filter_feature_model.dart';
 
 class HomePage extends StatelessWidget {
 
   // Instantiate each presenter with the model and any required callbacks
   final CalorieTrackerPresenter calorieTrackerPresenter;
   final DataEntryForDayPresenter dataEntryForDayPresenter;
+  final MealFilterPresenter mealFilterPresenter;
 
   HomePage({
     Key? key,
@@ -25,6 +31,7 @@ class HomePage extends StatelessWidget {
           dataEntryForDayModel,
               (data) => print(data),
         ),
+        mealFilterPresenter = MealFilterPresenter(MealFilterModel()),
         super(key: key);
 
   @override
@@ -49,8 +56,20 @@ class HomePage extends StatelessWidget {
               },
               child: const Text('Enter data by day'),
             ),
+            // Navigate to Meal Filter Page
             ElevatedButton(
-              // Navigate to Calorie Tracker Page
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MealFilterFeature(mealFilterPresenter: mealFilterPresenter),
+                  ),
+                );
+              },
+              child: const Text("Go to Meal Filter"),
+            ),
+            // Navigate to Calorie Tracker Page
+            ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
