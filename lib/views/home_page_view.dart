@@ -6,17 +6,22 @@ import 'calorie_tracker_view.dart';
 import 'data_entry_for_day_view.dart';
 import '../models/calorie_tracker_model.dart';
 import 'package:north_stars/models/data_entry_for_day_model.dart';
+import 'package:north_stars/views/nutrient_tracking_view.dart';
+import 'package:north_stars/presenters/nutrient_tracking_presenter.dart';
+import 'package:north_stars/models/nutrient_tracking_model.dart';
 
 class HomePage extends StatelessWidget {
 
   // Instantiate each presenter with the model and any required callbacks
   final CalorieTrackerPresenter calorieTrackerPresenter;
   final DataEntryForDayPresenter dataEntryForDayPresenter;
+  final NutrientTrackingPresenter nutrientTrackingPresenter;
 
   HomePage({
     Key? key,
     required CalorieTrackerModel calorieTrackerModel,
     required DataEntryForDayModel dataEntryForDayModel,
+    required NutrientTrackerModel nutrientTrackerModel,
   })  : calorieTrackerPresenter = CalorieTrackerPresenter(
     calorieTrackerModel,
         (data) => print(data),
@@ -24,6 +29,10 @@ class HomePage extends StatelessWidget {
         dataEntryForDayPresenter = DataEntryForDayPresenter(
           dataEntryForDayModel,
               (data) => print(data),
+        ),
+        nutrientTrackingPresenter = NutrientTrackingPresenter(
+            nutrientTrackerModel,
+                (data) => print(data)
         ),
         super(key: key);
 
@@ -55,11 +64,23 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CalorieTrackingView(calorieTrackerPresenter),
+                    builder: (context) => CalorieTrackerView(calorieTrackerPresenter),
                   ),
                 );
               },
               child: const Text('Go to Calorie Tracker'),
+            ),
+            ElevatedButton(
+              // Navigate to Nutrient Tracker Page
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NutrientTrackingView(nutrientTrackingPresenter, data: "",),
+                  ),
+                );
+              },
+              child: const Text('Go to Nutrient Tracker'),
             ),
           ],
         ),

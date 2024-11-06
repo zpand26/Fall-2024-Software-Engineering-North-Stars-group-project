@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:north_stars/models/nutrient_tracking_model.dart';
 import 'models/notification_model.dart';
 import 'presenters/notification_presenter.dart';
 import 'views/notification_view.dart';
@@ -19,8 +20,11 @@ void main() async {
   runApp(MyApp());
 }
 
+
 class MyApp extends StatelessWidget {
-  final NutrientTrackingModel model = NutrientTrackingModel();
+  final NutrientTrackerModel nutrientTrackerModel = NutrientTrackerModel();
+  final CalorieTrackerModel calorieTrackerModel = CalorieTrackerModel();
+  final DataEntryForDayModel dataEntryForDayModel = DataEntryForDayModel();
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -39,6 +43,7 @@ class MyApp extends StatelessWidget {
             home: HomePage(
               calorieTrackerModel: calorieTrackerModel,
               dataEntryForDayModel: dataEntryForDayModel,
+              nutrientTrackerModel: nutrientTrackerModel,
             ),
           );
         }

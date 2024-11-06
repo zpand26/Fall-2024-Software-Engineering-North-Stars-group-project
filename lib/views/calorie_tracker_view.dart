@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import '../presenters/calorie_tracker_presenter.dart';
 
-class CalorieTrackingView extends StatefulWidget {
+class CalorieTrackerView extends StatefulWidget {
   final CalorieTrackerPresenter calorieTrackerPresenter;
 
-  const CalorieTrackingView(this.calorieTrackerPresenter, {super.key});
+  const CalorieTrackerView(this.calorieTrackerPresenter, {super.key});
 
   @override
-  _CalorieTrackingViewState createState() => _CalorieTrackingViewState();
+  _CalorieTrackerViewState createState() => _CalorieTrackerViewState();
 }
 
-class _CalorieTrackingViewState extends State<CalorieTrackingView> {
+class _CalorieTrackerViewState extends State<CalorieTrackerView> {
   final TextEditingController _calorieController = TextEditingController();
 
   @override
