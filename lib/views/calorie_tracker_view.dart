@@ -12,6 +12,18 @@ class CalorieTrackerView extends StatefulWidget {
 
 class _CalorieTrackerViewState extends State<CalorieTrackerView> {
   final TextEditingController _calorieController = TextEditingController();
+  String _displayMessage = ''; // Variable to store the message from presenter
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the updateView callback
+    widget.calorieTrackerPresenter.updateView = (String message) {
+      setState(() {
+        _displayMessage = message;
+      });
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +89,13 @@ class _CalorieTrackerViewState extends State<CalorieTrackerView> {
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
               child: Text('Back to Home'),
+            ),
+            SizedBox(height: 20.0),
+            // Display the message received from the presenter
+            Text(
+              _displayMessage,
+              style: TextStyle(fontSize: 18, color: Colors.blueAccent),
+              textAlign: TextAlign.center,
             ),
           ],
         ),

@@ -3,7 +3,9 @@ import '../models/calorie_tracker_model.dart';
 
 class CalorieTrackerPresenter {
   final CalorieTrackerModel calorieTrackerModel;
-  final Function(String) updateView;
+  Function(String) updateView;
+
+
 
   CalorieTrackerPresenter(this.calorieTrackerModel, this.updateView);
 
