@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
   final DataEntryForDayPresenter dataEntryForDayPresenter;
   final NutrientTrackingPresenter nutrientTrackingPresenter;
   //final notificationPresenter notificationPresenter;
-  String nutrientData = "No nutrient data loaded";
+  final String nutrientData = "No nutrient data loaded";
 
   HomePage({
     Key? key,
