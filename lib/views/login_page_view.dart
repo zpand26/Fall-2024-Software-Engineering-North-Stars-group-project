@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:north_stars/views/home_page_view.dart';
@@ -31,6 +32,14 @@ class _AuthPageState extends State<AuthPage> {
           password: _passwordController.text.trim(),
         );
       }
+
+      await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+        'email': _emailController.text.trim(),
+        'createdAt': FieldValue.serverTimestamp(),
+        //can add additional fields here later if needed.
+      });
+
+      
       // Navigate to Home Page on success
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
