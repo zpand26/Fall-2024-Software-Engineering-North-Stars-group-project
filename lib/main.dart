@@ -9,6 +9,11 @@ import 'views/notification_home.dart';
 import 'notification/initialization.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:north_stars/models/notification_model.dart';
+//import 'package:north_stars/presenters/notification_presenter.dart';
+
+
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,15 +41,11 @@ class MyApp extends StatelessWidget {
         // Once complete, show application
         if (snapshot.connectionState == ConnectionState.done) {
           return MaterialApp(
-            initialRoute: '/',
-            routes: {
-              '/': (context) => HomePage(
-                calorieTrackerModel: calorieTrackerModel,
-                dataEntryForDayModel: dataEntryForDayModel,
-                nutrientTrackerModel: nutrientTrackerModel,
-              ),
-              '/notifications': (context) => NotificationView(),
-            },
+            home: HomePage(
+              calorieTrackerModel: calorieTrackerModel,
+              dataEntryForDayModel: dataEntryForDayModel,
+              nutrientTrackerModel: nutrientTrackerModel,
+            ),
           );
         }
         // Loading indicator

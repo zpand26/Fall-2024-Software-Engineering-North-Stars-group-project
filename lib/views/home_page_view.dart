@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:north_stars/models/notification_model.dart';
 import 'package:north_stars/presenters/calorie_tracker_presenter.dart';
 import 'package:north_stars/presenters/data_entry_for_day_presenter.dart';
+import 'package:north_stars/views/notification_view.dart';
 import 'calorie_tracker_view.dart';
 import 'data_entry_for_day_view.dart';
 import '../models/calorie_tracker_model.dart';
@@ -9,12 +11,15 @@ import 'package:north_stars/views/nutrient_tracking_view.dart';
 import 'package:north_stars/presenters/nutrient_tracking_presenter.dart';
 import 'package:north_stars/models/nutrient_tracking_model.dart';
 import 'package:north_stars/notification/notification_app.dart'; // Ensure this import is correct
+//import 'package:north_stars/presenters/notification_presenter';
+
 
 class HomePage extends StatelessWidget {
   // Instantiate each presenter with the model and any required callbacks
   final CalorieTrackerPresenter calorieTrackerPresenter;
   final DataEntryForDayPresenter dataEntryForDayPresenter;
   final NutrientTrackingPresenter nutrientTrackingPresenter;
+  //final notificationPresenter notificationPresenter;
   String nutrientData = "No nutrient data loaded";
 
   HomePage({
@@ -22,6 +27,7 @@ class HomePage extends StatelessWidget {
     required CalorieTrackerModel calorieTrackerModel,
     required DataEntryForDayModel dataEntryForDayModel,
     required NutrientTrackerModel nutrientTrackerModel,
+    // required NotificationService notificationService,
   })  : calorieTrackerPresenter = CalorieTrackerPresenter(
     calorieTrackerModel,
         (data) => print(data),
@@ -34,6 +40,10 @@ class HomePage extends StatelessWidget {
           nutrientTrackerModel,
               (data) => print(data),
         ),
+        // notificationPresenter = NotificationPresenter(
+        //   notificationService,
+        //       (data) => print(data),
+        // ),
         super(key: key);
 
   @override
@@ -102,6 +112,18 @@ class HomePage extends StatelessWidget {
               },
               child: const Text('Go to Nutrient Tracker'),
             ),
+            // ElevatedButton(
+            //   // Navigate to Nutrient Tracker Page
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => NotificationView(notificationPresenter),
+            //       ),
+            //     );
+            //   },
+            //   child: const Text('Go to Notification Service'),
+            // ),
           ],
         ),
       ),
