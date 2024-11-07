@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:north_stars/presenters/calorie_tracker_presenter.dart';
 import 'package:north_stars/presenters/data_entry_for_day_presenter.dart';
-//import '/presenters/day_entry_presenter.dart';
 import 'calorie_tracker_view.dart';
 import 'data_entry_for_day_view.dart';
 import '../models/calorie_tracker_model.dart';
@@ -9,9 +8,9 @@ import 'package:north_stars/models/data_entry_for_day_model.dart';
 import 'package:north_stars/views/nutrient_tracking_view.dart';
 import 'package:north_stars/presenters/nutrient_tracking_presenter.dart';
 import 'package:north_stars/models/nutrient_tracking_model.dart';
+import 'package:north_stars/notification/notification_app.dart'; // Ensure this import is correct
 
 class HomePage extends StatelessWidget {
-
   // Instantiate each presenter with the model and any required callbacks
   final CalorieTrackerPresenter calorieTrackerPresenter;
   final DataEntryForDayPresenter dataEntryForDayPresenter;
@@ -32,8 +31,8 @@ class HomePage extends StatelessWidget {
               (data) => print(data),
         ),
         nutrientTrackingPresenter = NutrientTrackingPresenter(
-            nutrientTrackerModel,
-                (data) => print(data)
+          nutrientTrackerModel,
+              (data) => print(data),
         ),
         super(key: key);
 
@@ -42,6 +41,26 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Main Menu'),
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (String choice) {
+              if (choice == 'Notifications') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MyApp()),
+                );
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return {'Notifications'}.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(

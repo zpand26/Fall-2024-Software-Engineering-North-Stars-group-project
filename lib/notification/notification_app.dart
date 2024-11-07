@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home.dart';
+import '../views/notification_home.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

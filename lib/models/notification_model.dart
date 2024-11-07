@@ -1,30 +1,69 @@
-class AppModel {
-  // Sample method to fetch or process data
-  Future<String> fetchData() async {
-    // Simulating a data fetch or API call
-    await Future.delayed(Duration(seconds: 2));
-    return "Hello from Model!";
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart' as tz;
+
+class NotificationService {
+  static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  static Future<void> onDidReceiveNotification(NotificationResponse notificationResponse) async {
+    print("Notification receive");
   }
 
-  List<int> _calories = [];
+  static Future<void> init() async {
+    const AndroidInitializationSettings androidInitializationSettings =
+        AndroidInitializationSettings("@mipmap/ic_launcher");
+    const DarwinInitializationSettings iOSInitializationSettings = DarwinInitializationSettings();
 
-  // Add calories to the list
-  void addCalories(int calorie) {
-    _calories.add(calorie);
+    const InitializationSettings initializationSettings = InitializationSettings(
+      android: androidInitializationSettings,
+      iOS: iOSInitializationSettings,
+    );
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: onDidReceiveNotification,
+      onDidReceiveBackgroundNotificationResponse: onDidReceiveNotification,
+    );
+
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
   }
 
-  // Remove calories entry from the list
-  void removeCalories(int calorie) {
-    _calories.remove(calorie);
+ static Future<void> showInstantNotification(String title, String body) async {
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+        android: AndroidNotificationDetails(
+          'instant_notification_channel_id',
+          'Instant Notifications',
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails());
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      platformChannelSpecifics,
+      payload: 'instant_notification',
+    );
   }
 
-  // Get total calories
-  int getTotalCalories() {
-    return _calories.fold(0, (total, current) => total + current);
-  }
-
-  // Get the list of all calorie entries
-  List<int> getAllCalorieEntries() {
-    return _calories;
+  static Future<void> scheduleNotification(int id, String title, String body, DateTime scheduledTime) async {
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      tz.TZDateTime.from(scheduledTime, tz.local),
+      const NotificationDetails(
+        iOS: DarwinNotificationDetails(),
+        android: AndroidNotificationDetails(
+          'reminder_channel',
+          'Reminder Channel',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+      ),
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.dateAndTime,
+    );
   }
 }

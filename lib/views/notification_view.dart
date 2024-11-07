@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import '../presenters/notification_presenter.dart';
-import '../notification/home.dart';
+import 'notification_home.dart';
 
-class AppView extends StatelessWidget {
-  final AppPresenter presenter;
-
-  AppView(this.presenter);
-
+class NotificationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('MVP Example'),
+        title: Text('Notifications'),
         actions: [
           PopupMenuButton<String>(
             onSelected: (String choice) {
@@ -34,10 +29,7 @@ class AppView extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () => presenter.loadData(),
-          child: Text('Load Data'),
-        ),
+        child: Text('Notification Menu'),
       ),
     );
   }

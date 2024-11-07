@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:north_stars/notification/notification.dart';
+import 'package:north_stars/models/notification_model.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
