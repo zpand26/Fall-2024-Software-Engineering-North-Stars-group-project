@@ -29,7 +29,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Calendar'),
+        title: const Text('Calendar'),
       ),
       body: Column(
         children: [
@@ -58,7 +58,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddEventDialog(),
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -81,42 +81,42 @@ class _CalendarScreenState extends State<CalendarScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Add Event'),
+          title: const Text('Add Event'),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   controller: eventController1,
-                  decoration: InputDecoration(hintText: 'Calories'),
+                  decoration: const InputDecoration(hintText: 'Calories'),
                 ),
                 TextField(
                   controller: eventController2,
-                  decoration: InputDecoration(hintText: 'Total Fat'),
+                  decoration: const InputDecoration(hintText: 'Total Fat'),
                 ),
                 TextField(
                   controller: eventController3,
-                  decoration: InputDecoration(hintText: 'Cholestorol'),
+                  decoration: const InputDecoration(hintText: 'Cholesterol'),
                 ),
                 TextField(
                   controller: eventController4,
-                  decoration: InputDecoration(hintText: 'Sodium'),
+                  decoration: const InputDecoration(hintText: 'Sodium'),
                 ),
                 TextField(
                   controller: eventController5,
-                  decoration: InputDecoration(hintText: 'Total Carbohydrate'),
+                  decoration: const InputDecoration(hintText: 'Total Carbohydrate'),
                 ),
                 TextField(
                   controller: eventController6,
-                  decoration: InputDecoration(hintText: 'Fiber'),
+                  decoration: const InputDecoration(hintText: 'Fiber'),
                 ),
                 TextField(
                   controller: eventController7,
-                  decoration: InputDecoration(hintText: 'Total Sugar'),
+                  decoration: const InputDecoration(hintText: 'Total Sugar'),
                 ),
                 TextField(
                   controller: eventController8,
-                  decoration: InputDecoration(hintText: 'Protein'),
+                  decoration: const InputDecoration(hintText: 'Protein'),
                 ),
               ],
             ),
@@ -126,16 +126,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-                if (eventController1.text.isNotEmpty || eventController2.text.isNotEmpty) {
-                  _addEvent('${eventController1.text} ${eventController2.text}');
+                if (eventController1.text.isNotEmpty || eventController2.text.isNotEmpty|| eventController3.text.isNotEmpty || eventController4.text.isNotEmpty || eventController5.text.isNotEmpty || eventController6.text.isNotEmpty || eventController7.text.isNotEmpty || eventController8.text.isNotEmpty) {
+                  _addEvent('Calories: ${eventController1.text}\nTotal Fat: ${eventController2.text}\nCholesterol: ${eventController3.text}\nSodium: ${eventController4.text}\nTotal Carbohydrates: ${eventController5.text}\nFiber: ${eventController6.text}\nTotal Sugar: ${eventController7.text}\nProtein: ${eventController8.text}');
                 }
                 Navigator.of(context).pop();
               },
-              child: Text('Add'),
+              child: const Text('Add'),
             ),
           ],
         );
