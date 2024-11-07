@@ -1,19 +1,25 @@
 import 'package:north_stars/models/data_entry_for_day_model.dart';
 
 class DataEntryForDayPresenter {
-  final DataEntryForDayModel model;
-  final Function(String) updateView;
+  final DataEntryForDayModel dataEntryForDayModel;
+  Function(String) updateView;
 
-  DataEntryForDayPresenter(this.model, this.updateView);
+  DataEntryForDayPresenter(this.dataEntryForDayModel, this.updateView);
+
+  //data fetching
+  void loadData() async{
+    String data = await dataEntryForDayModel.fetchData();
+    updateView(data);
+  }
 
   void addDailyCalorieEntry(int calorie, String day) {
-    model.addDailyCalories(calorie, day);
-    updateView('Calorie entries added.');
+    dataEntryForDayModel.addDailyCalories(calorie, day);
+    updateView('Calorie entries added for days.');
   }
 
 //display total calories
   void showDailyCalories() {
-    List<int> total = model.getDailyCalories();
+    List<int> total = dataEntryForDayModel.getDailyCalories();
     updateView('Daily Calories: $total');
   }
 

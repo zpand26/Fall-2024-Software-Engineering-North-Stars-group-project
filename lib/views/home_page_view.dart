@@ -43,7 +43,7 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DayEntryPage(dataEntryForDayPresenter),
+                    builder: (context) => DayEntryView(dataEntryForDayPresenter),
                   ),
                 );
               },

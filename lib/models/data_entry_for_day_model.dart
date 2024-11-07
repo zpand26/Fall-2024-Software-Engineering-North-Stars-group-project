@@ -53,25 +53,4 @@ class DataEntryForDayModel {
 
   }
 
-//get the list of all calorie entries
-/*List<int> getAllCalorieEntries(){
-    return _calories;
-  }*/
-
-/* List<int> _monCalories = [];
-  List<int> _tueCalories = [];
-  List<int> _wedCalories = [];
-  List<int> _thuCalories = [];
-  List<int> _friCalories = [];
-  List<int> _satCalories = [];
-  List<int> _sunCalories = [];
-
-
-  void addCaloriesForDay(String day, int dayCalorie) {
-    switch (day) {
-      case
-  }
-
-
-  getSpecificDay() {} */
 }
