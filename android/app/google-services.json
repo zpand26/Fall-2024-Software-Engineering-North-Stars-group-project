@@ -1,15 +1,16 @@
 {
   "project_info": {
     "project_number": "608473995268",
+    "firebase_url": "https://north-stars-a5f9c-default-rtdb.firebaseio.com",
     "project_id": "north-stars-a5f9c",
-    "storage_bucket": "north-stars-a5f9c.appspot.com"
+    "storage_bucket": "north-stars-a5f9c.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:608473995268:android:a7e70e2b428b39a4a73d51",
         "android_client_info": {
-          "package_name": "com.example.northstars"
+          "package_name": "com.example.north_stars"
         }
       },
       "oauth_client": [],
