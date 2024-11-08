@@ -10,8 +10,8 @@ import 'package:north_stars/models/data_entry_for_day_model.dart';
 import 'package:north_stars/views/nutrient_tracking_view.dart';
 import 'package:north_stars/presenters/nutrient_tracking_presenter.dart';
 import 'package:north_stars/models/nutrient_tracking_model.dart';
-import 'package:north_stars/notification/notification_app.dart'; // Ensure this import is correct
-//import 'package:north_stars/presenters/notification_presenter';
+
+
 
 
 class HomePage extends StatelessWidget {
@@ -57,8 +57,9 @@ class HomePage extends StatelessWidget {
               if (choice == 'Notifications') {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const MyApp()),
+                  MaterialPageRoute(builder: (context) => NotificationView()),
                 );
+
               }
             },
             itemBuilder: (BuildContext context) {
