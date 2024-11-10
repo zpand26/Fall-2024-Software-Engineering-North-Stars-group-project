@@ -22,6 +22,8 @@ class MyApp extends StatelessWidget {
   final NutrientTrackerModel nutrientTrackerModel = NutrientTrackerModel();
   final CalorieTrackerModel calorieTrackerModel = CalorieTrackerModel();
   final DataEntryForDayModel dataEntryForDayModel = DataEntryForDayModel();
+
+  MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -36,7 +38,7 @@ class MyApp extends StatelessWidget {
           }
         //Once complete, show application
         if (snapshot.connectionState == ConnectionState.done){
-          return MaterialApp(
+          return const MaterialApp(
             home: AuthPage(),
           );
         }

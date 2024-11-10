@@ -1,18 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:north_stars/models/notification_model.dart';
+import '../models/notification_model.dart';
+import '../presenters/notification_presenter.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
-
+class NotificationHome extends StatefulWidget {
   @override
-  State<Home> createState() => _HomeState();
+  _NotificationHomeState createState() => _NotificationHomeState();
 }
 
-class _HomeState extends State<Home> {
+class _NotificationHomeState extends State<NotificationHome> {
+  late NotificationPresenter _presenter;
+  late NotificationModel _model;
+  bool _areNotificationsEnabled = true;
   DateTime? _selectedDateTime;
 
+  @override
+  void initState() {
+    super.initState();
+    _model = NotificationModel();
+    _presenter = NotificationPresenter(_model, (bool areEnabled) {
+      setState(() {
+        _areNotificationsEnabled = areEnabled;
+      });
+    });
+
+    // Correctly load the initial settings
+    _presenter.loadInitialSettings();
+  }
+
   Future<void> _pickDateTime() async {
-    // Pick a date
     DateTime? date = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -22,7 +37,6 @@ class _HomeState extends State<Home> {
 
     if (date == null) return;
 
-    // Pick a time
     TimeOfDay? time = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
@@ -30,7 +44,6 @@ class _HomeState extends State<Home> {
 
     if (time == null) return;
 
-    // Combine date and time into a single DateTime
     setState(() {
       _selectedDateTime = DateTime(
         date.year,
@@ -45,30 +58,43 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Meal Reminder')),
+      appBar: AppBar(
+        title: const Text('Meal Reminders'),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SwitchListTile(
+              title: const Text('Enable Notifications'),
+              value: _areNotificationsEnabled,
+              onChanged: (bool value) {
+                _presenter.toggleNotifications(value);
+              },
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                NotificationService.showInstantNotification(
+              onPressed: _areNotificationsEnabled
+                  ? () {
+                _presenter.showInstantNotification(
                   "Meal Reminder",
                   "It's time for your meal!",
                 );
-              },
+              }
+                  : null, // Disable button if notifications are off
               child: const Text('Show Instant Meal Reminder'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _pickDateTime,
+              onPressed: _areNotificationsEnabled ? _pickDateTime : null, // Disable button if notifications are off
               child: const Text('Pick Meal Reminder Time'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
+              onPressed: _areNotificationsEnabled
+                  ? () {
                 if (_selectedDateTime != null) {
-                  NotificationService.scheduleNotification(
+                  _presenter.scheduleNotification(
                     0,
                     "Scheduled Meal Reminder",
                     "It's time for your meal!",
@@ -82,7 +108,8 @@ class _HomeState extends State<Home> {
                     const SnackBar(content: Text('Please pick a date and time first')),
                   );
                 }
-              },
+              }
+                  : null, // Disable button if notifications are off
               child: const Text('Schedule Meal Reminder'),
             ),
           ],

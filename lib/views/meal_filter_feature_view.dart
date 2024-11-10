@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MealFilterFeature extends StatefulWidget {
+  const MealFilterFeature({super.key});
+
   @override
   _MealFilterFeatureState createState() => _MealFilterFeatureState();
 }
@@ -36,7 +38,7 @@ class _MealFilterFeatureState extends State<MealFilterFeature> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Select Filters'),
+          title: const Text('Select Filters'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: options.map((option) {
@@ -61,7 +63,7 @@ class _MealFilterFeatureState extends State<MealFilterFeature> {
                 Navigator.pop(context);
                 applyFilters();
               },
-              child: Text('Apply'),
+              child: const Text('Apply'),
             ),
           ],
         );
@@ -73,10 +75,10 @@ class _MealFilterFeatureState extends State<MealFilterFeature> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Meal Filter Feature'),
+        title: const Text('Meal Filter Feature'),
         actions: [
           IconButton(
-            icon: Icon(Icons.filter_list),
+            icon: const Icon(Icons.filter_list),
             onPressed: showFilterDialog,
           ),
         ],

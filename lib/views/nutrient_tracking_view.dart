@@ -4,7 +4,7 @@ import '../presenters/nutrient_tracking_presenter.dart';
 class NutrientTrackingView extends StatefulWidget {
   final NutrientTrackingPresenter presenter;
 
-  NutrientTrackingView(this.presenter, {Key? key}) : super(key: key);
+  const NutrientTrackingView(this.presenter, {super.key});
 
   @override
   _NutrientTrackingViewState createState() => _NutrientTrackingViewState();
@@ -30,7 +30,7 @@ class _NutrientTrackingViewState extends State<NutrientTrackingView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Nutrient Tracker'),
+        title: const Text('Nutrient Tracker'),
       ),
       body: Center(
         child: Column(
@@ -38,16 +38,16 @@ class _NutrientTrackingViewState extends State<NutrientTrackingView> {
           children: [
             TextField(
               controller: _queryController,
-              decoration: InputDecoration(hintText: 'Enter food items'),
+              decoration: const InputDecoration(hintText: 'Enter food items'),
             ),
             ElevatedButton(
               onPressed: () => widget.presenter.loadData(_queryController.text),
-              child: Text('Show Nutrient Summary'),
+              child: const Text('Show Nutrient Summary'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               data,
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
               textAlign: TextAlign.center,
             ),
           ],

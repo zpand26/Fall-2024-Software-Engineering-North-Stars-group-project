@@ -1,16 +1,35 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
+import 'package:shared_preferences/shared_preferences.dart';
+
+class NotificationModel {
+  bool areNotificationsEnabled;
+
+  NotificationModel({this.areNotificationsEnabled = true});
+
+  // Load the notification state from SharedPreferences
+  static Future<bool> loadNotificationState() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('areNotificationsEnabled') ?? true; // Default to true if not set
+  }
+
+  // Save the notification state to SharedPreferences
+  static Future<void> saveNotificationState(bool isEnabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('areNotificationsEnabled', isEnabled);
+  }
+}
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   static Future<void> onDidReceiveNotification(NotificationResponse notificationResponse) async {
-    print("Notification receive");
+    print("Notification received");
   }
 
   static Future<void> init() async {
     const AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings("@mipmap/ic_launcher");
+    AndroidInitializationSettings("@mipmap/ic_launcher");
     const DarwinInitializationSettings iOSInitializationSettings = DarwinInitializationSettings();
 
     const InitializationSettings initializationSettings = InitializationSettings(
@@ -22,13 +41,11 @@ class NotificationService {
       onDidReceiveNotificationResponse: onDidReceiveNotification,
       onDidReceiveBackgroundNotificationResponse: onDidReceiveNotification,
     );
-
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestNotificationsPermission();
   }
 
- static Future<void> showInstantNotification(String title, String body) async {
+  static Future<void> showInstantNotification(String title, String body, bool areNotificationsEnabled) async {
+    if (!areNotificationsEnabled) return; // Prevent showing notification if disabled
+
     const NotificationDetails platformChannelSpecifics = NotificationDetails(
         android: AndroidNotificationDetails(
           'instant_notification_channel_id',
@@ -47,7 +64,9 @@ class NotificationService {
     );
   }
 
-  static Future<void> scheduleNotification(int id, String title, String body, DateTime scheduledTime) async {
+  static Future<void> scheduleNotification(int id, String title, String body, DateTime scheduledTime, bool areNotificationsEnabled) async {
+    if (!areNotificationsEnabled) return; // Prevent scheduling if notifications are disabled
+
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       title,
@@ -65,5 +84,9 @@ class NotificationService {
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.dateAndTime,
     );
+  }
+
+  static Future<void> cancelAllNotifications() async {
+    await flutterLocalNotificationsPlugin.cancelAll();
   }
 }

@@ -1,16 +1,15 @@
-import 'dart:collection';
 
 class CalorieTrackerModel {
 
   //sample method to fetch or proccess data
   Future<String> fetchData() async {
     //simulating a data fetch or api call
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     return "Hello from Model!";
   }
 
-  List<int> _solidCalories = [];
-  List<int> _liquidCalories = [];
+  final List<int> _solidCalories = [];
+  final List<int> _liquidCalories = [];
 
   //add solid calories to the list
   void addSolidCalories(int calorie) {
