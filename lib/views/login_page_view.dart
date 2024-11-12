@@ -1,11 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:north_stars/views/home_page_view.dart';
-import 'package:north_stars/models/calorie_tracker_model.dart';
-import 'package:north_stars/models/data_entry_for_day_model.dart';
-import 'package:north_stars/models/nutrient_tracking_model.dart';
+// auth_page.dart
 
+import 'package:flutter/material.dart';
+import 'package:north_stars/views/home_page_view.dart';
+import 'package:north_stars/presenters/login_page_presenter.dart';
+import '../models/calorie_tracker_model.dart';
+import '../models/data_entry_for_day_model.dart';
+import '../models/nutrient_tracking_model.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -14,48 +14,25 @@ class AuthPage extends StatefulWidget {
   _AuthPageState createState() => _AuthPageState();
 }
 
-class _AuthPageState extends State<AuthPage> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+class _AuthPageState extends State<AuthPage> implements AuthViewContract {
+  late AuthPresenter _presenter;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLogin = true;
 
-  Future<void> _authenticate() async {
-    try {
-      UserCredential userCredential;
-      if (_isLogin) {
-        userCredential = await _auth.signInWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
-        );
-      } else {
-        userCredential = await _auth.createUserWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
-        );
-      }
+  @override
+  void initState() {
+    super.initState();
+    _presenter = AuthPresenter(this);
+  }
 
-      await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
-        'email': _emailController.text.trim(),
-        'createdAt': FieldValue.serverTimestamp(),
-        //can add additional fields here later if needed.
-      });
-
-      
-      // Navigate to Home Page on success
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => HomePage(
-            calorieTrackerModel: CalorieTrackerModel(),
-            dataEntryForDayModel: DataEntryForDayModel(),
-            nutrientTrackerModel: NutrientTrackerModel(),
-          ),
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
+  void _authenticate() {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    if (_isLogin) {
+      _presenter.login(email, password);
+    } else {
+      _presenter.signUp(email, password);
     }
   }
 
@@ -93,6 +70,26 @@ class _AuthPageState extends State<AuthPage> {
               child: Text(_isLogin ? 'Create an account' : 'Have an account? Log in'),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  void showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
+  @override
+  void navigateToHome() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => HomePage(
+          calorieTrackerModel: CalorieTrackerModel(),
+          dataEntryForDayModel: DataEntryForDayModel(),
+          nutrientTrackerModel: NutrientTrackerModel(),
         ),
       ),
     );
