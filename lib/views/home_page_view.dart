@@ -7,10 +7,13 @@ import 'data_entry_for_day_view.dart';
 import '../models/calorie_tracker_model.dart';
 import 'package:north_stars/models/data_entry_for_day_model.dart';
 
-// Only necessary import for the MealFilter feature
+// Only necessary import for the MealFilter feature and Profile feature
 import 'meal_filter_feature_view.dart';
 import '../presenters/meal_filter_feature_presenter.dart';
 import '../models/meal_filter_feature_model.dart';
+import 'profile_page_view.dart';
+import '../presenters/profile_page_presenter.dart';
+import '../models/profile_page_model.dart';
 
 class HomePage extends StatelessWidget {
 
@@ -18,6 +21,7 @@ class HomePage extends StatelessWidget {
   final CalorieTrackerPresenter calorieTrackerPresenter;
   final DataEntryForDayPresenter dataEntryForDayPresenter;
   final MealFilterPresenter mealFilterPresenter;
+  final ProfilePagePresenter profilePagePresenter;
 
   HomePage({
     Key? key,
@@ -32,6 +36,14 @@ class HomePage extends StatelessWidget {
               (data) => print(data),
         ),
         mealFilterPresenter = MealFilterPresenter(MealFilterModel()),
+  // Ensure ProfilePagePresenter is correctly initialized with ProfilePageModel
+        profilePagePresenter = ProfilePagePresenter(
+          ProfilePageModel(
+            username: 'User123',
+            email: 'user@example.com',
+            profilePictureUrl: 'https://example.com/image.png',
+          ),
+        ),
         super(key: key);
 
   @override
@@ -39,6 +51,20 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Main Menu'),
+        // Profile button in the top-left corner
+        leading: IconButton(
+          icon: const Icon(Icons.person, size:30.0),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfilePageView(
+                  presenter: profilePagePresenter,
+                ),
+              ),
+            );
+          },
+        ),
       ),
       body: Center(
         child: Column(
@@ -62,7 +88,8 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MealFilterFeature(mealFilterPresenter: mealFilterPresenter),
+                    builder: (context) =>
+                        MealFilterFeature(mealFilterPresenter: mealFilterPresenter),
                   ),
                 );
               },
@@ -74,7 +101,8 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CalorieTrackingView(calorieTrackerPresenter),
+                    builder: (context) =>
+                        CalorieTrackingView(calorieTrackerPresenter),
                   ),
                 );
               },
