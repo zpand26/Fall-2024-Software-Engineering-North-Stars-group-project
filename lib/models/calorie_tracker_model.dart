@@ -1,39 +1,38 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class CalorieTrackerModel {
 
-  //sample method to fetch or proccess data
-  Future<String> fetchData() async {
-    //simulating a data fetch or api call
-    await Future.delayed(const Duration(seconds: 2));
-    return "Hello from Model!";
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+
+  //add solid calories to firebase
+  Future<void> addSolidCalories(int calorie) async{
+    await _firestore.collection('solidCalories').add({'calorie': calorie, 'timestamp': DateTime.now()});
   }
 
-  final List<int> _solidCalories = [];
-  final List<int> _liquidCalories = [];
-
-  //add solid calories to the list
-  void addSolidCalories(int calorie) {
-    _solidCalories.add(calorie);
-  }
-
-  //add liquid calories to the list
-  void addLiquidCalories(int calorie) {
-    _liquidCalories.add(calorie);
+  //add liquid calories to firebase
+  Future<void> addLiquidCalories(int calorie) async{
+    await _firestore.collection('liquidCalories').add({'calorie': calorie, 'timestamp': DateTime.now()});
   }
 
   //get total solid calories
-  int getTotalSolidCalories() {
-    return _solidCalories.fold(0, (total, current) => total + current);
+  Future<int> getTotalSolidCalories() async {
+    final querySnapshot = await _firestore.collection('solidCalories').get();
+    return querySnapshot.docs.fold<int>(0, (int total, doc) => total + (doc['calorie'] as int));
   }
 
   //get total liquid calories
-  int getTotalLiquidCalories() {
-    return _liquidCalories.fold(0, (total, current) => total + current);
+  Future<int> getTotalLiquidCalories() async {
+    final querySnapshot = await _firestore.collection('liquidCalories').get();
+    return querySnapshot.docs.fold<int>(0, (int total, doc) => total + (doc['calorie'] as int));
   }
 
   //get the total calorie count
-  int getTotalCalories() {
-    return (getTotalLiquidCalories() + getTotalSolidCalories());
+  Future<int> getTotalCalories() async {
+    int totalLiquid = await getTotalLiquidCalories();
+    int totalSolid = await getTotalSolidCalories();
+    return totalLiquid + totalSolid;
   }
 
 }
