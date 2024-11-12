@@ -27,4 +27,8 @@ class AuthModel {
 
     return userCredential;
   }
+
+  Future<void> logout() async{
+    await _auth.signOut();
+  }
 }

@@ -6,6 +6,7 @@ import '../models/login_page_model.dart';
 abstract class AuthViewContract {
   void showError(String message);
   void navigateToHome();
+  void navigateToLogin();
 }
 
 class AuthPresenter {
@@ -31,4 +32,14 @@ class AuthPresenter {
       _view.showError(e.toString());
     }
   }
+
+  Future<void> logout() async {
+    try {
+      await _authModel.logout();
+      _view.navigateToLogin();
+    } catch (e) {
+      _view.showError("Logout failed: ${e.toString()}");
+    }
+  }
+
 }
