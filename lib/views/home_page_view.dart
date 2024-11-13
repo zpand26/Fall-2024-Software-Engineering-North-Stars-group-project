@@ -11,13 +11,16 @@ import 'package:north_stars/models/nutrient_tracking_model.dart';
 import 'notification_home.dart';
 import 'notification_settings_page.dart';
 import 'package:north_stars/views/camera_view.dart';
+import 'profile_page_view.dart';
+import '../presenters/profile_page_presenter.dart';
+import '../models/profile_page_model.dart';
 
 class HomePage extends StatelessWidget {
   // Instantiate each presenter with the model and any required callbacks
   final CalorieTrackerPresenter calorieTrackerPresenter;
   final DataEntryForDayPresenter dataEntryForDayPresenter;
   final NutrientTrackingPresenter nutrientTrackingPresenter;
-  //final notificationPresenter notificationPresenter;
+  final ProfilePagePresenter profilePagePresenter;
   final String nutrientData = "No nutrient data loaded";
 
   HomePage({
@@ -25,7 +28,6 @@ class HomePage extends StatelessWidget {
     required CalorieTrackerModel calorieTrackerModel,
     required DataEntryForDayModel dataEntryForDayModel,
     required NutrientTrackerModel nutrientTrackerModel,
-    // required NotificationService notificationService,
   })  : calorieTrackerPresenter = CalorieTrackerPresenter(
     calorieTrackerModel,
         (data) => print(data),
@@ -37,6 +39,14 @@ class HomePage extends StatelessWidget {
         nutrientTrackingPresenter = NutrientTrackingPresenter(
           nutrientTrackerModel,
               (data) => print(data),
+        ),
+        profilePagePresenter = ProfilePagePresenter(
+          model: ProfilePageModel(
+            username: 'User123',
+            email: 'user@example.com',
+            profilePictureUrl: 'https://example.com/image.png',
+          ),
+          updateView: (username) {},
         );
 
   @override
@@ -44,6 +54,17 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Main Menu'),
+        leading: IconButton(
+          icon: const Icon(Icons.person, size: 30.0),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfilePageView(presenter: profilePagePresenter),
+              ),
+            );
+          },
+        ),
         actions: [
           PopupMenuButton<String>(
             onSelected: (String choice) {
