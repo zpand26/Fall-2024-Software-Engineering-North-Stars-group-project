@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:north_stars/views/home_page_view.dart';
 import 'package:north_stars/presenters/login_page_presenter.dart';
-import '../models/calorie_tracker_model.dart';
-import '../models/data_entry_for_day_model.dart';
-import '../models/nutrient_tracking_model.dart';
+import 'package:north_stars/views/home_page_view.dart';
+import 'package:north_stars/models/calorie_tracker_model.dart';
+import 'package:north_stars/models/data_entry_for_day_model.dart';
+import 'package:north_stars/models/nutrient_tracking_model.dart';
+import 'package:north_stars/models/nutrition_goal_model.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -17,6 +20,21 @@ class _AuthPageState extends State<AuthPage> implements AuthViewContract {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLogin = true;
+
+  // Future<void> _authenticate() async {
+  //   try {
+  //     UserCredential userCredential;
+  //     if (_isLogin) {
+  //       userCredential = await _auth.signInWithEmailAndPassword(
+  //         email: _emailController.text.trim(),
+  //         password: _passwordController.text.trim(),
+  //       );
+  //     } else {
+  //       userCredential = await _auth.createUserWithEmailAndPassword(
+  //         email: _emailController.text.trim(),
+  //         password: _passwordController.text.trim(),
+  //       );
+  //     }
 
   @override
   void initState() {
@@ -33,6 +51,32 @@ class _AuthPageState extends State<AuthPage> implements AuthViewContract {
       _presenter.signUp(email, password);
     }
   }
+
+
+      // await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+      //   'email': _emailController.text.trim(),
+      //   'createdAt': FieldValue.serverTimestamp(),
+      //   //can add additional fields here later if needed.
+      // });
+
+      
+      // Navigate to Home Page on success
+  //     Navigator.of(context).pushReplacement(
+  //       MaterialPageRoute(
+  //         builder: (context) => HomePage(
+  //           calorieTrackerModel: CalorieTrackerModel(),
+  //           dataEntryForDayModel: DataEntryForDayModel(),
+  //           nutrientTrackerModel: NutrientTrackerModel(),
+  //           nutritionGoalModel: NutritionGoalModel(),
+  //         ),
+  //       ),
+  //     );
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text(e.toString())),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +132,7 @@ class _AuthPageState extends State<AuthPage> implements AuthViewContract {
           calorieTrackerModel: CalorieTrackerModel(),
           dataEntryForDayModel: DataEntryForDayModel(),
           nutrientTrackerModel: NutrientTrackerModel(),
+          nutritionGoalModel: NutritionGoalModel(),
         ),
       ),
     );

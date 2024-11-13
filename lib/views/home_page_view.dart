@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:north_stars/presenters/calorie_tracker_presenter.dart';
 import 'package:north_stars/presenters/data_entry_for_day_presenter.dart';
+import 'package:north_stars/views/calendar_view.dart';
 import 'calorie_tracker_view.dart';
 import 'data_entry_for_day_view.dart';
 import '../models/calorie_tracker_model.dart';
@@ -15,7 +16,10 @@ import 'package:north_stars/views/camera_view.dart';
 import 'profile_page_view.dart';
 import '../presenters/profile_page_presenter.dart';
 import '../models/profile_page_model.dart';
-import 'package:north_stars/views/login_page_view.dart';
+import 'package:north_stars/views/login_page_view.dart';import 'package:north_stars/views/nutrition_goal_view.dart';
+import 'package:north_stars/models/nutrition_goal_model.dart';
+import 'package:north_stars/presenters/nutrition_goal_presenter.dart';
+
 
 class HomePage extends StatelessWidget {
   // Instantiate each presenter with the model and any required callbacks
@@ -25,11 +29,15 @@ class HomePage extends StatelessWidget {
   final ProfilePagePresenter profilePagePresenter;
   final String nutrientData = "No nutrient data loaded";
 
+  final NutritionGoalPresenter nutritionGoalPresenter;
+
   HomePage({
     super.key,
     required CalorieTrackerModel calorieTrackerModel,
     required DataEntryForDayModel dataEntryForDayModel,
     required NutrientTrackerModel nutrientTrackerModel,
+    required NutritionGoalModel nutritionGoalModel, 
+    // required NotificationService notificationService,
   })  : calorieTrackerPresenter = CalorieTrackerPresenter(
     calorieTrackerModel,
         (data) => print(data),
@@ -41,16 +49,20 @@ class HomePage extends StatelessWidget {
         nutrientTrackingPresenter = NutrientTrackingPresenter(
           nutrientTrackerModel,
               (data) => print(data),
+        ), 
+
+        nutritionGoalPresenter = NutritionGoalPresenter(
+        
         ),
-        profilePagePresenter = ProfilePagePresenter(
+         profilePagePresenter = ProfilePagePresenter(
           model: ProfilePageModel(
             username: 'User123',
             email: 'user@example.com',
             profilePictureUrl: 'https://example.com/image.png',
           ),
           updateView: (username) {},
-        );
 
+        );
 
   void _logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
@@ -61,7 +73,6 @@ class HomePage extends StatelessWidget {
           (route) => false, // Remove all previous routes
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -110,83 +121,103 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      // Wrapping body in a Stack for positioning
-      body: Stack(
-        children: [
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DayEntryPage(dataEntryForDayPresenter),
-                      ),
-                    );
-                  },
-                  child: const Text('Enter data by day'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CalorieTrackerView(calorieTrackerPresenter),
-                      ),
-                    );
-                  },
-                  child: const Text('Go to Calorie Tracker'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NutrientTrackingView(nutrientTrackingPresenter),
-                      ),
-                    );
-                  },
-                  child: const Text('Go to Nutrient Tracker'),
-                ),
-                // Uncomment and add more buttons as needed
-                // ElevatedButton(
-                //   onPressed: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //         builder: (context) => NotificationView(notificationPresenter),
-                //       ),
-                //     );
-                //   },
-                //   child: const Text('Go to Notification Service'),
-                // ),
-              ],
-            ),
-          ),
-          // Positioned widget for camera button in bottom-left corner
-          Positioned(
-            bottom: 16,
-            left: 16,
-            child: FloatingActionButton(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Navigate to DataEntry Page
+            ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CameraScreen(), // Ensure CameraScreen is imported
+                    builder: (context) => DayEntryPage(dataEntryForDayPresenter),
                   ),
                 );
               },
-              child: Icon(Icons.camera_alt),
+              child: const Text('Enter data by day'),
             ),
-          ),
-        ],
+            ElevatedButton(
+              // Navigate to Calorie Tracker Page
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CalorieTrackerView(calorieTrackerPresenter),
+                  ),
+                );
+              },
+              child: const Text('Go to Calorie Tracker'),
+            ),
+            ElevatedButton(
+              // Navigate to Nutrient Tracker Page
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NutrientTrackingView(nutrientTrackingPresenter),
+                  ),
+                );
+              },
+              child: const Text('Go to Nutrient Tracker'),
+            ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context, 
+            //       MaterialPageRoute(builder: (context) => CalendarScreen(),
+            //       ),
+            //     );
+            //   },
+            //     child: const Text('View Calendar'),
+            //     ),
+
+            // _buildNavigationButton(
+            //   context,
+            //   'View Calendar',
+            //   () => Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) => CalendarScreen(),
+            //     ),
+            //   ),
+            // ),
+              _buildNavigationButton(
+                  context,
+                  'Nutrition Goals (Intake Summary)',
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: 
+                    (context) => NutritionGoalView(),
+                    ),
+                  ),
+                )
+            // ElevatedButton(
+            //   // Navigate to Nutrient Tracker Page
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => NotificationView(notificationPresenter),
+            //       ),
+            //     );
+            //   },
+            //   child: const Text('Go to Notification Service'),
+            // ),
+          ],
+        ),
       ),
     );
   }
 }
 
+// navigation button for calendar
+Widget _buildNavigationButton(BuildContext context, String text, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: Text(text),
+    );
+  }
 // SettingsPage Widget
 class SettingsPage extends StatelessWidget {
   @override
