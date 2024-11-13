@@ -1,5 +1,3 @@
-// auth_page.dart
-
 import 'package:flutter/material.dart';
 import 'package:north_stars/views/home_page_view.dart';
 import 'package:north_stars/presenters/login_page_presenter.dart';
@@ -91,6 +89,15 @@ class _AuthPageState extends State<AuthPage> implements AuthViewContract {
           dataEntryForDayModel: DataEntryForDayModel(),
           nutrientTrackerModel: NutrientTrackerModel(),
         ),
+      ),
+    );
+  }
+
+  @override
+  void navigateToLogin() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => AuthPage(),
       ),
     );
   }
