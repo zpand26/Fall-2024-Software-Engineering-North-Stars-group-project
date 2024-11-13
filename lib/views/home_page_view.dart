@@ -19,7 +19,7 @@ class HomePage extends StatelessWidget {
   final CalorieTrackerPresenter calorieTrackerPresenter;
   final DataEntryForDayPresenter dataEntryForDayPresenter;
   final NutrientTrackingPresenter nutrientTrackingPresenter;
-  //final notificationPresenter notificationPresenter;
+  final ProfilePagePresenter profilePagePresenter;
   final String nutrientData = "No nutrient data loaded";
 
   HomePage({
