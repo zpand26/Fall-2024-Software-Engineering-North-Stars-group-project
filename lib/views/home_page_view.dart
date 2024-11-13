@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:north_stars/presenters/calorie_tracker_presenter.dart';
 import 'package:north_stars/presenters/data_entry_for_day_presenter.dart';
@@ -12,7 +11,9 @@ import 'package:north_stars/models/nutrient_tracking_model.dart';
 import 'notification_home.dart';
 import 'notification_settings_page.dart';
 import 'package:north_stars/views/camera_view.dart';
-import 'package:north_stars/views/login_page_view.dart';
+import 'profile_page_view.dart';
+import '../presenters/profile_page_presenter.dart';
+import '../models/profile_page_model.dart';
 
 class HomePage extends StatelessWidget {
   // Instantiate each presenter with the model and any required callbacks
@@ -27,7 +28,6 @@ class HomePage extends StatelessWidget {
     required CalorieTrackerModel calorieTrackerModel,
     required DataEntryForDayModel dataEntryForDayModel,
     required NutrientTrackerModel nutrientTrackerModel,
-    // required NotificationService notificationService,
   })  : calorieTrackerPresenter = CalorieTrackerPresenter(
     calorieTrackerModel,
         (data) => print(data),
@@ -39,23 +39,32 @@ class HomePage extends StatelessWidget {
         nutrientTrackingPresenter = NutrientTrackingPresenter(
           nutrientTrackerModel,
               (data) => print(data),
+        ),
+        profilePagePresenter = ProfilePagePresenter(
+          model: ProfilePageModel(
+            username: 'User123',
+            email: 'user@example.com',
+            profilePictureUrl: 'https://example.com/image.png',
+          ),
+          updateView: (username) {},
         );
-
-  void _logout(BuildContext context) async {
-    await FirebaseAuth.instance.signOut();
-    // Navigate back to the AuthPage after logging out
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const AuthPage()),
-          (route) => false, // Remove all previous routes
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Main Menu'),
+        leading: IconButton(
+          icon: const Icon(Icons.person, size: 30.0),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfilePageView(presenter: profilePagePresenter),
+              ),
+            );
+          },
+        ),
         actions: [
           PopupMenuButton<String>(
             onSelected: (String choice) {
@@ -79,11 +88,6 @@ class HomePage extends StatelessWidget {
                 );
               }).toList();
             },
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => _logout(context),
-            tooltip: 'Logout',
           ),
         ],
       ),
