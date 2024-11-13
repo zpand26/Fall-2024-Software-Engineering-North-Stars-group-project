@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:north_stars/presenters/calorie_tracker_presenter.dart';
 import 'package:north_stars/presenters/data_entry_for_day_presenter.dart';
+import 'package:north_stars/views/calendar_view.dart';
 import 'calorie_tracker_view.dart';
 import 'data_entry_for_day_view.dart';
 import '../models/calorie_tracker_model.dart';
@@ -11,6 +12,9 @@ import 'package:north_stars/models/nutrient_tracking_model.dart';
 import 'notification_home.dart';
 import 'notification_settings_page.dart';
 
+import 'package:north_stars/views/nutrition_goal_view.dart';
+import 'package:north_stars/models/nutrition_goal_model.dart';
+import 'package:north_stars/presenters/nutrition_goal_presenter.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -21,11 +25,14 @@ class HomePage extends StatelessWidget {
   //final notificationPresenter notificationPresenter;
   final String nutrientData = "No nutrient data loaded";
 
+  final NutritionGoalPresenter nutritionGoalPresenter;
+
   HomePage({
     super.key,
     required CalorieTrackerModel calorieTrackerModel,
     required DataEntryForDayModel dataEntryForDayModel,
     required NutrientTrackerModel nutrientTrackerModel,
+    required NutritionGoalModel nutritionGoalModel, 
     // required NotificationService notificationService,
   })  : calorieTrackerPresenter = CalorieTrackerPresenter(
     calorieTrackerModel,
@@ -38,6 +45,14 @@ class HomePage extends StatelessWidget {
         nutrientTrackingPresenter = NutrientTrackingPresenter(
           nutrientTrackerModel,
               (data) => print(data),
+        ), 
+
+        nutritionGoalPresenter = NutritionGoalPresenter(
+          // model: nutritionGoalModel,
+          // onUpdate: (data) => print(data),
+          // nutritionGoalModel,
+          // (data) => print(data),
+        
         );
 
   @override
@@ -112,6 +127,37 @@ class HomePage extends StatelessWidget {
               child: const Text('Go to Nutrient Tracker'),
             ),
             // ElevatedButton(
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context, 
+            //       MaterialPageRoute(builder: (context) => CalendarScreen(),
+            //       ),
+            //     );
+            //   },
+            //     child: const Text('View Calendar'),
+            //     ),
+
+            // _buildNavigationButton(
+            //   context,
+            //   'View Calendar',
+            //   () => Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) => CalendarScreen(),
+            //     ),
+            //   ),
+            // ),
+              _buildNavigationButton(
+                  context,
+                  'Nutrition Goals (Intake Summary)',
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: 
+                    (context) => NutritionGoalView(),
+                    ),
+                  ),
+                )
+            // ElevatedButton(
             //   // Navigate to Nutrient Tracker Page
             //   onPressed: () {
             //     Navigator.push(
@@ -129,6 +175,14 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+// navigation button for calendar
+Widget _buildNavigationButton(BuildContext context, String text, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: Text(text),
+    );
+  }
 // SettingsPage Widget
 class SettingsPage extends StatelessWidget {
   @override
