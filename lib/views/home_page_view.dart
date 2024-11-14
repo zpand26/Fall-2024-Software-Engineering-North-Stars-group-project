@@ -16,7 +16,8 @@ import 'package:north_stars/views/camera_view.dart';
 import 'profile_page_view.dart';
 import '../presenters/profile_page_presenter.dart';
 import '../models/profile_page_model.dart';
-import 'package:north_stars/views/login_page_view.dart';import 'package:north_stars/views/nutrition_goal_view.dart';
+import 'package:north_stars/views/login_page_view.dart';
+import 'package:north_stars/views/nutrition_goal_view.dart';
 import 'package:north_stars/models/nutrition_goal_model.dart';
 import 'package:north_stars/presenters/nutrition_goal_presenter.dart';
 
@@ -121,23 +122,25 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+      body: Stack(
+        children: [
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
             // Navigate to DataEntry Page
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DayEntryPage(dataEntryForDayPresenter),
-                  ),
-                );
-              },
-              child: const Text('Enter data by day'),
-            ),
-            ElevatedButton(
+                ElevatedButton(
+                  onPressed: () {
+                   Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DayEntryPage(dataEntryForDayPresenter),
+                    ),
+                  );
+                },
+                child: const Text('Enter data by day'),
+              ),
+              ElevatedButton(
               // Navigate to Calorie Tracker Page
               onPressed: () {
                 Navigator.push(
@@ -161,28 +164,22 @@ class HomePage extends StatelessWidget {
               },
               child: const Text('Go to Nutrient Tracker'),
             ),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     Navigator.push(
-            //       context, 
-            //       MaterialPageRoute(builder: (context) => CalendarScreen(),
-            //       ),
-            //     );
-            //   },
-            //     child: const Text('View Calendar'),
-            //     ),
-
-            // _buildNavigationButton(
-            //   context,
-            //   'View Calendar',
-            //   () => Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => CalendarScreen(),
-            //     ),
-            //   ),
-            // ),
-              _buildNavigationButton(
+            // Uncomment and add more buttons as needed
+                // ElevatedButton(
+                //   onPressed: () {
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (context) => NotificationView(notificationPresenter),
+                //       ),
+                //     );
+                //   },
+                //   child: const Text('Go to Notification Service'),
+                // ),
+              ],
+            ),
+            ),
+            _buildNavigationButton(
                   context,
                   'Nutrition Goals (Intake Summary)',
                   () => Navigator.push(
@@ -191,7 +188,25 @@ class HomePage extends StatelessWidget {
                     (context) => NutritionGoalView(),
                     ),
                   ),
-                )
+                ),
+
+            Positioned(
+            bottom: 16,
+            left: 16,
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CameraScreen(), // Ensure CameraScreen is imported
+                  ),
+                );
+              },
+              child: Icon(Icons.camera_alt),
+            ),
+            ),
+            
+              
             // ElevatedButton(
             //   // Navigate to Nutrient Tracker Page
             //   onPressed: () {
@@ -204,12 +219,12 @@ class HomePage extends StatelessWidget {
             //   },
             //   child: const Text('Go to Notification Service'),
             // ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+          
+              ],
+            ),
+          );
+        }
+      }
 
 // navigation button for calendar
 Widget _buildNavigationButton(BuildContext context, String text, VoidCallback onPressed) {

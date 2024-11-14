@@ -52,32 +52,6 @@ class _AuthPageState extends State<AuthPage> implements AuthViewContract {
     }
   }
 
-
-      // await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
-      //   'email': _emailController.text.trim(),
-      //   'createdAt': FieldValue.serverTimestamp(),
-      //   //can add additional fields here later if needed.
-      // });
-
-      
-      // Navigate to Home Page on success
-  //     Navigator.of(context).pushReplacement(
-  //       MaterialPageRoute(
-  //         builder: (context) => HomePage(
-  //           calorieTrackerModel: CalorieTrackerModel(),
-  //           dataEntryForDayModel: DataEntryForDayModel(),
-  //           nutrientTrackerModel: NutrientTrackerModel(),
-  //           nutritionGoalModel: NutritionGoalModel(),
-  //         ),
-  //       ),
-  //     );
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text(e.toString())),
-  //     );
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
