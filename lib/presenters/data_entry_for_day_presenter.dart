@@ -20,7 +20,15 @@ class DataEntryForDayPresenter {
 //display total calories
   void showDailyCalories() {
     List<int> total = dataEntryForDayModel.getDailyCalories();
-    updateView('Daily Calories: $total');
+    int monTotal = total[0];
+    int tueTotal = total[1];
+    int wedTotal = total[2];
+    int thuTotal = total[3];
+    int friTotal = total[4];
+    int satTotal = total[5];
+    int sunTotal = total[6];
+    updateView('Monday: $monTotal, Tuesday: $tueTotal, Wednesday: $wedTotal,'
+        ' Thursday: $thuTotal, Friday: $friTotal, Saturday: $satTotal, Sunday: $sunTotal');
   }
 
 

@@ -85,7 +85,6 @@ class _dayEntryViewState extends State<DayEntryView> {
                   widget.dataEntryForDayPresenter.addDailyCalorieEntry(
                       calories, listOfDays[i]);
                 }
-                listOfDays.clear();
                 _dayEntryController.clear();
               },
               child: Text('Add Calorie Entry'),
@@ -117,16 +116,10 @@ class _dayEntryViewState extends State<DayEntryView> {
                   ),
                 ),
                 onSelect: (values) {
-                  int valueLength = values.length;
-                  //If day has been selected, re-clicking the day unselects the day
-                  for (int i = 0; i<valueLength; i++) {
-                    if (listOfDays.contains(values[i])) {
-                      listOfDays.remove(values[i]);
-                    }
-                  }
-                  listOfDays.addAll(values);
+                    listOfDays = values;
 
-                  print(values);
+                  print(values); //Tests value selector in terminal
+                  print(listOfDays);
                 },
               ),
             ),

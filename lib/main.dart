@@ -10,7 +10,10 @@ import 'package:north_stars/models/data_entry_for_day_model.dart';
 import 'models/calorie_tracker_model.dart';
 import 'presenters/calorie_tracker_presenter.dart';
 import 'views/home_page_view.dart';
-
+import 'package:galleryimage/galleryimage.dart';
+import 'models/photo_gallery_model.dart';
+import 'presenters/photo_gallery_presenter.dart';
+import 'views/photo_gallery_view.dart';
 
 
 
@@ -22,7 +25,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   final CalorieTrackerModel calorieTrackerModel = CalorieTrackerModel();
   final DataEntryForDayModel dataEntryForDayModel = DataEntryForDayModel();
-
+  final PhotoGalleryPresenter photoGalleryPresenter = PhotoGalleryPresenter(PhotoGalleryModel());
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -41,6 +44,7 @@ class MyApp extends StatelessWidget {
             home: HomePage(
               calorieTrackerModel: calorieTrackerModel,
               dataEntryForDayModel: dataEntryForDayModel,
+              photoGalleryPresenter: photoGalleryPresenter,
             ),
           );
         }
@@ -54,3 +58,4 @@ class MyApp extends StatelessWidget {
       });
   }
 }
+
