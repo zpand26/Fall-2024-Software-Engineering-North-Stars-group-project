@@ -20,6 +20,8 @@ import 'package:north_stars/views/login_page_view.dart';
 import 'package:north_stars/views/nutrition_goal_view.dart';
 import 'package:north_stars/models/nutrition_goal_model.dart';
 import 'package:north_stars/presenters/nutrition_goal_presenter.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:line_icons/line_icons.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -37,7 +39,7 @@ class HomePage extends StatelessWidget {
     required CalorieTrackerModel calorieTrackerModel,
     required DataEntryForDayModel dataEntryForDayModel,
     required NutrientTrackerModel nutrientTrackerModel,
-    required NutritionGoalModel nutritionGoalModel, 
+    required NutritionGoalModel nutritionGoalModel,
     // required NotificationService notificationService,
   })  : calorieTrackerPresenter = CalorieTrackerPresenter(
     calorieTrackerModel,
@@ -50,10 +52,10 @@ class HomePage extends StatelessWidget {
         nutrientTrackingPresenter = NutrientTrackingPresenter(
           nutrientTrackerModel,
               (data) => print(data),
-        ), 
+        ),
 
         nutritionGoalPresenter = NutritionGoalPresenter(
-        
+
         ),
          profilePagePresenter = ProfilePagePresenter(
           model: ProfilePageModel(
@@ -86,7 +88,7 @@ class HomePage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ProfilePageView(presenter: profilePagePresenter),
+                builder: (context) => ProfilePageView(profilePagePresenter: profilePagePresenter),
               ),
             );
           },
@@ -184,7 +186,7 @@ class HomePage extends StatelessWidget {
                   'Nutrition Goals (Intake Summary)',
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: 
+                    MaterialPageRoute(builder:
                     (context) => NutritionGoalView(),
                     ),
                   ),
@@ -205,8 +207,8 @@ class HomePage extends StatelessWidget {
               child: Icon(Icons.camera_alt),
             ),
             ),
-            
-              
+
+
             // ElevatedButton(
             //   // Navigate to Nutrient Tracker Page
             //   onPressed: () {
@@ -219,7 +221,7 @@ class HomePage extends StatelessWidget {
             //   },
             //   child: const Text('Go to Notification Service'),
             // ),
-          
+
               ],
             ),
           );

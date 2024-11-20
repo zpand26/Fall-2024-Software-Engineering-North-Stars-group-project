@@ -3,9 +3,9 @@ import 'package:intl/intl.dart'; //for the date
 import '../presenters/profile_page_presenter.dart';
 
 class ProfilePageView extends StatefulWidget {
-  final ProfilePagePresenter presenter;
+  final ProfilePagePresenter profilePagePresenter;
 
-  ProfilePageView({Key? key, required this.presenter}) : super(key: key);
+  ProfilePageView({Key? key, required this.profilePagePresenter}) : super(key: key);
 
   @override
   _ProfilePageViewState createState() => _ProfilePageViewState();
@@ -24,21 +24,21 @@ class _ProfilePageViewState extends State<ProfilePageView> {
     // Load all fields from the model
     _loadProfileData();
 
-    widget.presenter.updateView = (username) {
+    widget.profilePagePresenter.updateView = (username) {
       setState(() {
         _nameController.text = username;
       });
     };
 
-    widget.presenter.loadUsername();
+    widget.profilePagePresenter.loadUsername();
   }
 
   // Method to load profile data from the model
   void _loadProfileData() {
     setState(() {
-      _nameController.text = widget.presenter.model.username;
-      _mobilePhoneController.text = widget.presenter.model.mobilePhone ?? '';
-      _selectedBirthday = widget.presenter.model.birthday;
+      _nameController.text = widget.profilePagePresenter.model.username;
+      _mobilePhoneController.text = widget.profilePagePresenter.model.mobilePhone ?? '';
+      _selectedBirthday = widget.profilePagePresenter.model.birthday;
     });
   }
 
@@ -49,16 +49,16 @@ class _ProfilePageViewState extends State<ProfilePageView> {
     bool hasChanges = false;
 
     // Only update the model if there are changes
-    if (newUsername != widget.presenter.model.username) {
-      widget.presenter.saveUsername(newUsername);
+    if (newUsername != widget.profilePagePresenter.model.username) {
+      widget.profilePagePresenter.saveUsername(newUsername);
       hasChanges = true;
     }
-    if (newMobilePhone != widget.presenter.model.mobilePhone) {
-      widget.presenter.model.updateMobilePhone(newMobilePhone);
+    if (newMobilePhone != widget.profilePagePresenter.model.mobilePhone) {
+      widget.profilePagePresenter.model.updateMobilePhone(newMobilePhone);
       hasChanges = true;
     }
-    if (_selectedBirthday != null && _selectedBirthday != widget.presenter.model.birthday) {
-      widget.presenter.model.updateBirthday(_selectedBirthday!);
+    if (_selectedBirthday != null && _selectedBirthday != widget.profilePagePresenter.model.birthday) {
+      widget.profilePagePresenter.model.updateBirthday(_selectedBirthday!);
       hasChanges = true;
     }
 
@@ -93,14 +93,14 @@ class _ProfilePageViewState extends State<ProfilePageView> {
             Center(
               child: CircleAvatar(
                 radius: 50,
-                backgroundImage: NetworkImage(widget.presenter.model.profilePictureUrl),
+                backgroundImage: NetworkImage(widget.profilePagePresenter.model.profilePictureUrl),
                 onBackgroundImageError: (_, __) => const Icon(Icons.person, size: 50),
               ),
             ),
             const SizedBox(height: 20),
             Center(
               child: Text(
-                widget.presenter.model.email,
+                widget.profilePagePresenter.model.email,
                 style: const TextStyle(fontSize: 16),
               ),
             ),
