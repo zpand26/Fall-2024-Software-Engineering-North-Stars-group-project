@@ -61,6 +61,11 @@ class HomePage extends StatelessWidget {
         nutritionGoalPresenter = NutritionGoalPresenter(
 
         ),
+
+        photoGalleryPresenter = PhotoGalleryPresenter(
+            PhotoGalleryModel()
+        ),
+
          profilePagePresenter = ProfilePagePresenter(
           model: ProfilePageModel(
             username: 'User123',
@@ -80,8 +85,6 @@ class HomePage extends StatelessWidget {
           (route) => false, // Remove all previous routes
     );
   }
-    photoGalleryPresenter = PhotoGalleryPresenter(PhotoGalleryModel()),
-        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +157,7 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CalorieTrackingView(calorieTrackerPresenter),
+                    builder: (context) => CalorieTrackerView(calorieTrackerPresenter),
                   ),
                 );
               },
@@ -171,6 +174,17 @@ class HomePage extends StatelessWidget {
                 );
               },
               child: const Text('Go to Nutrient Tracker'),
+            ),
+            ElevatedButton(
+              onPressed: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PhotoGalleryView(presenter: photoGalleryPresenter),
+                  ),
+                );
+              },
+              child: const Text('View Photo Gallery'),
             ),
             // Uncomment and add more buttons as needed
                 // ElevatedButton(
@@ -226,23 +240,11 @@ class HomePage extends StatelessWidget {
             //   },
             //   child: const Text('Go to Notification Service'),
             // ),
-
-
-            ElevatedButton(
-              onPressed: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PhotoGalleryView(presenter: photoGalleryPresenter),
-                  ),
-                );
-              },
-              child: const Text('View Photo Gallery'),
             ),
+
           ],
         ),
-      ),
-    );
+      );
   }
 }
 

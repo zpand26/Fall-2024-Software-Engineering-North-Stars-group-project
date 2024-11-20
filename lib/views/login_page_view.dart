@@ -7,6 +7,8 @@ import 'package:north_stars/models/calorie_tracker_model.dart';
 import 'package:north_stars/models/data_entry_for_day_model.dart';
 import 'package:north_stars/models/nutrient_tracking_model.dart';
 import 'package:north_stars/models/nutrition_goal_model.dart';
+import '../models/photo_gallery_model.dart';
+import '../presenters/photo_gallery_presenter.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -107,6 +109,7 @@ class _AuthPageState extends State<AuthPage> implements AuthViewContract {
           dataEntryForDayModel: DataEntryForDayModel(),
           nutrientTrackerModel: NutrientTrackerModel(),
           nutritionGoalModel: NutritionGoalModel(),
+          photoGalleryPresenter: PhotoGalleryPresenter(PhotoGalleryModel()),
         ),
       ),
     );
