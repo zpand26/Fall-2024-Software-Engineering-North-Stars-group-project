@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'models/notification_model.dart';
-import 'presenters/notification_presenter.dart';
-import 'views/notification_view.dart';
-import 'notification/home.dart';
+import 'package:north_stars/models/nutrient_tracking_model.dart';
+import 'package:north_stars/views/login_page_view.dart';
 import 'notification/initialization.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:north_stars/models/data_entry_for_day_model.dart';
 import 'models/calorie_tracker_model.dart';
@@ -14,18 +11,26 @@ import 'package:galleryimage/galleryimage.dart';
 import 'models/photo_gallery_model.dart';
 import 'presenters/photo_gallery_presenter.dart';
 import 'views/photo_gallery_view.dart';
+//import 'package:north_stars/presenters/notification_presenter.dart';
+
 
 
 
 void main() async {
   await initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
+
 class MyApp extends StatelessWidget {
+  final NutrientTrackerModel nutrientTrackerModel = NutrientTrackerModel();
   final CalorieTrackerModel calorieTrackerModel = CalorieTrackerModel();
   final DataEntryForDayModel dataEntryForDayModel = DataEntryForDayModel();
   final PhotoGalleryPresenter photoGalleryPresenter = PhotoGalleryPresenter(PhotoGalleryModel());
+
+  MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -40,12 +45,8 @@ class MyApp extends StatelessWidget {
           }
         //Once complete, show application
         if (snapshot.connectionState == ConnectionState.done){
-          return MaterialApp(
-            home: HomePage(
-              calorieTrackerModel: calorieTrackerModel,
-              dataEntryForDayModel: dataEntryForDayModel,
-              photoGalleryPresenter: photoGalleryPresenter,
-            ),
+          return const MaterialApp(
+            home: AuthPage(),
           );
         }
         //loading indicator
@@ -58,4 +59,3 @@ class MyApp extends StatelessWidget {
       });
   }
 }
-

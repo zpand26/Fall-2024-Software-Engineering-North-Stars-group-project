@@ -41,7 +41,7 @@ class _dayEntryViewState extends State<DayEntryView> {
 
   @override
   Widget build(BuildContext context) {
-    final customWidgetKey = new GlobalKey<SelectWeekDaysState>();
+    final customWidgetKey = GlobalKey<SelectWeekDaysState>();
 
     SelectWeekDays selectWeekDays = SelectWeekDays(
       key: customWidgetKey,
@@ -63,21 +63,21 @@ class _dayEntryViewState extends State<DayEntryView> {
     );
     return Scaffold(
       appBar: AppBar(
-        title: Text('Daily Calories'),
+        title: const Text('Daily Calories'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             TextField(
               controller: _dayEntryController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Enter Calories and Select Day',
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
                 int calories = int.tryParse(_dayEntryController.text) ?? 0;
@@ -87,14 +87,14 @@ class _dayEntryViewState extends State<DayEntryView> {
                 }
                 _dayEntryController.clear();
               },
-              child: Text('Add Calorie Entry'),
+              child: const Text('Add Calorie Entry'),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
                 widget.dataEntryForDayPresenter.showDailyCalories();
               },
-              child: Text('Show Calories per Day'),
+              child: const Text('Show Calories per Day'),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -104,12 +104,12 @@ class _dayEntryViewState extends State<DayEntryView> {
                 days: _days,
                 boxDecoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30.0),
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     begin: Alignment.topLeft,
                     // 10% of the width, so there are ten blinds.
                     colors: [
-                      const Color(0xFFE55CE4),
-                      const Color(0xFFBB75FB)
+                      Color(0xFFE55CE4),
+                      Color(0xFFBB75FB)
                     ], // whitish to gray
                     tileMode:
                     TileMode.repeated, // repeats the gradient over the canvas
@@ -123,15 +123,15 @@ class _dayEntryViewState extends State<DayEntryView> {
                 },
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
                 // Pop the current page (CalorieTrackerPage) off the stack and go back to the HomePage
                 Navigator.pop(context);
               },
-              child: Text('Back to Home'),
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.redAccent),
+              child: const Text('Back to Home'),
             ),
             SizedBox (height: 20.0),
             Text(
