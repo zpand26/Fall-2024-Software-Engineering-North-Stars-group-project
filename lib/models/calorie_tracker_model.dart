@@ -27,7 +27,7 @@ class CalorieTrackerModel {
     if (userId.isNotEmpty) {
       await _firestore
           .collection('users')
-          .doc(userId)
+          .doc(userId)  
           .collection('liquidCalories')
           .add({'calorie': calorie, 'timestamp': DateTime.now()});
     }

@@ -7,6 +7,7 @@ import 'package:north_stars/models/calorie_tracker_model.dart';
 import 'package:north_stars/models/data_entry_for_day_model.dart';
 import 'package:north_stars/models/nutrient_tracking_model.dart';
 import 'package:north_stars/models/nutrition_goal_model.dart';
+import 'package:north_stars/views/nav_bar.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -102,7 +103,7 @@ class _AuthPageState extends State<AuthPage> implements AuthViewContract {
   void navigateToHome() {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => HomePage(
+        builder: (context) => NavBar(
           calorieTrackerModel: CalorieTrackerModel(),
           dataEntryForDayModel: DataEntryForDayModel(),
           nutrientTrackerModel: NutrientTrackerModel(),
