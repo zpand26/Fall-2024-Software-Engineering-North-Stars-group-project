@@ -26,6 +26,7 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
           IconButton(
             icon: const Icon(Icons.summarize),
             onPressed: _showIntakeSummary,
+            padding: const EdgeInsets.only(top: 35, right: 30),
           ),
         ],
       ),
