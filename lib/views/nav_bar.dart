@@ -78,6 +78,7 @@ class _NavBarState extends State<NavBar> {
       NutrientTrackingView(widget.nutrientTrackingPresenter),
       CameraScreen(),
       ProfilePageView(profilePagePresenter: widget.profilePagePresenter),
+      // NotificationHome(),
     ];
   }
 
@@ -149,6 +150,10 @@ class _NavBarState extends State<NavBar> {
               icon: LineIcons.user,
               // text: 'Profile',
             ),
+            // GButton(
+            //   icon: LineIcons.cog,
+            //   // text: 'Profile',
+            // ),
           ],
         ),
       ),
