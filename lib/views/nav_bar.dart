@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:north_stars/presenters/calorie_tracker_presenter.dart';
 import 'package:north_stars/presenters/camera_presenter.dart';
 import 'package:north_stars/presenters/data_entry_for_day_presenter.dart';
+import 'package:north_stars/presenters/photo_gallery_presenter.dart';
 import 'package:north_stars/views/calendar_view.dart';
 import 'calorie_tracker_view.dart';
 import 'data_entry_for_day_view.dart';
@@ -26,6 +27,9 @@ import 'package:line_icons/line_icons.dart';
 import 'package:north_stars/views/profile_page_view.dart';
 import 'package:north_stars/presenters/calendar_presenter.dart';
 import 'package:north_stars/models/camera_model.dart';
+import 'package:north_stars/presenters/photo_gallery_presenter.dart';
+import 'package:north_stars/models/photo_gallery_model.dart';
+
 
 class NavBar extends StatefulWidget {
   final CalorieTrackerPresenter calorieTrackerPresenter;
@@ -33,6 +37,7 @@ class NavBar extends StatefulWidget {
   final NutrientTrackingPresenter nutrientTrackingPresenter;
   final ProfilePagePresenter profilePagePresenter;
   final NutritionGoalPresenter nutritionGoalPresenter;
+  final PhotoGalleryPresenter photoGalleryPresenter;
   //final CalendarScreenPresenter calenderScreenPresenter;
 
 
@@ -42,6 +47,7 @@ class NavBar extends StatefulWidget {
     required DataEntryForDayModel dataEntryForDayModel,
     required NutrientTrackerModel nutrientTrackerModel,
     required NutritionGoalModel nutritionGoalModel,
+    required PhotoGalleryModel photoGalleryModel,
   }) : calorieTrackerPresenter = CalorieTrackerPresenter(calorieTrackerModel, (data) => print(data)),
         dataEntryForDayPresenter = DataEntryForDayPresenter(dataEntryForDayModel, (data) => print(data)),
         nutrientTrackingPresenter = NutrientTrackingPresenter(nutrientTrackerModel, (data) => print(data)),
@@ -53,7 +59,8 @@ class NavBar extends StatefulWidget {
           ),
           updateView: (username) {},
         ),
-        nutritionGoalPresenter = NutritionGoalPresenter();
+        nutritionGoalPresenter = NutritionGoalPresenter(),
+        photoGalleryPresenter = PhotoGalleryPresenter(photoGalleryModel);
 
   @override
   _NavBarState createState() => _NavBarState();
@@ -67,7 +74,7 @@ class _NavBarState extends State<NavBar> {
   void initState() {
     super.initState();
     _pages = [
-      CalendarScreen(),
+      NutritionGoalView(),
       NutrientTrackingView(widget.nutrientTrackingPresenter),
       CameraScreen(),
       ProfilePageView(profilePagePresenter: widget.profilePagePresenter),

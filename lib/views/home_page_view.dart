@@ -22,6 +22,9 @@ import 'package:north_stars/models/nutrition_goal_model.dart';
 import 'package:north_stars/presenters/nutrition_goal_presenter.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:north_stars/presenters/photo_gallery_presenter.dart';
+import 'package:north_stars/models/photo_gallery_model.dart';
+import 'package:north_stars/views/photo_gallery_view.dart';
 
 
 class HomePage extends StatelessWidget {
