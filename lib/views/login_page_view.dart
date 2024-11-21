@@ -56,6 +56,16 @@ class _AuthPageState extends State<AuthPage> implements AuthViewContract {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'lib/assets/images/north-star.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+        ],
+      ),
       appBar: AppBar(
         title: Text(_isLogin ? 'Login' : 'Sign Up'),
       ),
