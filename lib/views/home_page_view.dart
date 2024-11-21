@@ -28,6 +28,7 @@ class HomePage extends StatelessWidget {
   // Instantiate each presenter with the model and any required callbacks
   final CalorieTrackerPresenter calorieTrackerPresenter;
   final DataEntryForDayPresenter dataEntryForDayPresenter;
+  final PhotoGalleryPresenter photoGalleryPresenter;
   final NutrientTrackingPresenter nutrientTrackingPresenter;
   final ProfilePagePresenter profilePagePresenter;
   final String nutrientData = "No nutrient data loaded";
@@ -41,6 +42,7 @@ class HomePage extends StatelessWidget {
     required NutrientTrackerModel nutrientTrackerModel,
     required NutritionGoalModel nutritionGoalModel,
     // required NotificationService notificationService,
+    required PhotoGalleryPresenter photoGalleryPresenter,
   })  : calorieTrackerPresenter = CalorieTrackerPresenter(
     calorieTrackerModel,
         (data) => print(data),
@@ -57,6 +59,11 @@ class HomePage extends StatelessWidget {
         nutritionGoalPresenter = NutritionGoalPresenter(
 
         ),
+
+        photoGalleryPresenter = PhotoGalleryPresenter(
+            PhotoGalleryModel()
+        ),
+
          profilePagePresenter = ProfilePagePresenter(
           model: ProfilePageModel(
             username: 'User123',
@@ -131,18 +138,18 @@ class HomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
             // Navigate to DataEntry Page
-                ElevatedButton(
-                  onPressed: () {
-                   Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DayEntryPage(dataEntryForDayPresenter),
-                    ),
-                  );
-                },
-                child: const Text('Enter data by day'),
-              ),
-              ElevatedButton(
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DayEntryView(dataEntryForDayPresenter),
+                  ),
+                );
+              },
+              child: const Text('Enter data by day'),
+            ),
+            ElevatedButton(
               // Navigate to Calorie Tracker Page
               onPressed: () {
                 Navigator.push(
@@ -165,6 +172,17 @@ class HomePage extends StatelessWidget {
                 );
               },
               child: const Text('Go to Nutrient Tracker'),
+            ),
+            ElevatedButton(
+              onPressed: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PhotoGalleryView(presenter: photoGalleryPresenter),
+                  ),
+                );
+              },
+              child: const Text('View Photo Gallery'),
             ),
             // Uncomment and add more buttons as needed
                 // ElevatedButton(
@@ -206,7 +224,6 @@ class HomePage extends StatelessWidget {
               },
               child: Icon(Icons.camera_alt),
             ),
-            ),
 
 
             // ElevatedButton(
@@ -221,12 +238,13 @@ class HomePage extends StatelessWidget {
             //   },
             //   child: const Text('Go to Notification Service'),
             // ),
-
-              ],
             ),
-          );
-        }
-      }
+
+          ],
+        ),
+      );
+  }
+}
 
 // navigation button for calendar
 Widget _buildNavigationButton(BuildContext context, String text, VoidCallback onPressed) {

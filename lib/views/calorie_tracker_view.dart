@@ -31,8 +31,9 @@ class _CalorieTrackerViewState extends State<CalorieTrackerView> {
       appBar: AppBar(
         title: const Text('Calorie Tracker'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
             TextField(
