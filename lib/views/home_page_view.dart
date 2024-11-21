@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:north_stars/presenters/calorie_tracker_presenter.dart';
 import 'package:north_stars/presenters/data_entry_for_day_presenter.dart';
-import 'package:north_stars/views/calendar_view.dart';
 import 'calorie_tracker_view.dart';
 import 'data_entry_for_day_view.dart';
 import '../models/calorie_tracker_model.dart';

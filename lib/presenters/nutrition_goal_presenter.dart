@@ -1,4 +1,3 @@
-// presenters/calendar_presenter.dart
 import '../models/nutrition_goal_model.dart';
 
 class NutritionGoalPresenter {
