@@ -6,36 +6,18 @@ class DataEntryForDayPresenter {
 
   DataEntryForDayPresenter(this.dataEntryForDayModel, this.updateView);
 
-  //data fetching
-  void loadData() async{
-    String data = await dataEntryForDayModel.fetchData();
-    updateView(data);
+  // Add daily calorie entry for a specific day and week
+  void addDailyCalorieEntry(int calorie, String day, String week) {
+    dataEntryForDayModel.addDailyCalories(calorie, day, week);
+    updateView('Calorie entries added for $week.');
   }
 
-  void addDailyCalorieEntry(int calorie, String day) {
-    dataEntryForDayModel.addDailyCalories(calorie, day);
-    updateView('Calorie entries added for days.');
+  // Show daily calories for the selected week
+  void showDailyCalories(String selectedWeek) {
+    List<int> total = dataEntryForDayModel.getDailyCalories(selectedWeek);
+    String weekMessage = "$selectedWeek: ";
+    weekMessage += 'Mon: ${total[0]}, Tue: ${total[1]}, Wed: ${total[2]}, '
+        'Thu: ${total[3]}, Fri: ${total[4]}, Sat: ${total[5]}, Sun: ${total[6]}';
+    updateView(weekMessage);
   }
-
-//display total calories
-  void showDailyCalories() {
-    List<int> total = dataEntryForDayModel.getDailyCalories();
-    int monTotal = total[0];
-    int tueTotal = total[1];
-    int wedTotal = total[2];
-    int thuTotal = total[3];
-    int friTotal = total[4];
-    int satTotal = total[5];
-    int sunTotal = total[6];
-    updateView('Monday: $monTotal, Tuesday: $tueTotal, Wednesday: $wedTotal,'
-        ' Thursday: $thuTotal, Friday: $friTotal, Saturday: $satTotal, Sunday: $sunTotal');
-  }
-
-
-  //adding calories for day
-  /*void addCaloriesForDay(int dayCalorie){
-      model.addCaloriesForDay(dayCalorie);
-      updateView('Day updated. Day: ${model.getSpecificDay()}. Calories: $dayCalorie.');
-   }*/
-
 }
