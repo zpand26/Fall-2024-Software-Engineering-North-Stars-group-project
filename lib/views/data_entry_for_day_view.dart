@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:north_stars/presenters/data_entry_for_day_presenter.dart';
-import 'package:north_stars/presenters/calorie_tracker_presenter.dart';
 import 'package:day_picker/day_picker.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:north_stars/presenters/data_entry_for_day_presenter.dart';
+import '../presenters/calorie_tracker_presenter.dart';
 
 class DayEntryView extends StatefulWidget {
   final DataEntryForDayPresenter dataEntryForDayPresenter;
@@ -9,7 +10,7 @@ class DayEntryView extends StatefulWidget {
   const DayEntryView(this.dataEntryForDayPresenter, {super.key});
 
   @override
-  _DayEntryViewState createState() => _DayEntryViewState();
+  _dayEntryViewState createState() => _dayEntryViewState();
 }
 
 final List<DayInWeek> _days = [
@@ -23,18 +24,21 @@ final List<DayInWeek> _days = [
 ];
 
 List<String> listOfDays = [];
-String selectedWeek = 'Week 1';  // Default selected week
 
-class _DayEntryViewState extends State<DayEntryView> {
+class _dayEntryViewState extends State<DayEntryView> {
   final TextEditingController _dayEntryController = TextEditingController();
-  String _displayMessage = ''; // Stores message from presenter
+  String _displayMessage = ''; //Stores message from presenter
+  final CalendarFormat _calendarFormat = CalendarFormat.week;
+  DateTime _selectedDay = DateTime.now();
+  DateTime _focusedDay = DateTime.now();
+  final Map<DateTime, List<String>> _events = {};
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
-    // Initialize the updateView callback
-    widget.dataEntryForDayPresenter.updateView = (String message) {
-      setState(() {
+    //Initialize updateView callback
+    widget.dataEntryForDayPresenter.updateView = (String message){
+      setState((){
         _displayMessage = message;
       });
     };
@@ -42,6 +46,26 @@ class _DayEntryViewState extends State<DayEntryView> {
 
   @override
   Widget build(BuildContext context) {
+    final customWidgetKey = GlobalKey<SelectWeekDaysState>();
+
+    SelectWeekDays selectWeekDays = SelectWeekDays(
+      key: customWidgetKey,
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      days: _days,
+      border: false,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width / 1.4,
+      boxDecoration: BoxDecoration(
+        color: Colors.red,
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      onSelect: (values) {
+        print(values);
+      },
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('Daily Calories'),
@@ -51,25 +75,24 @@ class _DayEntryViewState extends State<DayEntryView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // Week selection dropdown
-            DropdownButton<String>(
-              value: selectedWeek,
-              onChanged: (String? newWeek) {
+            TableCalendar(
+              firstDay: DateTime.utc(2010, 10, 16),
+              lastDay: DateTime.utc(2030, 3, 14),
+              focusedDay: _focusedDay,
+              calendarFormat: _calendarFormat,
+              selectedDayPredicate: (day) {
+                return isSameDay(_selectedDay, day);
+              },
+              onDaySelected: (selectedDay, focusedDay) {
                 setState(() {
-                  selectedWeek = newWeek!;
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
                 });
               },
-              items: ['Week 1', 'Week 2', 'Week 3', 'Week 4']
-                  .map<DropdownMenuItem<String>>((String week) {
-                return DropdownMenuItem<String>(
-                  value: week,
-                  child: Text(week),
-                );
-              }).toList(),
+              eventLoader: (day) {
+                return _events[day] ?? [];
+              },
             ),
-            const SizedBox(height: 16.0),
-
-            // Text field for entering calories
             TextField(
               controller: _dayEntryController,
               keyboardType: TextInputType.number,
@@ -78,63 +101,62 @@ class _DayEntryViewState extends State<DayEntryView> {
               ),
             ),
             const SizedBox(height: 16.0),
-
-            // Button to add calorie entry for the selected days
             ElevatedButton(
               onPressed: () {
                 int calories = int.tryParse(_dayEntryController.text) ?? 0;
-                for (String day in listOfDays) {
+                for (int i = 0; i < listOfDays.length; i++) {
                   widget.dataEntryForDayPresenter.addDailyCalorieEntry(
-                      calories, day, selectedWeek);
+                      calories, listOfDays[i]);
                 }
                 _dayEntryController.clear();
               },
               child: const Text('Add Calorie Entry'),
             ),
             const SizedBox(height: 16.0),
-
-            // Button to show daily calories for the selected week
             ElevatedButton(
               onPressed: () {
-                widget.dataEntryForDayPresenter.showDailyCalories(selectedWeek);
+                widget.dataEntryForDayPresenter.showDailyCalories();
               },
               child: const Text('Show Calories per Day'),
             ),
-            const SizedBox(height: 16.0),
-
-            // Weekday selector for picking days
-            SelectWeekDays(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              days: _days,
-              boxDecoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30.0),
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  colors: [Color(0xFFE55CE4), Color(0xFFBB75FB)],
-                  tileMode: TileMode.repeated,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SelectWeekDays(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                days: _days,
+                boxDecoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.0),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    // 10% of the width, so there are ten blinds.
+                    colors: [
+                      Color(0xFFE55CE4),
+                      Color(0xFFBB75FB)
+                    ], // whitish to gray
+                    tileMode:
+                    TileMode.repeated, // repeats the gradient over the canvas
+                  ),
                 ),
+                onSelect: (values) {
+                  listOfDays = values;
+
+                  print(values); //Tests value selector in terminal
+                  print(listOfDays);
+                },
               ),
-              onSelect: (values) {
-                listOfDays = values;
-                print('Selected Days: $values');
-              },
             ),
             const SizedBox(height: 16.0),
-
-            // Button to navigate back to the home page
             ElevatedButton(
               onPressed: () {
+                // Pop the current page (CalorieTrackerPage) off the stack and go back to the HomePage
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
-              ),
+                  backgroundColor: Colors.redAccent),
               child: const Text('Back to Home'),
             ),
-            const SizedBox(height: 20.0),
-
-            // Display the message from the presenter
+            SizedBox (height: 20.0),
             Text(
               _displayMessage,
               style: TextStyle(fontSize: 18, color: Colors.blueAccent),
