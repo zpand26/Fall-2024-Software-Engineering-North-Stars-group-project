@@ -29,6 +29,7 @@ import 'package:north_stars/presenters/calendar_presenter.dart';
 import 'package:north_stars/models/camera_model.dart';
 import 'package:north_stars/presenters/photo_gallery_presenter.dart';
 import 'package:north_stars/models/photo_gallery_model.dart';
+import 'package:north_stars/views/photo_gallery_view.dart';
 
 
 class NavBar extends StatefulWidget {
@@ -83,7 +84,7 @@ class _NavBarState extends State<NavBar> {
     _pages = [
       NutritionGoalView(),
       NutrientTrackingView(widget.nutrientTrackingPresenter),
-      CameraScreen(),
+    PhotoGalleryView(presenter: widget.photoGalleryPresenter),
       ProfilePageView(
         profilePagePresenter: widget.profilePagePresenter,
         photoGalleryPresenter: widget.photoGalleryPresenter, // Added presenter
