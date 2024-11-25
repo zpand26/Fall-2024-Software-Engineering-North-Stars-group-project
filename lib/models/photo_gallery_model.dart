@@ -6,42 +6,46 @@ class PhotoGalleryModel {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  // In-memory storage of photo URLs
-  final List<String> photoUrls = [];
-
   // Upload a photo to Firebase Storage and return its URL
-  Future<String> uploadPhoto(File photo) async {
+  Future<String> uploadPhoto(File photo, String userId) async {
     try {
+      // Create user-specific path
       final fileName = DateTime.now().toIso8601String();
-      final storageRef = _storage.ref().child('gallery/$fileName.jpg');
+      final storageRef = _storage.ref().child('user_photos/$userId/$fileName.jpg');
 
       final uploadTask = await storageRef.putFile(photo);
       final downloadUrl = await uploadTask.ref.getDownloadURL();
 
-      print('Download URL: $downloadUrl'); // Debug log
-
-      // Save photo URL to Firestore
-      await _firestore.collection('gallery').add({'url': downloadUrl});
-      print('URL saved to Firestore'); // Debug log
-
-      photoUrls.add(downloadUrl);
       return downloadUrl;
     } catch (e) {
-      print('Error uploading photo: $e'); // Debug log
-      throw Exception('Failed to upload photo');
+      throw Exception('Error uploading photo: $e');
     }
   }
-  // Fetch all photo URLs from Firestore
-  Future<List<String>> fetchPhotos() async {
+
+  // Save the photo URL to Firestore
+  Future<void> savePhotoUrlToFirestore(String downloadUrl, String userId) async {
     try {
-      final snapshot = await _firestore.collection('gallery').get();
-
-      photoUrls.clear();
-      photoUrls.addAll(snapshot.docs.map((doc) => doc['url'] as String));
-
-      return photoUrls;
+      await _firestore.collection('users').doc(userId).collection('gallery').add({
+        'url': downloadUrl,
+        'uploadedAt': Timestamp.now(),
+      });
     } catch (e) {
-      throw Exception('Error fetching photos: $e');
+      throw Exception('Error saving photo URL to Firestore: $e');
+    }
+  }
+
+  // Fetch user-specific photo URLs from Firestore
+  Future<List<String>> fetchUserPhotos(String userId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('gallery')
+          .get();
+
+      return snapshot.docs.map((doc) => doc['url'] as String).toList();
+    } catch (e) {
+      throw Exception('Error fetching user photos: $e');
     }
   }
 }

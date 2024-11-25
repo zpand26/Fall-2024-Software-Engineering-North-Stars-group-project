@@ -67,7 +67,9 @@ class HomePage extends StatelessWidget {
             PhotoGalleryModel(),
             () {
               print("Photo gallery view updated");
-            }
+            },
+          FirebaseAuth.instance.currentUser?.uid ?? '',
+
         ),
 
          profilePagePresenter = ProfilePagePresenter(

@@ -66,6 +66,7 @@ class NavBar extends StatefulWidget {
 
       print("Photo gallery view updated");
     },
+          FirebaseAuth.instance.currentUser?.uid ?? '',
   );
 
   @override

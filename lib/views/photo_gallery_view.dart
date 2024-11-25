@@ -14,6 +14,7 @@ class PhotoGalleryView extends StatefulWidget {
 
 class _PhotoGalleryViewState extends State<PhotoGalleryView> {
   late PhotoGalleryPresenter _presenter;
+  List<String> _photos = [];
   bool _isLoading = false;
 
   @override
@@ -28,8 +29,11 @@ class _PhotoGalleryViewState extends State<PhotoGalleryView> {
   // Load photos from Firestore
   Future<void> _loadPhotos() async {
     setState(() => _isLoading = true);
-    await _presenter.fetchPhotos();
-    setState(() => _isLoading = false);
+    final photos = await _presenter.getPhotos();
+    setState(() {
+      _photos = photos;
+      _isLoading = false;
+    });
   }
 
   // Capture a photo using the camera and upload it
@@ -40,24 +44,22 @@ class _PhotoGalleryViewState extends State<PhotoGalleryView> {
     if (pickedFile != null) {
       setState(() => _isLoading = true);
       await _presenter.addPhoto(File(pickedFile.path));
+      await _loadPhotos(); // Refresh the photo list
       setState(() => _isLoading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final photos = _presenter.getPhotos();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Photo Gallery'),
       ),
       body: Column(
         children: [
-          if (_isLoading)
-            const LinearProgressIndicator(),
+          if (_isLoading) const LinearProgressIndicator(),
           Expanded(
-            child: photos.isEmpty
+            child: _photos.isEmpty
                 ? const Center(child: Text('No photos available'))
                 : GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -65,10 +67,10 @@ class _PhotoGalleryViewState extends State<PhotoGalleryView> {
                 crossAxisSpacing: 4.0,
                 mainAxisSpacing: 4.0,
               ),
-              itemCount: photos.length,
+              itemCount: _photos.length,
               itemBuilder: (context, index) {
                 return Image.network(
-                  photos[index],
+                  _photos[index],
                   fit: BoxFit.cover,
                 );
               },

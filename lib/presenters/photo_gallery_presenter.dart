@@ -6,13 +6,15 @@ typedef ViewUpdater = void Function();
 class PhotoGalleryPresenter {
   final PhotoGalleryModel _model;
   final ViewUpdater updateView;
+  final String userId;
 
-  PhotoGalleryPresenter(this._model, this.updateView);
+  PhotoGalleryPresenter(this._model, this.updateView, this.userId);
 
   // Add a photo and update the view
   Future<void> addPhoto(File photo) async {
     try {
-      await _model.uploadPhoto(photo);
+      final downloadUrl = await _model.uploadPhoto(photo, userId);
+      await _model.savePhotoUrlToFirestore(downloadUrl, userId);
       updateView(); // Notify the view to refresh
     } catch (e) {
       print('Error adding photo: $e');
@@ -22,7 +24,7 @@ class PhotoGalleryPresenter {
   // Fetch photos and update the view
   Future<void> fetchPhotos() async {
     try {
-      await _model.fetchPhotos();
+      await _model.fetchUserPhotos(userId);
       updateView(); // Notify the view to refresh
     } catch (e) {
       print('Error fetching photos: $e');
@@ -30,5 +32,7 @@ class PhotoGalleryPresenter {
   }
 
   // Get photo URLs from the model
-  List<String> getPhotos() => _model.photoUrls;
+  Future<List<String>> getPhotos() async {
+    return _model.fetchUserPhotos(userId);
+  }
 }

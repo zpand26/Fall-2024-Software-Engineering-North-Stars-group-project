@@ -5,6 +5,7 @@ import 'notification/initialization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:north_stars/models/data_entry_for_day_model.dart';
 import 'models/calorie_tracker_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'presenters/calorie_tracker_presenter.dart';
 import 'views/home_page_view.dart';
 import 'package:galleryimage/galleryimage.dart';
@@ -33,6 +34,9 @@ class MyApp extends StatelessWidget {
         () {
       print("Photo gallery view updated");
     },
+      FirebaseAuth.instance.currentUser?.uid ?? ''
+
+
   );
   MyApp({super.key});
   @override
