@@ -1,7 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'data_entry_for_day_model.dart';
 
 class CalorieTrackerModel {
 
@@ -192,5 +191,4 @@ class CalorieTrackerModel {
 
   Future<int> getTotalProteinOnDay(int year, int month, int day) =>
       getTotalForFieldOnDay('Protein', year, month, day);
-}
 }
