@@ -60,7 +60,13 @@ class NavBar extends StatefulWidget {
           updateView: (username) {},
         ),
         nutritionGoalPresenter = NutritionGoalPresenter(),
-        photoGalleryPresenter = PhotoGalleryPresenter(photoGalleryModel);
+        photoGalleryPresenter = PhotoGalleryPresenter(
+    PhotoGalleryModel(),
+        () {
+
+      print("Photo gallery view updated");
+    },
+  );
 
   @override
   _NavBarState createState() => _NavBarState();
@@ -77,11 +83,13 @@ class _NavBarState extends State<NavBar> {
       NutritionGoalView(),
       NutrientTrackingView(widget.nutrientTrackingPresenter),
       CameraScreen(),
-      ProfilePageView(profilePagePresenter: widget.profilePagePresenter),
+      ProfilePageView(
+        profilePagePresenter: widget.profilePagePresenter,
+        photoGalleryPresenter: widget.photoGalleryPresenter, // Added presenter
+      ),
       NotificationHome(),
     ];
   }
-
   void _logout() async {
     await FirebaseAuth.instance.signOut();
     Navigator.pushAndRemoveUntil(

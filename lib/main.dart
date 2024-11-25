@@ -28,8 +28,12 @@ class MyApp extends StatelessWidget {
   final NutrientTrackerModel nutrientTrackerModel = NutrientTrackerModel();
   final CalorieTrackerModel calorieTrackerModel = CalorieTrackerModel();
   final DataEntryForDayModel dataEntryForDayModel = DataEntryForDayModel();
-  final PhotoGalleryPresenter photoGalleryPresenter = PhotoGalleryPresenter(PhotoGalleryModel());
-
+  final PhotoGalleryPresenter photoGalleryPresenter = PhotoGalleryPresenter(
+    PhotoGalleryModel(),
+        () {
+      print("Photo gallery view updated");
+    },
+  );
   MyApp({super.key});
   @override
   Widget build(BuildContext context) {

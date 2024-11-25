@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; //for the date
 import '../presenters/profile_page_presenter.dart';
+import '../presenters/photo_gallery_presenter.dart';
+import 'photo_gallery_view.dart'; // Import PhotoGalleryView
 
 class ProfilePageView extends StatefulWidget {
   final ProfilePagePresenter profilePagePresenter;
+  final PhotoGalleryPresenter photoGalleryPresenter; // Add this field
 
-  ProfilePageView({Key? key, required this.profilePagePresenter}) : super(key: key);
+  ProfilePageView({
+    Key? key,
+    required this.profilePagePresenter,
+    required this.photoGalleryPresenter, // Include in constructor
+  }) : super(key: key);
 
   @override
   _ProfilePageViewState createState() => _ProfilePageViewState();
@@ -135,6 +142,20 @@ class _ProfilePageViewState extends State<ProfilePageView> {
             ElevatedButton(
               onPressed: _saveProfileInfo,
               child: const Text("Save Profile"),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PhotoGalleryView(
+                      presenter: widget.photoGalleryPresenter, // Pass the presenter
+                    ),
+                  ),
+                );
+              },
+              child: const Text("Go to Photo Gallery"), // Add Photo Gallery Button
             ),
             if (_statusMessage.isNotEmpty)
               Padding(

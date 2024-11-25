@@ -1,23 +1,47 @@
-// models/photo_gallery_model.dart
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
 
 class PhotoGalleryModel {
-  // Example list of image URL
-  List<String> getImageUrls() {
-    return [
-      "https://www.emilieeats.com/wp-content/uploads/2020/01/teriyaki-tofu-meal-prep-plant-based-healthy-vegan-recipes-lunch-dinner-7.jpg",
-      "https://ohsheglows.com/wp-content/uploads/2019/03/veganpowerbowls-2157-5-728x1092.jpg",
-      "https://www.mealpro.net/wp-content/uploads/2020/12/mealpro-meal-prep.jpg",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIoZ_50VXvV-WZIN6PBe_0BtbVlN3Wg0A46w&s",
-      /*"https://cosmosmagazine.com/wp-content/uploads/2020/02/191010_nature.jpg",
-      "https://scx2.b-cdn.net/gfx/news/hires/2019/2-nature.jpg",
-      "https://wallpapers.com/images/featured/2ygv7ssy2k0lxlzu.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/7/77/Big_Nature_%28155420955%29.jpeg",
-      "https://www.rd.com/wp-content/uploads/2020/04/GettyImages-1093840488-5-scaled.jpg",
-      "https://media.cntraveller.com/photos/611bf0b8f6bd8f17556db5e4/1:1/w_2000,h_2000,c_limit/gettyimages-1146431497.jpg",
-      "https://img.freepik.com/premium-photo/fantastic-view-kirkjufellsfoss-waterfall-near-kirkjufell-mountain-sunset_761071-868.jpg",
-      "https://www.travelandleisure.com/thmb/KLPvXakEKLGE5AY2jVyovl3Md1k=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/iceland-BEAUTCONT1021-b1aeafa7ac2847a484cbca48d3172b6c.jpg",
-      "https://w0.peakpx.com/wallpaper/265/481/HD-wallpaper-nature.jpg",
-      "https://e0.pxfuel.com/wallpapers/163/906/desktop-wallpaper-beautiful-nature-with-girl-beautiful-girl-with-nature-and-moon-high-resolution-beautiful.jpg",*/
-    ];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+
+  // In-memory storage of photo URLs
+  final List<String> photoUrls = [];
+
+  // Upload a photo to Firebase Storage and return its URL
+  Future<String> uploadPhoto(File photo) async {
+    try {
+      final fileName = DateTime.now().toIso8601String();
+      final storageRef = _storage.ref().child('gallery/$fileName.jpg');
+
+      final uploadTask = await storageRef.putFile(photo);
+      final downloadUrl = await uploadTask.ref.getDownloadURL();
+
+      print('Download URL: $downloadUrl'); // Debug log
+
+      // Save photo URL to Firestore
+      await _firestore.collection('gallery').add({'url': downloadUrl});
+      print('URL saved to Firestore'); // Debug log
+
+      photoUrls.add(downloadUrl);
+      return downloadUrl;
+    } catch (e) {
+      print('Error uploading photo: $e'); // Debug log
+      throw Exception('Failed to upload photo');
+    }
+  }
+  // Fetch all photo URLs from Firestore
+  Future<List<String>> fetchPhotos() async {
+    try {
+      final snapshot = await _firestore.collection('gallery').get();
+
+      photoUrls.clear();
+      photoUrls.addAll(snapshot.docs.map((doc) => doc['url'] as String));
+
+      return photoUrls;
+    } catch (e) {
+      throw Exception('Error fetching photos: $e');
+    }
   }
 }

@@ -64,7 +64,10 @@ class HomePage extends StatelessWidget {
         ),
 
         photoGalleryPresenter = PhotoGalleryPresenter(
-            PhotoGalleryModel()
+            PhotoGalleryModel(),
+            () {
+              print("Photo gallery view updated");
+            }
         ),
 
          profilePagePresenter = ProfilePagePresenter(
@@ -88,21 +91,11 @@ class HomePage extends StatelessWidget {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Main Menu'),
-        leading: IconButton(
-          icon: const Icon(Icons.person, size: 30.0),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ProfilePageView(profilePagePresenter: profilePagePresenter),
-              ),
-            );
-          },
-        ),
         actions: [
           PopupMenuButton<String>(
             onSelected: (String choice) {
