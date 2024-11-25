@@ -3,6 +3,8 @@ import 'package:day_picker/day_picker.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:north_stars/presenters/data_entry_for_day_presenter.dart';
 import '../presenters/calorie_tracker_presenter.dart';
+import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DayEntryView extends StatefulWidget {
   final DataEntryForDayPresenter dataEntryForDayPresenter;
@@ -29,6 +31,7 @@ class _dayEntryViewState extends State<DayEntryView> {
   final TextEditingController _dayEntryController = TextEditingController();
   String _displayMessage = ''; //Stores message from presenter
   final CalendarFormat _calendarFormat = CalendarFormat.month;
+
   /*DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedWeek = DateTime.now();
@@ -39,13 +42,14 @@ class _dayEntryViewState extends State<DayEntryView> {
   DateTime? _selectedDay;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
+  final DateRangePickerController _rangePickerController = DateRangePickerController();
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     //Initialize updateView callback
-    widget.dataEntryForDayPresenter.updateView = (String message){
-      setState((){
+    widget.dataEntryForDayPresenter.updateView = (String message) {
+      setState(() {
         _displayMessage = message;
       });
     };
@@ -80,121 +84,117 @@ class _dayEntryViewState extends State<DayEntryView> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            TableCalendar(
-              firstDay: DateTime.utc(2010, 10, 16),
-              lastDay: DateTime.utc(2030, 3, 14),
-              focusedDay: _focusedDay,
-              rangeStartDay: _rangeStart,
-              rangeEndDay: _rangeEnd,
-              calendarFormat: _calendarFormat,
-              selectedDayPredicate: (day) {
-                if (day.day == DateTime.sunday || day.day == DateTime.saturday) {
-                  return isSameDay(_selectedDay, day);
-                }
-                return false;
-              },
-              rangeSelectionMode: _rangeSelectionMode,
-              onDaySelected: (selectedDay, focusedDay) {
-                if (!isSameDay(_selectedDay, selectedDay)) {
-                  setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay;
-                    _rangeStart = null; // Important to clean those
-                    _rangeEnd = null;
-                    _rangeSelectionMode = RangeSelectionMode.toggledOff;
-                  });
-                }
-              },
-              onRangeSelected: (start, end, focusedDay) {
-                setState(() {
-                  _selectedDay = null;
-                  _focusedDay = focusedDay;
-                  _rangeStart = start;
-                  _rangeEnd = end;
-                  _rangeSelectionMode = RangeSelectionMode.toggledOn;
-                });
-              },
-
-              onPageChanged: (focusedDay){
-                _focusedDay = focusedDay;
-              },
-            ),
-            TextField(
-              controller: _dayEntryController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Enter Calories and Select Day',
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                int calories = int.tryParse(_dayEntryController.text) ?? 0;
-                for (int i = 0; i < listOfDays.length; i++) {
-                  widget.dataEntryForDayPresenter.addDailyCalorieEntry(
-                      calories, listOfDays[i]);
-                }
-                _dayEntryController.clear();
-              },
-              child: const Text('Add Calorie Entry'),
-            ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                widget.dataEntryForDayPresenter.showDailyCalories();
-              },
-              child: const Text('Show Calories per Day'),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SelectWeekDays(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                days: _days,
-                boxDecoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30.0),
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    // 10% of the width, so there are ten blinds.
-                    colors: [
-                      Color(0xFFE55CE4),
-                      Color(0xFFBB75FB)
-                    ], // whitish to gray
-                    tileMode:
-                    TileMode.repeated, // repeats the gradient over the canvas
-                  ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Card(
+                margin: const EdgeInsets.fromLTRB(50, 100, 50, 100),
+                child: SfDateRangePicker(
+                  controller: _rangePickerController,
+                  view: DateRangePickerView.month,
+                  selectionMode: DateRangePickerSelectionMode.range,
+                  onSelectionChanged: selectionChanged,
+                  monthViewSettings: DateRangePickerMonthViewSettings(
+                      enableSwipeSelection: false),
                 ),
-                onSelect: (values) {
-                  listOfDays = values;
-
-                  print(values); //Tests value selector in terminal
-                  print(listOfDays);
-                },
               ),
-            ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                // Pop the current page (CalorieTrackerPage) off the stack and go back to the HomePage
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent),
-              child: const Text('Back to Home'),
-            ),
-            SizedBox (height: 20.0),
-            Text(
-              _displayMessage,
-              style: TextStyle(fontSize: 18, color: Colors.blueAccent),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+              TextField(
+                controller: _dayEntryController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Enter Calories and Select Day',
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  int calories = int.tryParse(_dayEntryController.text) ?? 0;
+                  for (int i = 0; i < listOfDays.length; i++) {
+                    widget.dataEntryForDayPresenter.addDailyCalorieEntry(
+                        calories, listOfDays[i]);
+                  }
+                  _dayEntryController.clear();
+                },
+                child: const Text('Add Calorie Entry'),
+              ),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  widget.dataEntryForDayPresenter.showDailyCalories();
+                },
+                child: const Text('Show Calories per Day'),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SelectWeekDays(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  days: _days,
+                  boxDecoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30.0),
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      // 10% of the width, so there are ten blinds.
+                      colors: [
+                        Color(0xFFE55CE4),
+                        Color(0xFFBB75FB)
+                      ], // whitish to gray
+                      tileMode:
+                      TileMode.repeated, // repeats the gradient over the canvas
+                    ),
+                  ),
+                  onSelect: (values) {
+                    listOfDays = values;
+
+                    print(values); //Tests value selector in terminal
+                    print(listOfDays);
+                  },
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  // Pop the current page (CalorieTrackerPage) off the stack and go back to the HomePage
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent),
+                child: const Text('Back to Home'),
+              ),
+              SizedBox(height: 20.0),
+              Text(
+                _displayMessage,
+                style: TextStyle(fontSize: 18, color: Colors.blueAccent),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  void selectionChanged(DateRangePickerSelectionChangedArgs args) {
+    int firstDayOfWeek = DateTime.sunday % 7;
+    int endDayOfWeek = (firstDayOfWeek - 1) % 7;
+    endDayOfWeek = endDayOfWeek < 0 ? 7 + endDayOfWeek : endDayOfWeek;
+    PickerDateRange ranges = args.value;
+    DateTime date1 = ranges.startDate!;
+    DateTime date2 = (ranges.endDate ?? ranges.startDate)!;
+    if (date1.isAfter(date2)) {
+      var date = date1;
+      date1 = date2;
+      date2 = date;
+    }
+    int day1 = date1.weekday % 7;
+    int day2 = date2.weekday % 7;
+
+    DateTime dat1 = date1.add(Duration(days: (firstDayOfWeek - day1)));
+    DateTime dat2 = date2.add(Duration(days: (endDayOfWeek - day2)));
+
+    if (!DateUtils.isSameDay(dat1, ranges.startDate) ||
+        !DateUtils.isSameDay(dat2, ranges.endDate)) {
+      _rangePickerController.selectedRange = PickerDateRange(dat1, dat2);
+    }
   }
 }
