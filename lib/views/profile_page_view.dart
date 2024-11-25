@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; //for the date
+import 'package:intl/intl.dart';
 import '../presenters/profile_page_presenter.dart';
 import '../presenters/photo_gallery_presenter.dart';
-import 'photo_gallery_view.dart'; // Import PhotoGalleryView
+import 'photo_gallery_view.dart';
 
 class ProfilePageView extends StatefulWidget {
   final ProfilePagePresenter profilePagePresenter;
-  final PhotoGalleryPresenter photoGalleryPresenter; // Add this field
+  final PhotoGalleryPresenter photoGalleryPresenter;
 
-  ProfilePageView({
+  const ProfilePageView({
     Key? key,
     required this.profilePagePresenter,
-    required this.photoGalleryPresenter, // Include in constructor
+    required this.photoGalleryPresenter,
   }) : super(key: key);
 
   @override
@@ -27,8 +27,6 @@ class _ProfilePageViewState extends State<ProfilePageView> {
   @override
   void initState() {
     super.initState();
-
-    // Load all fields from the model
     _loadProfileData();
 
     widget.profilePagePresenter.updateView = (username) {
@@ -40,7 +38,6 @@ class _ProfilePageViewState extends State<ProfilePageView> {
     widget.profilePagePresenter.loadUsername();
   }
 
-  // Method to load profile data from the model
   void _loadProfileData() {
     setState(() {
       _nameController.text = widget.profilePagePresenter.model.username;
@@ -55,7 +52,6 @@ class _ProfilePageViewState extends State<ProfilePageView> {
 
     bool hasChanges = false;
 
-    // Only update the model if there are changes
     if (newUsername != widget.profilePagePresenter.model.username) {
       widget.profilePagePresenter.saveUsername(newUsername);
       hasChanges = true;
@@ -91,75 +87,105 @@ class _ProfilePageViewState extends State<ProfilePageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Profile")),
-      body: Padding(
+      appBar: AppBar(
+        title: const Text("Profile"),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Profile Picture
             Center(
               child: CircleAvatar(
-                radius: 50,
+                radius: 60,
                 backgroundImage: NetworkImage(widget.profilePagePresenter.model.profilePictureUrl),
-                onBackgroundImageError: (_, __) => const Icon(Icons.person, size: 50),
+                onBackgroundImageError: (_, __) => const Icon(Icons.person, size: 60),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Center(
               child: Text(
                 widget.profilePagePresenter.model.email,
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 20),
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(labelText: "Name"),
-              onSubmitted: (_) => _saveProfileInfo(),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _mobilePhoneController,
-              decoration: const InputDecoration(labelText: "Mobile Phone"),
-              keyboardType: TextInputType.phone,
-              onSubmitted: (_) => _saveProfileInfo(),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    "Birthday: ${_selectedBirthday != null ? DateFormat.yMMMd().format(_selectedBirthday!) : "Not set"}",
-                  ),
+
+            // Profile Info Card
+            Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Profile Information",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _nameController,
+                      decoration: const InputDecoration(labelText: "Name"),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _mobilePhoneController,
+                      decoration: const InputDecoration(labelText: "Mobile Phone"),
+                      keyboardType: TextInputType.phone,
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Birthday: ${_selectedBirthday != null ? DateFormat.yMMMd().format(_selectedBirthday!) : "Not set"}",
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => _selectBirthday(context),
+                          child: const Text("Select Date"),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                TextButton(
-                  onPressed: () => _selectBirthday(context),
-                  child: const Text("Select Date"),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Action Buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: _saveProfileInfo,
+                  icon: const Icon(Icons.save),
+                  label: const Text("Save Profile"),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PhotoGalleryView(
+                          presenter: widget.photoGalleryPresenter,
+                        ),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.photo_album),
+                  label: const Text("Photo Gallery"),
                 ),
               ],
             ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _saveProfileInfo,
-              child: const Text("Save Profile"),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PhotoGalleryView(
-                      presenter: widget.photoGalleryPresenter, // Pass the presenter
-                    ),
-                  ),
-                );
-              },
-              child: const Text("Go to Photo Gallery"), // Add Photo Gallery Button
-            ),
+
+            // Status Message
             if (_statusMessage.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 20.0),
                 child: Text(
                   _statusMessage,
                   style: TextStyle(
