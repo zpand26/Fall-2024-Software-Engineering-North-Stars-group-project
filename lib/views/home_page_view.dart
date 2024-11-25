@@ -14,6 +14,9 @@ import 'package:north_stars/views/camera_view.dart';
 import 'profile_page_view.dart';
 import '../presenters/profile_page_presenter.dart';
 import '../models/profile_page_model.dart';
+import 'feature_food_list_view.dart'; // Import FeatureFoodList view
+import '../models/feature_food_list_model.dart';
+import '../presenters/feature_food_list_presenter.dart';
 
 class HomePage extends StatelessWidget {
   // Instantiate each presenter with the model and any required callbacks
@@ -21,6 +24,7 @@ class HomePage extends StatelessWidget {
   final DataEntryForDayPresenter dataEntryForDayPresenter;
   final NutrientTrackingPresenter nutrientTrackingPresenter;
   final ProfilePagePresenter profilePagePresenter;
+  final FeatureFoodListPresenter featureFoodListPresenter;
   final String nutrientData = "No nutrient data loaded";
 
   HomePage({
@@ -39,6 +43,9 @@ class HomePage extends StatelessWidget {
         nutrientTrackingPresenter = NutrientTrackingPresenter(
           nutrientTrackerModel,
               (data) => print(data),
+        ),
+        featureFoodListPresenter = FeatureFoodListPresenter(
+          FeatureFoodListModel(),
         ),
         profilePagePresenter = ProfilePagePresenter(
           model: ProfilePageModel(
@@ -131,22 +138,22 @@ class HomePage extends StatelessWidget {
                   },
                   child: const Text('Go to Nutrient Tracker'),
                 ),
-                // Uncomment and add more buttons as needed
-                // ElevatedButton(
-                //   onPressed: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //         builder: (context) => NotificationView(notificationPresenter),
-                //       ),
-                //     );
-                //   },
-                //   child: const Text('Go to Notification Service'),
-                // ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FeatureFoodListView(
+                          presenter: featureFoodListPresenter,
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('Go to Food List'),
+                ),
               ],
             ),
           ),
-          // Positioned widget for camera button in bottom-left corner
           Positioned(
             bottom: 16,
             left: 16,
@@ -155,7 +162,7 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CameraScreen(), // Ensure CameraScreen is imported
+                    builder: (context) => CameraScreen(),
                   ),
                 );
               },

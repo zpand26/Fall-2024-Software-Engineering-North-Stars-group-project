@@ -12,92 +12,55 @@ class MealFilterFeature extends StatefulWidget {
 
 class _MealFilterFeatureState extends State<MealFilterFeature> {
   List<String> displayedMeals = [];
-  List<String> selectedFilters = [];
 
   @override
   void initState() {
     super.initState();
-    // Setting up the updateView callback to update displayed meals when filters are selected
-    widget.mealFilterPresenter.updateView = (filteredMeals) {
+    widget.mealFilterPresenter.updateView = (meals) {
       setState(() {
-        displayedMeals = filteredMeals;
+        displayedMeals = meals;
       });
     };
-    // Initial call to show all meals by default
-    widget.mealFilterPresenter.onFiltersSelected([]);
-  }
-
-  void _showFilterDialog() async {
-    // Options for meal filters
-    List<String> options = ['Vegan', 'Vegetarian', 'Non-Vegan'];
-
-    // Show a dialog with filter options
-    final selected = await showDialog<List<String>>(
-      context: context,
-      builder: (BuildContext context) {
-        List<String> tempSelectedFilters = List.from(selectedFilters);
-        return AlertDialog(
-          title: const Text('Select Filters'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: options.map((option) {
-              return CheckboxListTile(
-                title: Text(option),
-                value: tempSelectedFilters.contains(option),
-                onChanged: (bool? value) {
-                  setState(() {
-                    if (value == true) {
-                      tempSelectedFilters.add(option);
-                    } else {
-                      tempSelectedFilters.remove(option);
-                    }
-                  });
-                },
-              );
-            }).toList(),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context), // Close without changes
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, tempSelectedFilters), // Apply changes
-              child: Text('Apply'),
-            ),
-          ],
-        );
-      },
-    );
-
-    // Update selected filters and apply them if a selection was made
-    if (selected != null) {
-      setState(() {
-        selectedFilters = selected;
-      });
-      widget.mealFilterPresenter.onFiltersSelected(selectedFilters);
-    }
+    displayedMeals = widget.mealFilterPresenter.model.allMeals; // Initial load of meals
   }
 
   @override
   Widget build(BuildContext context) {
+    final filters = ['Vegan', 'Chicken', 'Vegetarian', 'Beef']; // Example filter options
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Meal Filter Feature'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.filter_list),
-            onPressed: _showFilterDialog, // Show filter dialog on press
+      appBar: AppBar(title: Text("Meal Filter")),
+      body: Column(
+        children: [
+          // Filter checkboxes
+          Wrap(
+            spacing: 10.0,
+            children: filters.map((filter) {
+              return CheckboxListTile(
+                title: Text(filter),
+                value: widget.mealFilterPresenter.selectedFilters.contains(filter),
+                onChanged: (isSelected) {
+                  setState(() {
+                    widget.mealFilterPresenter.toggleFilter(filter);
+                  });
+                },
+                controlAffinity: ListTileControlAffinity.leading,
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 20),
+          // Display filtered meals
+          Expanded(
+            child: ListView.builder(
+              itemCount: displayedMeals.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(displayedMeals[index]),
+                );
+              },
+            ),
           ),
         ],
-      ),
-      body: ListView.builder(
-        itemCount: displayedMeals.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(displayedMeals[index]),
-          );
-        },
       ),
     );
   }

@@ -9,14 +9,26 @@ class ProfilePagePresenter {
     this.updateView,
   });
 
-  // Load the initial username to display in the view
+  /// Load the username and trigger the view update.
   void loadUsername() {
     updateView?.call(model.username);
   }
 
-  // Save the updated username in the model and refresh the view
+  /// Save the username and trigger the view update.
   void saveUsername(String newUsername) {
-    model.username = newUsername;
-    updateView?.call(newUsername); // Trigger the view to update with the new username
+    model.updateUsername(newUsername);
+    updateView?.call(newUsername);
+  }
+
+  /// Save the mobile phone and trigger the view update.
+  void saveMobilePhone(String newMobilePhone) {
+    model.updateMobilePhone(newMobilePhone);
+    updateView?.call(model.username); // Triggers view update
+  }
+
+  /// Save the birthday and trigger the view update.
+  void saveBirthday(DateTime newBirthday) {
+    model.updateBirthday(newBirthday);
+    updateView?.call(model.username); // Triggers view update
   }
 }

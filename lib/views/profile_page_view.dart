@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; //for the date
+import 'package:intl/intl.dart';
 import '../presenters/profile_page_presenter.dart';
 
 class ProfilePageView extends StatefulWidget {
@@ -21,50 +21,38 @@ class _ProfilePageViewState extends State<ProfilePageView> {
   void initState() {
     super.initState();
 
-    // Load all fields from the model
-    _loadProfileData();
-
     widget.presenter.updateView = (username) {
       setState(() {
         _nameController.text = username;
+        _mobilePhoneController.text = widget.presenter.model.mobilePhone ?? '';
+        _selectedBirthday = widget.presenter.model.birthday;
+        _statusMessage = '';
       });
     };
 
     widget.presenter.loadUsername();
   }
 
-  // Method to load profile data from the model
-  void _loadProfileData() {
-    setState(() {
-      _nameController.text = widget.presenter.model.username;
-      _mobilePhoneController.text = widget.presenter.model.mobilePhone ?? '';
-      _selectedBirthday = widget.presenter.model.birthday;
-    });
-  }
-
   void _saveProfileInfo() {
     final newUsername = _nameController.text;
     final newMobilePhone = _mobilePhoneController.text;
 
-    bool hasChanges = false;
-
-    // Only update the model if there are changes
-    if (newUsername != widget.presenter.model.username) {
+    if (newUsername != widget.presenter.model.username ||
+        newMobilePhone != widget.presenter.model.mobilePhone ||
+        _selectedBirthday != widget.presenter.model.birthday) {
       widget.presenter.saveUsername(newUsername);
-      hasChanges = true;
+      widget.presenter.saveMobilePhone(newMobilePhone);
+      if (_selectedBirthday != null) {
+        widget.presenter.saveBirthday(_selectedBirthday!);
+      }
+      setState(() {
+        _statusMessage = "Profile updated!";
+      });
+    } else {
+      setState(() {
+        _statusMessage = "No changes to save.";
+      });
     }
-    if (newMobilePhone != widget.presenter.model.mobilePhone) {
-      widget.presenter.model.updateMobilePhone(newMobilePhone);
-      hasChanges = true;
-    }
-    if (_selectedBirthday != null && _selectedBirthday != widget.presenter.model.birthday) {
-      widget.presenter.model.updateBirthday(_selectedBirthday!);
-      hasChanges = true;
-    }
-
-    setState(() {
-      _statusMessage = hasChanges ? "Profile updated!" : "No changes to save.";
-    });
   }
 
   Future<void> _selectBirthday(BuildContext context) async {
@@ -74,7 +62,7 @@ class _ProfilePageViewState extends State<ProfilePageView> {
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
     );
-    if (pickedDate != null) {
+    if (pickedDate != null && pickedDate != _selectedBirthday) {
       setState(() {
         _selectedBirthday = pickedDate;
       });

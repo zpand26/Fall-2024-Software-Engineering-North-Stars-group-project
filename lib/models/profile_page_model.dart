@@ -2,28 +2,26 @@ class ProfilePageModel {
   String username;
   String email;
   String profilePictureUrl;
-  DateTime? birthday;
   String? mobilePhone;
+  DateTime? birthday;
 
   ProfilePageModel({
     required this.username,
     required this.email,
     required this.profilePictureUrl,
-    this.birthday,
     this.mobilePhone,
+    this.birthday,
   });
 
-  // Method to update the username
   void updateUsername(String newUsername) {
     username = newUsername;
   }
 
-  // Optional: Additional methods to update birthday and mobile phone
-  void updateBirthday(DateTime newBirthday) {
-    birthday = newBirthday;
-  }
-
   void updateMobilePhone(String newMobilePhone) {
     mobilePhone = newMobilePhone;
+  }
+
+  void updateBirthday(DateTime newBirthday) {
+    birthday = newBirthday;
   }
 }
