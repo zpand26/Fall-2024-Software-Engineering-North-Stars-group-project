@@ -28,10 +28,17 @@ List<String> listOfDays = [];
 class _dayEntryViewState extends State<DayEntryView> {
   final TextEditingController _dayEntryController = TextEditingController();
   String _displayMessage = ''; //Stores message from presenter
-  final CalendarFormat _calendarFormat = CalendarFormat.week;
-  DateTime _selectedDay = DateTime.now();
+  final CalendarFormat _calendarFormat = CalendarFormat.month;
+  /*DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
-  final Map<DateTime, List<String>> _events = {};
+  DateTime _selectedWeek = DateTime.now();
+  final Map<DateTime, List<String>> _events = {};*/
+  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
+      .toggledOn; // Can be toggled on/off by longpressing a date
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+  DateTime? _rangeStart;
+  DateTime? _rangeEnd;
 
   @override
   void initState(){
@@ -72,6 +79,7 @@ class _dayEntryViewState extends State<DayEntryView> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -79,18 +87,39 @@ class _dayEntryViewState extends State<DayEntryView> {
               firstDay: DateTime.utc(2010, 10, 16),
               lastDay: DateTime.utc(2030, 3, 14),
               focusedDay: _focusedDay,
+              rangeStartDay: _rangeStart,
+              rangeEndDay: _rangeEnd,
               calendarFormat: _calendarFormat,
               selectedDayPredicate: (day) {
-                return isSameDay(_selectedDay, day);
+                if (day.day == DateTime.sunday || day.day == DateTime.saturday) {
+                  return isSameDay(_selectedDay, day);
+                }
+                return false;
               },
+              rangeSelectionMode: _rangeSelectionMode,
               onDaySelected: (selectedDay, focusedDay) {
+                if (!isSameDay(_selectedDay, selectedDay)) {
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                    _rangeStart = null; // Important to clean those
+                    _rangeEnd = null;
+                    _rangeSelectionMode = RangeSelectionMode.toggledOff;
+                  });
+                }
+              },
+              onRangeSelected: (start, end, focusedDay) {
                 setState(() {
-                  _selectedDay = selectedDay;
+                  _selectedDay = null;
                   _focusedDay = focusedDay;
+                  _rangeStart = start;
+                  _rangeEnd = end;
+                  _rangeSelectionMode = RangeSelectionMode.toggledOn;
                 });
               },
-              eventLoader: (day) {
-                return _events[day] ?? [];
+
+              onPageChanged: (focusedDay){
+                _focusedDay = focusedDay;
               },
             ),
             TextField(
@@ -163,6 +192,7 @@ class _dayEntryViewState extends State<DayEntryView> {
               textAlign: TextAlign.center,
             ),
           ],
+        ),
         ),
       ),
     );
