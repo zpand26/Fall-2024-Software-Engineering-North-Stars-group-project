@@ -1,8 +1,10 @@
 import 'package:north_stars/models/data_entry_for_day_model.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DataEntryForDayPresenter {
   final DataEntryForDayModel dataEntryForDayModel;
   Function(String) updateView;
+
 
   DataEntryForDayPresenter(this.dataEntryForDayModel, this.updateView);
 
@@ -12,9 +14,27 @@ class DataEntryForDayPresenter {
     updateView(data);
   }
 
-  void addDailyCalorieEntry(int calorie, String day) {
-    dataEntryForDayModel.addDailyCalories(calorie, day);
-    updateView('Calorie entries added for days.');
+  void selectDates(DateTime dat1, DateTime dat2) {
+    List<DateTime> dateList = [];
+    for(int i=0; i<=dat2.difference(dat1).inDays; i++){
+      dateList.add(dat1.add(Duration(days:i)));
+    }
+    int year = dat1.year;
+    int entryMonth = dat1.month;
+    dataEntryForDayModel.updateDateList(dateList);
+
+  }
+
+  void addDailyCalorieEntry(int calorie, int Fat, int cholesterol,
+      int sodium, int carbs, int fiber, int sugar, int protein, String day) {
+    dataEntryForDayModel.addDailyCalories(calorie, Fat, cholesterol, sodium,
+        carbs, fiber, sugar, protein, day);
+    if (dataEntryForDayModel.dateListStatus()){
+      updateView('Entries added for days.');
+    }
+    else {
+      updateView('Select a week.');
+    }
   }
 
 //display total calories
@@ -30,6 +50,7 @@ class DataEntryForDayPresenter {
     updateView('Monday: $monTotal, Tuesday: $tueTotal, Wednesday: $wedTotal,'
         ' Thursday: $thuTotal, Friday: $friTotal, Saturday: $satTotal, Sunday: $sunTotal');
   }
+
 
 
 //adding calories for day

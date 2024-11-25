@@ -35,13 +35,13 @@ class _dayEntryViewState extends State<DayEntryView> {
   /*DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedWeek = DateTime.now();
-  final Map<DateTime, List<String>> _events = {};*/
+  final Map<DateTime, List<String>> _events = {};
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
       .toggledOn; // Can be toggled on/off by longpressing a date
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   DateTime? _rangeStart;
-  DateTime? _rangeEnd;
+  DateTime? _rangeEnd;*/
   final DateRangePickerController _rangePickerController = DateRangePickerController();
 
   @override
@@ -102,16 +102,74 @@ class _dayEntryViewState extends State<DayEntryView> {
                 controller: _dayEntryController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  labelText: 'Enter Calories and Select Day',
+                  labelText: 'Enter Calories',
+                ),
+              ),
+              TextField(
+                controller: _dayEntryController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Enter Fats (g)',
+                ),
+              ),
+              TextField(
+                controller: _dayEntryController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Enter Cholesterol (mg)',
+                ),
+              ),
+              TextField(
+                controller: _dayEntryController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Enter Sodium (g)',
+                ),
+              ),
+              TextField(
+                controller: _dayEntryController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Enter Carbs (g)',
+                ),
+              ),
+              TextField(
+                controller: _dayEntryController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Enter Fiber (g)',
+                ),
+              ),
+              TextField(
+                controller: _dayEntryController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Enter Sugars (g)',
+                ),
+              ),
+              TextField(
+                controller: _dayEntryController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Enter Protein (g)',
                 ),
               ),
               const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
                   int calories = int.tryParse(_dayEntryController.text) ?? 0;
+                  int Fat = int.tryParse(_dayEntryController.text) ?? 0;
+                  int cholesterol = int.tryParse(_dayEntryController.text) ?? 0;
+                  int sodium = int.tryParse(_dayEntryController.text) ?? 0;
+                  int carbs = int.tryParse(_dayEntryController.text) ?? 0;
+                  int fiber = int.tryParse(_dayEntryController.text) ?? 0;
+                  int sugar = int.tryParse(_dayEntryController.text) ?? 0;
+                  int protein = int.tryParse(_dayEntryController.text) ?? 0;
+                  //Add all other data (like calories) here and add each as a parameter)
                   for (int i = 0; i < listOfDays.length; i++) {
                     widget.dataEntryForDayPresenter.addDailyCalorieEntry(
-                        calories, listOfDays[i]);
+                        calories, Fat, cholesterol, sodium,
+                        carbs, fiber, sugar, protein, listOfDays[i]);
                   }
                   _dayEntryController.clear();
                 },
@@ -196,5 +254,6 @@ class _dayEntryViewState extends State<DayEntryView> {
         !DateUtils.isSameDay(dat2, ranges.endDate)) {
       _rangePickerController.selectedRange = PickerDateRange(dat1, dat2);
     }
+    widget.dataEntryForDayPresenter.selectDates(dat1, dat2);
   }
 }

@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 class DataEntryForDayModel {
   //sample method to fetch or proccess data
   Future<String> fetchData() async {
@@ -7,6 +10,14 @@ class DataEntryForDayModel {
 
   }
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  //get current users ID
+  String get userId => _auth.currentUser?.uid ?? '';
+
+  late List<DateTime> dateList;
+
   List<int> monCalories = [];
   List<int> tueCalories = [];
   List<int> wedCalories = [];
@@ -15,10 +26,131 @@ class DataEntryForDayModel {
   List<int> satCalories = [];
   List<int> sunCalories = [];
 
+  void updateDateList(List<DateTime> updatedDateList){
+    dateList = updatedDateList;
+  }
+
+  bool dateListStatus(){
+    if (!dateList.isEmpty){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
   //add calories to the list
-  void addDailyCalories(int calorie, String day) {
-    switch (day) {
+  Future<void> addDailyCalories(int calorie, int Fat, int cholesterol,
+      int sodium, int carbs, int fiber, int sugar, int protein, String dayOfWeek)
+  async {
+    switch (dayOfWeek) {
       case 'mon':
+        //Firebase
+        if (userId.isNotEmpty) {
+          await _firestore
+              .collection('users')
+              .doc(userId)
+              .collection('year')
+              .doc(dateList[0].year.toString())
+              .collection('month')
+              .doc(dateList[0].month.toString())
+              .collection('day')
+              .doc(dateList[0].day.toString())
+              .collection('Calories')
+              .add({'calorie': calorie, 'timestamp': DateTime.now()});
+        }
+        if (userId.isNotEmpty) {
+          await _firestore
+              .collection('users')
+              .doc(userId)
+              .collection('year')
+              .doc(dateList[0].year.toString())
+              .collection('month')
+              .doc(dateList[0].month.toString())
+              .collection('day')
+              .doc(dateList[0].day.toString())
+              .collection('Fat')
+              .add({'Total Fat': Fat, 'timestamp': DateTime.now()});
+        }
+        if (userId.isNotEmpty) {
+          await _firestore
+              .collection('users')
+              .doc(userId)
+              .collection('year')
+              .doc(dateList[0].year.toString())
+              .collection('month')
+              .doc(dateList[0].month.toString())
+              .collection('day')
+              .doc(dateList[0].day.toString())
+              .collection('Cholesterol')
+              .add({'Cholesterol': cholesterol, 'timestamp': DateTime.now()});
+        }
+        if (userId.isNotEmpty) {
+          await _firestore
+              .collection('users')
+              .doc(userId)
+              .collection('year')
+              .doc(dateList[0].year.toString())
+              .collection('month')
+              .doc(dateList[0].month.toString())
+              .collection('day')
+              .doc(dateList[0].day.toString())
+              .collection('Sodium')
+              .add({'Sodium': sodium, 'timestamp': DateTime.now()});
+        }
+        if (userId.isNotEmpty) {
+          await _firestore
+              .collection('users')
+              .doc(userId)
+              .collection('year')
+              .doc(dateList[0].year.toString())
+              .collection('month')
+              .doc(dateList[0].month.toString())
+              .collection('day')
+              .doc(dateList[0].day.toString())
+              .collection('Carbohydrates')
+              .add({'Total Carbohydrates': carbs, 'timestamp': DateTime.now()});
+        }
+        if (userId.isNotEmpty) {
+          await _firestore
+              .collection('users')
+              .doc(userId)
+              .collection('year')
+              .doc(dateList[0].year.toString())
+              .collection('month')
+              .doc(dateList[0].month.toString())
+              .collection('day')
+              .doc(dateList[0].day.toString())
+              .collection('Fiber')
+              .add({'Fiber': fiber, 'timestamp': DateTime.now()});
+        }
+        if (userId.isNotEmpty) {
+          await _firestore
+              .collection('users')
+              .doc(userId)
+              .collection('year')
+              .doc(dateList[0].year.toString())
+              .collection('month')
+              .doc(dateList[0].month.toString())
+              .collection('day')
+              .doc(dateList[0].day.toString())
+              .collection('Sugar')
+              .add({'Total Sugar': sugar, 'timestamp': DateTime.now()});
+        }
+        if (userId.isNotEmpty) {
+          await _firestore
+              .collection('users')
+              .doc(userId)
+              .collection('year')
+              .doc(dateList[0].year.toString())
+              .collection('month')
+              .doc(dateList[0].month.toString())
+              .collection('day')
+              .doc(dateList[0].day.toString())
+              .collection('Protein')
+              .add({'Protein': protein, 'timestamp': DateTime.now()});
+        }
+
         monCalories.add(calorie);
       case 'tue':
         tueCalories.add(calorie);
