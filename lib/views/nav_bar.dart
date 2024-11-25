@@ -5,7 +5,6 @@ import 'package:north_stars/presenters/camera_presenter.dart';
 import 'package:north_stars/presenters/data_entry_for_day_presenter.dart';
 import 'package:north_stars/presenters/photo_gallery_presenter.dart';
 import 'package:north_stars/views/calendar_view.dart';
-import 'calorie_tracker_view.dart';
 import 'data_entry_for_day_view.dart';
 import '../models/calorie_tracker_model.dart';
 import 'package:north_stars/models/data_entry_for_day_model.dart';

@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:north_stars/presenters/login_page_presenter.dart';
-import 'package:north_stars/views/home_page_view.dart';
 import 'package:north_stars/models/calorie_tracker_model.dart';
 import 'package:north_stars/models/data_entry_for_day_model.dart';
 import 'package:north_stars/models/nutrient_tracking_model.dart';
