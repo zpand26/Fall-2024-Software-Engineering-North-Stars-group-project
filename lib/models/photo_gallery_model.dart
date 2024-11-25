@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 
@@ -25,9 +26,11 @@ class PhotoGalleryModel {
   // Save the photo URL to Firestore
   Future<void> savePhotoUrlToFirestore(String downloadUrl, String userId) async {
     try {
-      await _firestore.collection('users').doc(userId).collection('gallery').add({
-        'url': downloadUrl,
-        'uploadedAt': Timestamp.now(),
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('gallery')
+          .add({'url': downloadUrl, 'uploadedAt': Timestamp.now(),
       });
     } catch (e) {
       throw Exception('Error saving photo URL to Firestore: $e');
