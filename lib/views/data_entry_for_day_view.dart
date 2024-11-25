@@ -28,7 +28,14 @@ final List<DayInWeek> _days = [
 List<String> listOfDays = [];
 
 class _dayEntryViewState extends State<DayEntryView> {
-  final TextEditingController _dayEntryController = TextEditingController();
+  final TextEditingController _dayCalorieController = TextEditingController();
+  final TextEditingController _dayFatController = TextEditingController();
+  final TextEditingController _dayCholesterolController = TextEditingController();
+  final TextEditingController _daySodiumController = TextEditingController();
+  final TextEditingController _dayCarbsController = TextEditingController();
+  final TextEditingController _dayFiberController = TextEditingController();
+  final TextEditingController _daySugarController = TextEditingController();
+  final TextEditingController _dayProteinController = TextEditingController();
   String _displayMessage = ''; //Stores message from presenter
   final CalendarFormat _calendarFormat = CalendarFormat.month;
 
@@ -99,56 +106,56 @@ class _dayEntryViewState extends State<DayEntryView> {
                 ),
               ),
               TextField(
-                controller: _dayEntryController,
+                controller: _dayCalorieController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Enter Calories',
                 ),
               ),
               TextField(
-                controller: _dayEntryController,
+                controller: _dayFatController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Enter Fats (g)',
                 ),
               ),
               TextField(
-                controller: _dayEntryController,
+                controller: _dayCholesterolController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Enter Cholesterol (mg)',
                 ),
               ),
               TextField(
-                controller: _dayEntryController,
+                controller: _daySodiumController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Enter Sodium (g)',
                 ),
               ),
               TextField(
-                controller: _dayEntryController,
+                controller: _dayCarbsController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Enter Carbs (g)',
                 ),
               ),
               TextField(
-                controller: _dayEntryController,
+                controller: _dayFiberController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Enter Fiber (g)',
                 ),
               ),
               TextField(
-                controller: _dayEntryController,
+                controller: _daySugarController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Enter Sugars (g)',
                 ),
               ),
               TextField(
-                controller: _dayEntryController,
+                controller: _dayProteinController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Enter Protein (g)',
@@ -157,21 +164,28 @@ class _dayEntryViewState extends State<DayEntryView> {
               const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
-                  int calories = int.tryParse(_dayEntryController.text) ?? 0;
-                  int Fat = int.tryParse(_dayEntryController.text) ?? 0;
-                  int cholesterol = int.tryParse(_dayEntryController.text) ?? 0;
-                  int sodium = int.tryParse(_dayEntryController.text) ?? 0;
-                  int carbs = int.tryParse(_dayEntryController.text) ?? 0;
-                  int fiber = int.tryParse(_dayEntryController.text) ?? 0;
-                  int sugar = int.tryParse(_dayEntryController.text) ?? 0;
-                  int protein = int.tryParse(_dayEntryController.text) ?? 0;
+                  int calories = int.tryParse(_dayCalorieController.text) ?? 0;
+                  int Fat = int.tryParse(_dayFatController.text) ?? 0;
+                  int cholesterol = int.tryParse(_dayCholesterolController.text) ?? 0;
+                  int sodium = int.tryParse(_daySodiumController.text) ?? 0;
+                  int carbs = int.tryParse(_dayCarbsController.text) ?? 0;
+                  int fiber = int.tryParse(_dayFiberController.text) ?? 0;
+                  int sugar = int.tryParse(_daySugarController.text) ?? 0;
+                  int protein = int.tryParse(_dayProteinController.text) ?? 0;
                   //Add all other data (like calories) here and add each as a parameter)
                   for (int i = 0; i < listOfDays.length; i++) {
                     widget.dataEntryForDayPresenter.addDailyCalorieEntry(
                         calories, Fat, cholesterol, sodium,
                         carbs, fiber, sugar, protein, listOfDays[i]);
                   }
-                  _dayEntryController.clear();
+                  _dayCalorieController.clear();
+                  _dayFatController.clear();
+                  _dayCholesterolController.clear();
+                  _daySodiumController.clear();
+                  _dayCarbsController.clear();
+                  _dayFiberController.clear();
+                  _daySugarController.clear();
+                  _dayProteinController.clear();
                 },
                 child: const Text('Add Calorie Entry'),
               ),
