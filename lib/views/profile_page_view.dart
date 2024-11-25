@@ -41,7 +41,8 @@ class _ProfilePageViewState extends State<ProfilePageView> {
   void _loadProfileData() {
     setState(() {
       _nameController.text = widget.profilePagePresenter.model.username;
-      _mobilePhoneController.text = widget.profilePagePresenter.model.mobilePhone ?? '';
+      _mobilePhoneController.text =
+          widget.profilePagePresenter.model.mobilePhone ?? '';
       _selectedBirthday = widget.profilePagePresenter.model.birthday;
     });
   }
@@ -60,7 +61,8 @@ class _ProfilePageViewState extends State<ProfilePageView> {
       widget.profilePagePresenter.model.updateMobilePhone(newMobilePhone);
       hasChanges = true;
     }
-    if (_selectedBirthday != null && _selectedBirthday != widget.profilePagePresenter.model.birthday) {
+    if (_selectedBirthday != null &&
+        _selectedBirthday != widget.profilePagePresenter.model.birthday) {
       widget.profilePagePresenter.model.updateBirthday(_selectedBirthday!);
       hasChanges = true;
     }
@@ -90,6 +92,7 @@ class _ProfilePageViewState extends State<ProfilePageView> {
       appBar: AppBar(
         title: const Text("Profile"),
         centerTitle: true,
+        backgroundColor: Colors.teal, // Set AppBar color to teal
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -99,15 +102,21 @@ class _ProfilePageViewState extends State<ProfilePageView> {
             Center(
               child: CircleAvatar(
                 radius: 60,
-                backgroundImage: NetworkImage(widget.profilePagePresenter.model.profilePictureUrl),
-                onBackgroundImageError: (_, __) => const Icon(Icons.person, size: 60),
+                backgroundImage: NetworkImage(
+                    widget.profilePagePresenter.model.profilePictureUrl),
+                onBackgroundImageError: (_, __) =>
+                const Icon(Icons.person, size: 60),
               ),
             ),
             const SizedBox(height: 10),
             Center(
               child: Text(
                 widget.profilePagePresenter.model.email,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.teal, // Set text color to teal
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -115,7 +124,9 @@ class _ProfilePageViewState extends State<ProfilePageView> {
             // Profile Info Card
             Card(
               elevation: 4,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -123,17 +134,35 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                   children: [
                     const Text(
                       "Profile Information",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.teal, // Set heading color to teal
+                      ),
                     ),
                     const SizedBox(height: 10),
                     TextField(
                       controller: _nameController,
-                      decoration: const InputDecoration(labelText: "Name"),
+                      decoration: InputDecoration(
+                        labelText: "Name",
+                        labelStyle: TextStyle(color: Colors.teal),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.teal),
+                        ),
+                        border: OutlineInputBorder(),
+                      ),
                     ),
                     const SizedBox(height: 10),
                     TextField(
                       controller: _mobilePhoneController,
-                      decoration: const InputDecoration(labelText: "Mobile Phone"),
+                      decoration: InputDecoration(
+                        labelText: "Mobile Phone",
+                        labelStyle: TextStyle(color: Colors.teal),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.teal),
+                        ),
+                        border: OutlineInputBorder(),
+                      ),
                       keyboardType: TextInputType.phone,
                     ),
                     const SizedBox(height: 10),
@@ -146,6 +175,9 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                         ),
                         TextButton(
                           onPressed: () => _selectBirthday(context),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.teal, // Set button color
+                          ),
                           child: const Text("Select Date"),
                         ),
                       ],
@@ -162,8 +194,14 @@ class _ProfilePageViewState extends State<ProfilePageView> {
               children: [
                 ElevatedButton.icon(
                   onPressed: _saveProfileInfo,
-                  icon: const Icon(Icons.save),
-                  label: const Text("Save Profile"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal, // Set button color
+                  ),
+                  icon: const Icon(Icons.save, color: Colors.white),
+                  label: const Text(
+                    "Save Profile",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
@@ -176,8 +214,14 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                       ),
                     );
                   },
-                  icon: const Icon(Icons.photo_album),
-                  label: const Text("Photo Gallery"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal, // Set button color
+                  ),
+                  icon: const Icon(Icons.photo_album, color: Colors.white),
+                  label: const Text(
+                    "Photo Gallery",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),
@@ -189,7 +233,7 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                 child: Text(
                   _statusMessage,
                   style: TextStyle(
-                    color: Colors.green[700],
+                    color: Colors.teal[700],
                     fontStyle: FontStyle.italic,
                   ),
                 ),

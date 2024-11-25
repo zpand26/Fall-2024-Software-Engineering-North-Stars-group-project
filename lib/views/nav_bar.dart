@@ -113,7 +113,7 @@ class _NavBarState extends State<NavBar> {
             right: 20,
             child: FloatingActionButton.small(
               onPressed: _logout,
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.tealAccent,
               child: const Icon(Icons.logout),
             ),
           ),
