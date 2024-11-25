@@ -1,35 +1,40 @@
 import '../models/profile_page_model.dart';
 
+typedef ViewUpdater = void Function();
+
 class ProfilePagePresenter {
   final ProfilePageModel profileModel;
-  final Function(String, Map<String, dynamic>?) updateView;
+  final ViewUpdater updateView;
 
   ProfilePagePresenter(this.profileModel, this.updateView);
 
-  Future<void> loadProfileData() async {
+  // Fetch profile data automatically when the page is created
+  Future<void> fetchProfileData() async {
     try {
-      final data = await profileModel.getProfile();
-      updateView('Profile loaded successfully.', data);
+      final data = await profileModel.getProfile();  // Fetch profile data
+      updateView(); // Notify the view to refresh with fetched data
     } catch (e) {
-      updateView('Failed to load profile: $e', null);
+      print('Error fetching profile data: $e');
     }
   }
 
+  // Save profile data
   Future<void> saveProfile(Map<String, dynamic> newProfileData) async {
     try {
       await profileModel.updateProfile(newProfileData);
-      updateView('Profile saved successfully.', newProfileData);
+      updateView();  // Refresh the view after saving profile data
     } catch (e) {
-      updateView('Failed to save profile: $e', null);
+      print('Error saving profile: $e');
     }
   }
 
+  // Update individual fields in the profile
   Future<void> updateField(String field, dynamic value) async {
     try {
       await profileModel.setProfileField(field, value);
-      updateView('$field updated successfully.', null);
+      updateView();  // Notify the view to refresh after updating field
     } catch (e) {
-      updateView('Failed to update $field: $e', null);
+      print('Error updating $field: $e');
     }
   }
 }

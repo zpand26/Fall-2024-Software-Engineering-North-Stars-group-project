@@ -27,7 +27,7 @@ class _ProfilePageViewState extends State<ProfilePageView> {
   }
 
   void _loadProfileData() async {
-    await widget.profilePagePresenter.loadProfileData();
+    await widget.profilePagePresenter.fetchProfileData();
   }
 
   void _saveProfile() async {

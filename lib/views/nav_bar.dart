@@ -52,9 +52,11 @@ class NavBar extends StatefulWidget {
   }) : calorieTrackerPresenter = CalorieTrackerPresenter(calorieTrackerModel, (data) => print(data)),
         dataEntryForDayPresenter = DataEntryForDayPresenter(dataEntryForDayModel, (data) => print(data)),
         nutrientTrackingPresenter = NutrientTrackingPresenter(nutrientTrackerModel, (data) => print(data)),
-        profilePagePresenter = ProfilePagePresenter(profilePageModel, (message, data) {
-          print("Message: $message, Data: $data");
-        }),
+        profilePagePresenter = ProfilePagePresenter(profilePageModel,
+              () {
+
+            print("Profile Page view updated");
+          },),
         nutritionGoalPresenter = NutritionGoalPresenter(),
         photoGalleryPresenter = PhotoGalleryPresenter(
     PhotoGalleryModel(),
