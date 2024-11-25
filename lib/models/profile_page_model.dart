@@ -1,3 +1,4 @@
+
 class ProfilePageModel {
   String username;
   String email;
