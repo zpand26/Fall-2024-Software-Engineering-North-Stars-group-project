@@ -1,23 +1,35 @@
-
 import '../models/profile_page_model.dart';
 
 class ProfilePagePresenter {
-  final ProfilePageModel model;
-  void Function(String)? updateView;
+  final ProfilePageModel profileModel;
+  final Function(String, Map<String, dynamic>?) updateView;
 
-  ProfilePagePresenter({
-    required this.model,
-    this.updateView,
-  });
+  ProfilePagePresenter(this.profileModel, this.updateView);
 
-  // Load the initial username to display in the view
-  void loadUsername() {
-    updateView?.call(model.username);
+  Future<void> loadProfileData() async {
+    try {
+      final data = await profileModel.getProfile();
+      updateView('Profile loaded successfully.', data);
+    } catch (e) {
+      updateView('Failed to load profile: $e', null);
+    }
   }
 
-  // Save the updated username in the model and refresh the view
-  void saveUsername(String newUsername) {
-    model.username = newUsername;
-    updateView?.call(newUsername); // Trigger the view to update with the new username
+  Future<void> saveProfile(Map<String, dynamic> newProfileData) async {
+    try {
+      await profileModel.updateProfile(newProfileData);
+      updateView('Profile saved successfully.', newProfileData);
+    } catch (e) {
+      updateView('Failed to save profile: $e', null);
+    }
+  }
+
+  Future<void> updateField(String field, dynamic value) async {
+    try {
+      await profileModel.setProfileField(field, value);
+      updateView('$field updated successfully.', null);
+    } catch (e) {
+      updateView('Failed to update $field: $e', null);
+    }
   }
 }

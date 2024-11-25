@@ -48,17 +48,13 @@ class NavBar extends StatefulWidget {
     required NutrientTrackerModel nutrientTrackerModel,
     required NutritionGoalModel nutritionGoalModel,
     required PhotoGalleryModel photoGalleryModel,
+    required ProfilePageModel profilePageModel,
   }) : calorieTrackerPresenter = CalorieTrackerPresenter(calorieTrackerModel, (data) => print(data)),
         dataEntryForDayPresenter = DataEntryForDayPresenter(dataEntryForDayModel, (data) => print(data)),
         nutrientTrackingPresenter = NutrientTrackingPresenter(nutrientTrackerModel, (data) => print(data)),
-        profilePagePresenter = ProfilePagePresenter(
-          model: ProfilePageModel(
-            username: 'User123',
-            email: 'user@example.com',
-            profilePictureUrl: 'https://example.com/image.png',
-          ),
-          updateView: (username) {},
-        ),
+        profilePagePresenter = ProfilePagePresenter(profilePageModel, (message, data) {
+          print("Message: $message, Data: $data");
+        }),
         nutritionGoalPresenter = NutritionGoalPresenter(),
         photoGalleryPresenter = PhotoGalleryPresenter(
     PhotoGalleryModel(),
@@ -86,7 +82,7 @@ class _NavBarState extends State<NavBar> {
     PhotoGalleryView(presenter: widget.photoGalleryPresenter),
       ProfilePageView(
         profilePagePresenter: widget.profilePagePresenter,
-        photoGalleryPresenter: widget.photoGalleryPresenter, // Added presenter
+        //photoGalleryPresenter: widget.photoGalleryPresenter, // Added presenter
       ),
       NotificationHome(),
     ];
