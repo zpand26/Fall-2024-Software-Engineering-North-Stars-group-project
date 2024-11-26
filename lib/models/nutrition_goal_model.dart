@@ -34,28 +34,28 @@ class NutritionGoalModel {
       }
     }
 
-     // Calculate the difference for each nutrient in the target
+    // Calculate the difference for each nutrient in the target
     return target.map((key, targetValue) {
       final intakeValue = intake[key] ?? 0.0;
       return MapEntry(key, intakeValue - targetValue);
     });
   }
 
-  // bool isMeetingGoal(String event, Map<String, int> target) {
-  //   final regex = RegExp(r'(\w+): (\d+\.?\d*)');
-  //   final intake = <String, double>{};
+// bool isMeetingGoal(String event, Map<String, int> target) {
+//   final regex = RegExp(r'(\w+): (\d+\.?\d*)');
+//   final intake = <String, double>{};
 
-  //   for (final match in regex.allMatches(event)) {
-  //     final nutrient = match.group(1);
-  //     final value = double.parse(match.group(2)!);
-  //     if (nutrient != null) {
-  //       intake[nutrient] = value;
-  //     }
-  //   }
+//   for (final match in regex.allMatches(event)) {
+//     final nutrient = match.group(1);
+//     final value = double.parse(match.group(2)!);
+//     if (nutrient != null) {
+//       intake[nutrient] = value;
+//     }
+//   }
 
-  //   return intake.entries.every((entry) {
-  //     final targetValue = target[entry.key] ?? double.infinity;
-  //     return entry.value >= targetValue * 0.9 && entry.value <= targetValue * 1.1;
-  //   });
-  // }
+//   return intake.entries.every((entry) {
+//     final targetValue = target[entry.key] ?? double.infinity;
+//     return entry.value >= targetValue * 0.9 && entry.value <= targetValue * 1.1;
+//   });
+// }
 }

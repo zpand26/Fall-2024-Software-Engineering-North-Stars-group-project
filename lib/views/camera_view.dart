@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:north_stars/presenters/camera_presenter.dart';

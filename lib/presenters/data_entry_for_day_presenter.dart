@@ -32,8 +32,8 @@ class DataEntryForDayPresenter {
   }
 
 
-  //adding calories for day
-  /*void addCaloriesForDay(int dayCalorie){
+//adding calories for day
+/*void addCaloriesForDay(int dayCalorie){
       model.addCaloriesForDay(dayCalorie);
       updateView('Day updated. Day: ${model.getSpecificDay()}. Calories: $dayCalorie.');
    }*/

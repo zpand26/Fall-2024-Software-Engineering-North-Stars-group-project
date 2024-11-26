@@ -116,7 +116,7 @@ class _dayEntryViewState extends State<DayEntryView> {
                   ),
                 ),
                 onSelect: (values) {
-                    listOfDays = values;
+                  listOfDays = values;
 
                   print(values); //Tests value selector in terminal
                   print(listOfDays);

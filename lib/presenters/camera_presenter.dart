@@ -1,3 +1,4 @@
+
 import 'package:north_stars/models/camera_model.dart';
 
 abstract class CameraView {
