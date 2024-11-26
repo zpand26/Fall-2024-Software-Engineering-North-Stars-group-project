@@ -8,7 +8,8 @@ class NutritionGoalModel {
     'Total Carbohydrate': 400,
     'Fiber': 30,
     'Total Sugar': 100,
-    'Protein': 150
+    'Protein': 150, 
+    'Caffeine': 400,
   };
 
   static const cuttingTarget = {
@@ -19,8 +20,11 @@ class NutritionGoalModel {
     'Total Carbohydrate': 200,
     'Fiber': 25,
     'Total Sugar': 70,
-    'Protein': 100
+    'Protein': 100,
+    'Caffeine': 400
   };
+
+  static const int caffeineLimit = 400; 
 
   Map<String, double> nutrientDifferences(String event, Map<String, int> target) {
     final regex = RegExp(r'(\w+): (\d+\.?\d*)');
@@ -40,22 +44,4 @@ class NutritionGoalModel {
       return MapEntry(key, intakeValue - targetValue);
     });
   }
-
-  // bool isMeetingGoal(String event, Map<String, int> target) {
-  //   final regex = RegExp(r'(\w+): (\d+\.?\d*)');
-  //   final intake = <String, double>{};
-
-  //   for (final match in regex.allMatches(event)) {
-  //     final nutrient = match.group(1);
-  //     final value = double.parse(match.group(2)!);
-  //     if (nutrient != null) {
-  //       intake[nutrient] = value;
-  //     }
-  //   }
-
-  //   return intake.entries.every((entry) {
-  //     final targetValue = target[entry.key] ?? double.infinity;
-  //     return entry.value >= targetValue * 0.9 && entry.value <= targetValue * 1.1;
-  //   });
-  // }
 }
