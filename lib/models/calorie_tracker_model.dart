@@ -24,7 +24,7 @@ class CalorieTrackerModel {
           .collection('day')
           .doc(day.toString())
           .collection('Calories')
-          .add({'calorie': calorie, 'timestamp': DateTime.now()});
+          .add({'Calories': calorie, 'timestamp': DateTime.now()});
     }
   }
 
@@ -41,7 +41,7 @@ class CalorieTrackerModel {
           .collection('day')
           .doc(day.toString())
           .collection('Fat')
-          .add({'Total Fat': Fat, 'timestamp': DateTime.now()});
+          .add({'Fat': Fat, 'timestamp': DateTime.now()});
     }
   }
 
@@ -92,7 +92,7 @@ class CalorieTrackerModel {
           .collection('day')
           .doc(day.toString())
           .collection('Carbohydrates')
-          .add({'Total Carbohydrates': carbs, 'timestamp': DateTime.now()});
+          .add({'Carbohydrates': carbs, 'timestamp': DateTime.now()});
     }
   }
 
@@ -126,7 +126,7 @@ class CalorieTrackerModel {
           .collection('day')
           .doc(day.toString())
           .collection('Sugar')
-          .add({'Total Sugar': sugar, 'timestamp': DateTime.now()});
+          .add({'Sugar': sugar, 'timestamp': DateTime.now()});
     }
   }
 
@@ -159,20 +159,21 @@ class CalorieTrackerModel {
         .collection('month')
         .doc(month.toString())
         .collection('day')
+        .doc(day.toString())
+        .collection(field)
         .get();
 
     return querySnapshot.docs.fold<int>(
-      0,
-          (sum, doc) => sum + (doc.data()[field] as int? ?? 0),
+      0, (sum, doc) => sum + (doc.data()[field] as int? ?? 0),
     );
   }
 
   // Getters for daily totals
   Future<int> getTotalCaloriesOnDay(int year, int month, int day) =>
-      getTotalForFieldOnDay('calorie', year, month, day);
+      getTotalForFieldOnDay('Calories', year, month, day);
 
   Future<int> getTotalFatOnDay(int year, int month, int day) =>
-      getTotalForFieldOnDay('Total Fat', year, month, day);
+      getTotalForFieldOnDay('Fat', year, month, day);
 
   Future<int> getTotalCholesterolOnDay(int year, int month, int day) =>
       getTotalForFieldOnDay('Cholesterol', year, month, day);
@@ -181,13 +182,13 @@ class CalorieTrackerModel {
       getTotalForFieldOnDay('Sodium', year, month, day);
 
   Future<int> getTotalCarbsOnDay(int year, int month, int day) =>
-      getTotalForFieldOnDay('Total Carbohydrates', year, month, day);
+      getTotalForFieldOnDay('Carbohydrates', year, month, day);
 
   Future<int> getTotalFiberOnDay(int year, int month, int day) =>
       getTotalForFieldOnDay('Fiber', year, month, day);
 
   Future<int> getTotalSugarOnDay(int year, int month, int day) =>
-      getTotalForFieldOnDay('Total Sugar', year, month, day);
+      getTotalForFieldOnDay('Sugar', year, month, day);
 
   Future<int> getTotalProteinOnDay(int year, int month, int day) =>
       getTotalForFieldOnDay('Protein', year, month, day);
