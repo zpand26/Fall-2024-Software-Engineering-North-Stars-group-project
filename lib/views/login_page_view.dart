@@ -127,7 +127,7 @@ class _AuthPageState extends State<AuthPage> implements AuthViewContract {
                   // Google Sign-In Button
                   ElevatedButton.icon(
                     onPressed: () {
-                      // Trigger Google Sign-In logic
+                      _presenter.googleSignIn(); // Call presenter for Google Sign-In
                     },
                     icon: Image.asset(
                       'lib/assets/images/google_signinwith.png', // Google logo image
@@ -145,6 +145,7 @@ class _AuthPageState extends State<AuthPage> implements AuthViewContract {
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 16),
                   // Toggle Login/Sign-Up
                   TextButton(
