@@ -22,6 +22,12 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
   final CalorieTrackerModel _calorieTracker = CalorieTrackerModel();
   final DataEntryForDayModel _dataEntryForDayModel = DataEntryForDayModel();
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchDataForDay(_selectedDay);
+  }
+
   Future<void> _fetchDataForDay(DateTime day) async {
     try {
       // Clear current events for the selected day
