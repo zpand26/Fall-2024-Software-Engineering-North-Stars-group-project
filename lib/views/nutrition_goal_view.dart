@@ -18,6 +18,55 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
   final NutritionGoalPresenter _presenter = NutritionGoalPresenter();
   final CalorieTrackerModel _calorieTracker = CalorieTrackerModel();
 
+  Future<void> _fetchDataForDay(DateTime day) async {
+    try {
+      // Clear current events for the selected day
+      _events[day] = [];
+
+      // Fetch data for the selected day
+      final year = day.year;
+      final month = day.month;
+      final dayOfMonth = day.day;
+
+      final calories = await _calorieTracker.getTotalCaloriesOnDay(year, month, dayOfMonth);
+      final fat = await _calorieTracker.getTotalFatOnDay(year, month, dayOfMonth);
+      final cholesterol = await _calorieTracker.getTotalCholesterolOnDay(year, month, dayOfMonth);
+      final sodium = await _calorieTracker.getTotalSodiumOnDay(year, month, dayOfMonth);
+      final carbs = await _calorieTracker.getTotalCarbsOnDay(year, month, dayOfMonth);
+      final fiber = await _calorieTracker.getTotalFiberOnDay(year, month, dayOfMonth);
+      final sugar = await _calorieTracker.getTotalSugarOnDay(year, month, dayOfMonth);
+      final protein = await _calorieTracker.getTotalProteinOnDay(year, month, dayOfMonth);
+
+      // Check if all values are 0 or missing
+      if (calories == 0 && fat == 0 && cholesterol == 0 && sodium == 0 &&
+          carbs == 0 && fiber == 0 && sugar == 0 && protein == 0) {
+        return; // No data for this day, do not add an event
+      }
+
+      // Combine all data into a single string
+      final event = '''
+    Calories: $calories
+    Total Fat: $fat
+    Cholesterol: $cholesterol
+    Sodium: $sodium
+    Total Carbohydrate: $carbs
+    Fiber: $fiber
+    Total Sugar: $sugar
+    Protein: $protein
+    ''';
+
+      // Add the single event for this day
+      setState(() {
+        _events[day] = [event];
+      });
+    } catch (e) {
+      print('Error fetching data for day: $e');
+      // Handle error if needed
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,11 +89,13 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
                   selectedDayPredicate: (day) {
                     return isSameDay(_selectedDay, day);
                   },
-                  onDaySelected: (selectedDay, focusedDay) {
+                  onDaySelected: (selectedDay, focusedDay) async {
                     setState(() {
                       _selectedDay = selectedDay;
                       _focusedDay = focusedDay;
                     });
+
+                    await _fetchDataForDay(selectedDay);
                   },
                   eventLoader: (day) {
                     return _events[day] ?? [];
@@ -271,6 +322,12 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
       } else {
         _events[_selectedDay] = [event];
       }
+    });
+  }
+
+  void clearEvents(){
+    setState(() {
+      _events.clear();
     });
   }
 }
