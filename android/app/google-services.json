@@ -10,10 +10,23 @@
       "client_info": {
         "mobilesdk_app_id": "1:608473995268:android:a7e70e2b428b39a4a73d51",
         "android_client_info": {
-          "package_name": "com.example.north_stars"
+          "package_name": "com.example.northstars"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "608473995268-mdgkr1ctfugoqlcmjvbbrpm4i7rg2gvq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.northstars",
+            "certificate_hash": "f39875dc64c01d9d1424dd50ac8f5e486a3482e2"
+          }
+        },
+        {
+          "client_id": "608473995268-rc673mu0jnaph9uooakqdvnv6lcabi67.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAh_uLnvEbGdr82gpjpujC9opMvy9Csba4"
@@ -21,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "608473995268-rc673mu0jnaph9uooakqdvnv6lcabi67.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

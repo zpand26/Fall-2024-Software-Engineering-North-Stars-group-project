@@ -8,6 +8,7 @@ plugins {
 
 android {
     namespace = "com.example.north_stars"
+    apply plugin: 'codenarc'
     compileSdk = 34
     ndkVersion = "25.1.8937393"
 
@@ -20,6 +21,14 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+
+    apply plugin: 'com.google.gms.google-services'
+
+    dependencies {
+        implementation platform('com.google.firebase:firebase-bom:32.2.0') // Ensure the BOM version matches
+        implementation 'com.google.firebase:firebase-auth'
+        implementation 'com.google.android.gms:play-services-auth' // Required for Google Sign-In
     }
 
     defaultConfig {
