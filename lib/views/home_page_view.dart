@@ -1,3 +1,5 @@
+//import 'dart:ui_web';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:north_stars/presenters/calorie_tracker_presenter.dart';
@@ -21,7 +23,6 @@ import 'package:north_stars/views/nutrition_goal_view.dart';
 import 'package:north_stars/models/nutrition_goal_model.dart';
 import 'package:north_stars/presenters/nutrition_goal_presenter.dart';
 
-
 class HomePage extends StatelessWidget {
   // Instantiate each presenter with the model and any required callbacks
   final CalorieTrackerPresenter calorieTrackerPresenter;
@@ -38,6 +39,7 @@ class HomePage extends StatelessWidget {
     required DataEntryForDayModel dataEntryForDayModel,
     required NutrientTrackerModel nutrientTrackerModel,
     required NutritionGoalModel nutritionGoalModel, 
+   
     // required NotificationService notificationService,
   })  : calorieTrackerPresenter = CalorieTrackerPresenter(
     calorieTrackerModel,
@@ -53,8 +55,10 @@ class HomePage extends StatelessWidget {
         ), 
 
         nutritionGoalPresenter = NutritionGoalPresenter(
-        
+          // caffeinePresenter = CaffeineIntakePresenter(
+          //   caffeineIntakeModel
         ),
+            
          profilePagePresenter = ProfilePagePresenter(
           model: ProfilePageModel(
             username: 'User123',
@@ -164,6 +168,7 @@ class HomePage extends StatelessWidget {
               },
               child: const Text('Go to Nutrient Tracker'),
             ),
+            
             // Uncomment and add more buttons as needed
                 // ElevatedButton(
                 //   onPressed: () {
@@ -176,6 +181,7 @@ class HomePage extends StatelessWidget {
                 //   },
                 //   child: const Text('Go to Notification Service'),
                 // ),
+              
               ],
             ),
             ),
