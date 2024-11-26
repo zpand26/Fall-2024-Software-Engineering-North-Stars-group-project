@@ -54,6 +54,8 @@ dependencies:
   line_icons: ^2.0.3
   firebase_storage: ^12.3.6
   image_picker: ^0.8.7
+  google_sign_in: ^5.4.0
+
 
 dev_dependencies:
   flutter_test:

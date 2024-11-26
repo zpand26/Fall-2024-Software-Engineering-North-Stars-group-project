@@ -1,21 +1,23 @@
-import 'package:your_app/models/login_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../models/google_sign_in_model.dart';
+import '../views/google_sign_in_view.dart';
 
-class LoginPresenter {
-  final LoginModel _model;
-  final LoginView _view;
+class GoogleSignInPresenter {
+  final GoogleSignInModel _model;
+  final GoogleSignInView _view;
 
-  LoginPresenter(this._model, this._view);
+  GoogleSignInPresenter(this._view) : _model = GoogleSignInModel();
 
-  Future<void> handleGoogleSignIn() async {
+  Future<void> signInWithGoogle() async {
     try {
-      final user = await _model.signInWithGoogle();
+      final User? user = await _model.signInWithGoogle();
       if (user != null) {
-        _view.onGoogleSignInSuccess(user);
+        _view.onGoogleSignInSuccess(user); // Notify the view of success
       } else {
-        _view.onGoogleSignInCancelled();
+        _view.onGoogleSignInCancelled(); // Notify the view if user cancels
       }
     } catch (error) {
-      _view.onGoogleSignInError(error.toString());
+      _view.onGoogleSignInError(error.toString()); // Notify the view of an error
     }
   }
 }
