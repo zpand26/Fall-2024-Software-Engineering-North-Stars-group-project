@@ -54,6 +54,7 @@ dependencies:
   line_icons: ^2.0.3
   firebase_storage: ^12.3.6
   image_picker: ^0.8.7
+  syncfusion_flutter_datepicker: ^19.1.54-beta
 
 dev_dependencies:
   flutter_test:
