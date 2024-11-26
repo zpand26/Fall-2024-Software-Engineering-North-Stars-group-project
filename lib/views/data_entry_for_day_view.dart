@@ -86,7 +86,7 @@ class _dayEntryViewState extends State<DayEntryView> {
     );
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Daily Calories'),
+        title: const Text('Add Data by Week'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -187,15 +187,9 @@ class _dayEntryViewState extends State<DayEntryView> {
                   _daySugarController.clear();
                   _dayProteinController.clear();
                 },
-                child: const Text('Add Calorie Entry'),
+                child: const Text('Add Entries'),
               ),
               const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  widget.dataEntryForDayPresenter.showDailyCalories();
-                },
-                child: const Text('Show Calories per Day'),
-              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SelectWeekDays(
