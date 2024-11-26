@@ -5,6 +5,12 @@ import 'notification/initialization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:north_stars/models/data_entry_for_day_model.dart';
 import 'models/calorie_tracker_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'presenters/calorie_tracker_presenter.dart';
+import 'package:galleryimage/galleryimage.dart';
+import 'models/photo_gallery_model.dart';
+import 'presenters/photo_gallery_presenter.dart';
+import 'views/photo_gallery_view.dart';
 //import 'package:north_stars/presenters/notification_presenter.dart';
 
 
@@ -22,7 +28,15 @@ class MyApp extends StatelessWidget {
   final NutrientTrackerModel nutrientTrackerModel = NutrientTrackerModel();
   final CalorieTrackerModel calorieTrackerModel = CalorieTrackerModel();
   final DataEntryForDayModel dataEntryForDayModel = DataEntryForDayModel();
+  final PhotoGalleryPresenter photoGalleryPresenter = PhotoGalleryPresenter(
+      PhotoGalleryModel(),
+          () {
+        print("Photo gallery view updated");
+      },
+      FirebaseAuth.instance.currentUser?.uid ?? ''
 
+
+  );
   MyApp({super.key});
   @override
   Widget build(BuildContext context) {
@@ -36,19 +50,19 @@ class MyApp extends StatelessWidget {
               ),
             );
           }
-        //Once complete, show application
-        if (snapshot.connectionState == ConnectionState.done){
+          //Once complete, show application
+          if (snapshot.connectionState == ConnectionState.done){
+            return const MaterialApp(
+              home: AuthPage(),
+            );
+          }
+          //loading indicator
           return const MaterialApp(
-            home: AuthPage(),
+            home: Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            ),
           );
-        }
-        //loading indicator
-        return const MaterialApp(
-          home: Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          ),
-        );
 
-      });
+        });
   }
 }

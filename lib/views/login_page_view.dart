@@ -1,97 +1,45 @@
-// auth_page.dart
+// auth_presenter.dart
 
-import 'package:flutter/material.dart';
-import 'package:north_stars/views/home_page_view.dart';
-import 'package:north_stars/presenters/login_page_presenter.dart';
-import '../models/calorie_tracker_model.dart';
-import '../models/data_entry_for_day_model.dart';
-import '../models/nutrient_tracking_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../models/login_page_model.dart';
 
-class AuthPage extends StatefulWidget {
-  const AuthPage({super.key});
-
-  @override
-  _AuthPageState createState() => _AuthPageState();
+abstract class AuthViewContract {
+  void showError(String message);
+  void navigateToHome();
+  void navigateToLogin();
 }
 
-class _AuthPageState extends State<AuthPage> implements AuthViewContract {
-  late AuthPresenter _presenter;
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _isLogin = true;
+class AuthPresenter {
+  final AuthModel _authModel;
+  final AuthViewContract _view;
 
-  @override
-  void initState() {
-    super.initState();
-    _presenter = AuthPresenter(this);
-  }
+  AuthPresenter(this._view) : _authModel = AuthModel();
 
-  void _authenticate() {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
-    if (_isLogin) {
-      _presenter.login(email, password);
-    } else {
-      _presenter.signUp(email, password);
+  Future<void> login(String email, String password) async {
+    try {
+      await _authModel.signIn(email, password);
+      _view.navigateToHome();
+    } catch (e) {
+      _view.showError(e.toString());
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_isLogin ? 'Login' : 'Sign Up'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _authenticate,
-              child: Text(_isLogin ? 'Login' : 'Sign Up'),
-            ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _isLogin = !_isLogin;
-                });
-              },
-              child: Text(_isLogin ? 'Create an account' : 'Have an account? Log in'),
-            ),
-          ],
-        ),
-      ),
-    );
+  Future<void> signUp(String email, String password) async {
+    try {
+      await _authModel.signUp(email, password);
+      _view.navigateToHome();
+    } catch (e) {
+      _view.showError(e.toString());
+    }
   }
 
-  @override
-  void showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+  Future<void> logout() async {
+    try {
+      await _authModel.logout();
+      _view.navigateToLogin();
+    } catch (e) {
+      _view.showError("Logout failed: ${e.toString()}");
+    }
   }
 
-  @override
-  void navigateToHome() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => HomePage(
-          calorieTrackerModel: CalorieTrackerModel(),
-          dataEntryForDayModel: DataEntryForDayModel(),
-          nutrientTrackerModel: NutrientTrackerModel(),
-        ),
-      ),
-    );
-  }
 }

@@ -31,26 +31,79 @@ class _NutrientTrackingViewState extends State<NutrientTrackingView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nutrient Tracker'),
+        backgroundColor: Colors.teal,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: _queryController,
-              decoration: const InputDecoration(hintText: 'Enter food items'),
-            ),
-            ElevatedButton(
-              onPressed: () => widget.presenter.loadData(_queryController.text),
-              child: const Text('Show Nutrient Summary'),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              data,
-              style: const TextStyle(fontSize: 18),
-              textAlign: TextAlign.center,
-            ),
-          ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Input Section
+              TextField(
+                controller: _queryController,
+                decoration: InputDecoration(
+                  labelText: 'Enter food items',
+                  labelStyle: TextStyle(color: Colors.teal),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  prefixIcon: const Icon(Icons.food_bank, color: Colors.teal),
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Button Section
+              ElevatedButton.icon(
+                onPressed: () => widget.presenter.loadData(_queryController.text),
+                icon: const Icon(Icons.search),
+                label: const Text('Show Nutrient Summary'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Result Section
+              if (data.isNotEmpty)
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Nutrient Summary:',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.teal,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          data,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              else
+                const Center(
+                  child: Text(
+                    'Enter food items to see the summary.',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

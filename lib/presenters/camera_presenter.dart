@@ -1,30 +1,40 @@
-import '../models/profile_page_model.dart';
+import 'package:north_stars/models/camera_model.dart';
 
-class ProfilePagePresenter {
-  final ProfilePageModel model;
-  void Function(String)? updateView;
+abstract class CameraView {
+  void updateView();
+  void showLoading();
+  void showError(String message);
+}
 
-  ProfilePagePresenter({
-    required this.model,
-    this.updateView,
-  });
+class CameraPresenter {
+  final CameraModel _cameraModel;
+  final CameraView _cameraView;
 
-  void loadUsername() {
-    updateView?.call(model.username);
+  CameraPresenter(this._cameraView) : _cameraModel = CameraModel();
+
+  Future<void> initializeCamera() async {
+    try {
+      _cameraView.showLoading();
+      await _cameraModel.initializeCamera();
+      _cameraView.updateView();
+    } catch (e) {
+      _cameraView.showError('Failed to initialize camera: $e');
+    }
   }
 
-  void saveUsername(String newUsername) {
-    model.updateUsername(newUsername);
-    updateView?.call(newUsername);
+  Future<void> capturePhoto() async {
+    try {
+      final imagePath = await _cameraModel.takePicture();
+      if (imagePath != null) {
+        // Handle the image (e.g., show a success message or navigate)
+        print('Photo taken at: $imagePath');
+      } else {
+        _cameraView.showError('Failed to capture photo');
+      }
+    } catch (e) {
+      _cameraView.showError('Error capturing photo: $e');
+    }
   }
 
-  void saveMobilePhone(String newMobilePhone) {
-    model.updateMobilePhone(newMobilePhone);
-    updateView?.call(model.username);
-  }
-
-  void saveBirthday(DateTime newBirthday) {
-    model.updateBirthday(newBirthday);
-    updateView?.call(model.username);
-  }
+  CameraModel get cameraModel => _cameraModel;
 }
