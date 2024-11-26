@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../presenters/nutrition_goal_presenter.dart';
+import '../models/nutrition_goal_model.dart';
 
 class NutritionGoalView extends StatefulWidget {
   const NutritionGoalView({super.key});
@@ -49,9 +50,28 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
               return _events[day] ?? [];
             },
           ),
-          ..._getEventsForDay(_selectedDay).map((event) => ListTile(
+          if (_getEventsForDay(_selectedDay).isNotEmpty) ...[
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                'Logged Nutrition Data:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            ..._getEventsForDay(_selectedDay).map(
+              (event) => ListTile(
                 title: Text(event),
-              )),
+              ),
+            ),
+          ],
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Nutrition Goals',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          _buildTargetTable(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -67,35 +87,21 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
 
   void _showIntakeSummary() {
     final events = _getEventsForDay(_selectedDay);
-    final latestEvent = events.isNotEmpty ? events.last : null;
-    final assessment = latestEvent != null ? 
-      _presenter.evaluateIntake(latestEvent) 
-      : 'No events logged for this day.';
+
+    if (events.isEmpty) {
+      _showAlert('No events logged for this day.');
+      return;
+    }
+
+    final latestEvent = events.last;
+    final assessment = _presenter.evaluateIntake(latestEvent);
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('Daily Intake Summary'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (latestEvent == null)
-                const Text('No events logged for this day.')
-              else
-                ...events.map((event) => Text(event)).toList(),
-              const SizedBox(height: 16),
-              Text(
-                assessment,
-                style: TextStyle(
-                  color: assessment.contains('bulking') ? Colors.green
-                   : assessment.contains('cutting') ? Colors.blue
-                   : Colors.red,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
+          content: Text(assessment),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -108,12 +114,20 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
   }
 
   void _showAddEventDialog() {
-    final controllers = List.generate(8, (_) => TextEditingController());
+    final controllers = List.generate(9, (_) => TextEditingController());
     final labels = [
-      'Calories', 'Total Fat', 'Cholesterol', 'Sodium',
-      'Total Carbohydrate', 'Fiber', 'Total Sugar', 'Protein'
+      'Calories',
+      'Total Fat (g)',
+      'Cholesterol (mg)',
+      'Sodium (mg)',
+      'Total Carbohydrate (mg)',
+      'Fiber (g)',
+      'Total Sugar (g)',
+      'Protein (g)',
+      'Caffeine (mg)'
     ];
-  showDialog(
+
+    showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -121,13 +135,14 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: List.generate(8, (index) {
-                return TextField(
+              children: List.generate(
+                labels.length,
+                (index) => TextField(
                   controller: controllers[index],
                   decoration: InputDecoration(hintText: labels[index]),
                   keyboardType: TextInputType.number,
-                );
-              }),
+                ),
+              ),
             ),
           ),
           actions: [
@@ -137,7 +152,10 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
             ),
             TextButton(
               onPressed: () {
-                if (controllers.any((controller) => controller.text.isNotEmpty)) {
+                final isValidInput = controllers
+                    .any((controller) => controller.text.isNotEmpty);
+
+                if (isValidInput) {
                   final event = labels.asMap().entries.map((entry) {
                     return '${entry.value}: ${controllers[entry.key].text}';
                   }).join('\n');
@@ -161,5 +179,88 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
         _events[_selectedDay] = [event];
       }
     });
+  }
+
+  Widget _buildTargetTable() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Table(
+        border: TableBorder.all(color: Colors.grey),
+        columnWidths: const {
+          0: FractionColumnWidth(0.5),
+          1: FractionColumnWidth(0.25),
+          2: FractionColumnWidth(0.25),
+        },
+        children: [
+          const TableRow(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Text(
+                  'Nutrient',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Text(
+                  'Bulking',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Text(
+                  'Cutting',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
+          ...NutritionGoalModel.bulkingTarget.entries.map((entry) {
+            final nutrient = entry.key;
+            final bulkingValue = entry.value;
+            final cuttingValue =
+                NutritionGoalModel.cuttingTarget[nutrient] ?? 0;
+            return TableRow(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(nutrient),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(bulkingValue.toString(), textAlign: TextAlign.center),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(cuttingValue.toString(), textAlign: TextAlign.center),
+                ),
+              ],
+            );
+          }).toList(),
+        ],
+      ),
+    );
+  }
+
+  void _showAlert(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Notice'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
