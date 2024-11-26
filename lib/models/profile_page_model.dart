@@ -57,4 +57,18 @@ class ProfilePageModel {
     final uploadTask = await storageRef.putFile(photo);
     return await uploadTask.ref.getDownloadURL();
   }
+
+  Future<List<String>> getPhotoGallery() async {
+    if (userId.isNotEmpty) {
+      final snapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('gallery')
+          .orderBy('uploadedAt', descending: true)
+          .get();
+
+      return snapshot.docs.map((doc) => doc['url'] as String).toList();
+    }
+    return [];
+  }
 }

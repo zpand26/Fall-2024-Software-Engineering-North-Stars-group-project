@@ -113,6 +113,73 @@ class _ProfilePageViewState extends State<ProfilePageView> {
     }
   }
 
+  Future<void> _selectProfilePictureFromGallery() async {
+    setState(() => _statusMessage = 'Loading gallery...');
+    final photoGallery = await widget.profilePagePresenter.fetchPhotoGallery();
+
+    if (photoGallery.isEmpty) {
+      setState(() => _statusMessage = 'No photos found in the gallery.');
+      return;
+    }
+
+    // Show dialog with photos
+    final selectedPhoto = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Select a Profile Picture'),
+              ),
+              SizedBox(
+                height: 300, // Adjust height for gallery display
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 4.0,
+                    mainAxisSpacing: 4.0,
+                  ),
+                  itemCount: photoGallery.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context, photoGallery[index]);
+                      },
+                      child: Image.network(
+                        photoGallery[index],
+                        fit: BoxFit.cover,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    // Update profile picture if an image was selected
+    if (selectedPhoto != null) {
+      try {
+        setState(() {
+          _profilePictureUrl = selectedPhoto;
+          _statusMessage = 'Profile picture updated!';
+        });
+
+        await widget.profilePagePresenter.updateField('profilePictureUrl', selectedPhoto);
+      } catch (e) {
+        setState(() {
+          _statusMessage = 'Failed to update profile picture. Please try again.';
+        });
+        print('Error updating profile picture: $e');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,7 +197,7 @@ class _ProfilePageViewState extends State<ProfilePageView> {
               backgroundImage:
               _profilePictureUrl != null ? NetworkImage(_profilePictureUrl!) : null,
               child: GestureDetector(
-                onTap: _selectProfilePicture, // Open gallery on tap
+                onTap: _selectProfilePictureFromGallery, // Open gallery on tap
                 child: _profilePictureUrl == null
                     ? const Icon(Icons.person, size: 60)
                     : null,

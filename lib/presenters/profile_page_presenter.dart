@@ -44,4 +44,14 @@ class ProfilePagePresenter {
     return await profileModel.uploadProfilePicture(photo);
   }
 
+  Future<List<String>> fetchPhotoGallery() async {
+    try {
+      return await profileModel.getPhotoGallery();
+    } catch (e) {
+      print('Error fetching photo gallery: $e');
+      return [];
+    }
+  }
+
+
 }
