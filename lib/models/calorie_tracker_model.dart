@@ -28,6 +28,22 @@ class CalorieTrackerModel {
     }
   }
 
+  Future<void> addCaffeine(int caffeine, int year, int month, int day) async {
+    if (userId.isNotEmpty) {
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('year')
+          .doc(year.toString())
+          .collection('month')
+          .doc(month.toString())
+          .collection('day')
+          .doc(day.toString())
+          .collection('Caffeine')
+          .add({'Caffeine': caffeine, 'timestamp': DateTime.now()});
+    }
+  }
+
   //add Fat to firebase
   Future<void> addFat(int Fat, int year, int month, int day) async {
     if (userId.isNotEmpty) {
@@ -171,6 +187,9 @@ class CalorieTrackerModel {
   // Getters for daily totals
   Future<int> getTotalCaloriesOnDay(int year, int month, int day) =>
       getTotalForFieldOnDay('Calories', year, month, day);
+
+  Future<int> getTotalCaffeineOnDay(int year, int month, int day) =>
+      getTotalForFieldOnDay('Caffeine', year, month, day);
 
   Future<int> getTotalFatOnDay(int year, int month, int day) =>
       getTotalForFieldOnDay('Fat', year, month, day);

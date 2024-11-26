@@ -1,14 +1,13 @@
-// views/calendar_view.dart
 import 'package:flutter/material.dart';
-import 'package:north_stars/models/data_entry_for_day_model.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../presenters/nutrition_goal_presenter.dart';
 import '../models/calorie_tracker_model.dart';
-import 'package:north_stars/views/data_entry_for_day_view.dart';
-import 'package:north_stars/presenters/data_entry_for_day_presenter.dart';
+import '../models/data_entry_for_day_model.dart';
+import '../presenters/nutrition_goal_presenter.dart';
+import '../views/data_entry_for_day_view.dart';
+import '../presenters/data_entry_for_day_presenter.dart';
 
 class NutritionGoalView extends StatefulWidget {
-  const NutritionGoalView({super.key});
+  const NutritionGoalView({Key? key}) : super(key: key);
 
   @override
   _NutritionGoalViewState createState() => _NutritionGoalViewState();
@@ -19,8 +18,8 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   final Map<DateTime, List<String>> _events = {};
-  final NutritionGoalPresenter _nutritionGoalPresenter = NutritionGoalPresenter();
   final CalorieTrackerModel _calorieTracker = CalorieTrackerModel();
+  final NutritionGoalPresenter _nutritionGoalPresenter = NutritionGoalPresenter();
   final DataEntryForDayModel _dataEntryForDayModel = DataEntryForDayModel();
 
   @override
@@ -31,10 +30,8 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
 
   Future<void> _fetchDataForDay(DateTime day) async {
     try {
-      // Clear current events for the selected day
-      _events[day] = [];
 
-      // Fetch data for the selected day
+      _events[day] = [];
       final year = day.year;
       final month = day.month;
       final dayOfMonth = day.day;
@@ -48,13 +45,11 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
       final sugar = await _calorieTracker.getTotalSugarOnDay(year, month, dayOfMonth);
       final protein = await _calorieTracker.getTotalProteinOnDay(year, month, dayOfMonth);
 
-      // Check if all values are 0 or missing
       if (calories == 0 && fat == 0 && cholesterol == 0 && sodium == 0 &&
           carbs == 0 && fiber == 0 && sugar == 0 && protein == 0) {
         return; // No data for this day, do not add an event
       }
 
-      // Combine all data into a single string
       final event = '''
     Calories: $calories
     Total Fat: $fat
@@ -66,16 +61,13 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
     Protein: $protein
     ''';
 
-      // Add the single event for this day
       setState(() {
         _events[day] = [event];
       });
     } catch (e) {
-      print('Error fetching data for day: $e');
+      print('Error fetching data: $e');
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -198,9 +190,9 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
                     ),
                     onPressed: (){
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => DayEntryView(DataEntryForDayPresenter(
-                            _dataEntryForDayModel, (data) => print(data))))
+                          context,
+                          MaterialPageRoute(builder: (context) => DayEntryView(DataEntryForDayPresenter(
+                              _dataEntryForDayModel, (data) => print(data))))
                       );
                     },
                     icon: const Icon(Icons.calendar_view_week, color: Colors.white),
@@ -233,70 +225,12 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
             ),
           )
         ],
-          TableCalendar(
-            firstDay: DateTime.utc(2010, 10, 16),
-            lastDay: DateTime.utc(2030, 3, 14),
-            focusedDay: _focusedDay,
-            calendarFormat: _calendarFormat,
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay;
-              });
-            },
-            eventLoader: (day) {
-              return _events[day] ?? [];
-            },
-          ),
-          if (_getEventsForDay(_selectedDay).isNotEmpty) ...[
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Logged Nutrition Data:',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-            ..._getEventsForDay(_selectedDay).map(
-              (event) => ListTile(
-                title: Text(event),
-              ),
-            ),
-          ],
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              'Nutrition Goals',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          _buildTargetTable(),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showAddEventDialog,
-        child: const Icon(Icons.add),
       ),
       floatingActionButton: null,
     );
   }
 
-  List<String> _getEventsForDay(DateTime day) {
-    return _events[day] ?? [];
-  }
 
-  void _showIntakeSummary() {
-    final events = _getEventsForDay(_selectedDay);
-
-    if (events.isEmpty) {
-      _showAlert('No events logged for this day.');
-      return;
-    }
-
-    final latestEvent = events.last;
-    final assessment = _presenter.evaluateIntake(latestEvent);
   void _showIntakeSummary() async {
     final calories = await _calorieTracker.getTotalCaloriesOnDay(_selectedDay.year, _selectedDay.month, _selectedDay.day);
     final fat = await _calorieTracker.getTotalFatOnDay(_selectedDay.year, _selectedDay.month, _selectedDay.day);
@@ -349,7 +283,6 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
               ),
             ],
           ),
-          content: Text(assessment),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -365,14 +298,14 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
     final controllers = List.generate(9, (_) => TextEditingController());
     final labels = [
       'Calories',
-      'Total Fat (g)',
-      'Cholesterol (mg)',
-      'Sodium (mg)',
-      'Total Carbohydrate (mg)',
-      'Fiber (g)',
-      'Total Sugar (g)',
-      'Protein (g)',
-      'Caffeine (mg)'
+      'Fat',
+      'Cholesterol',
+      'Sodium',
+      'Carbohydrates',
+      'Fiber',
+      'Total Sugar',
+      'Protein',
+      'Caffeine',
     ];
 
     showDialog(
@@ -383,7 +316,7 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: List.generate(8, (index) {
+              children: List.generate(9, (index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: TextField(
@@ -396,14 +329,6 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
                   ),
                 );
               }),
-              children: List.generate(
-                labels.length,
-                (index) => TextField(
-                  controller: controllers[index],
-                  decoration: InputDecoration(hintText: labels[index]),
-                  keyboardType: TextInputType.number,
-                ),
-              ),
             ),
           ),
           actions: [
@@ -412,17 +337,6 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
-                final isValidInput = controllers
-                    .any((controller) => controller.text.isNotEmpty);
-
-                if (isValidInput) {
-                  final event = labels.asMap().entries.map((entry) {
-                    return '${entry.value}: ${controllers[entry.key].text}';
-                  }).join('\n');
-                  _addEvent(event);
-                }
-                Navigator.of(context).pop();
               onPressed: () async {
                 try {
                   if (controllers.any((controller) => controller.text.isNotEmpty)) {
@@ -446,6 +360,8 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
                         int.tryParse(controllers[6].text) ?? 0, year, month, day);
                     await _calorieTracker.addProtein(
                         int.tryParse(controllers[7].text) ?? 0, year, month, day);
+                    await _calorieTracker.addCaffeine(
+                        int.tryParse(controllers[8].text) ?? 0,year,month, day);
 
                     final event = labels.asMap().entries.map((entry) {
                       return '${entry.value}: ${controllers[entry.key].text}';
@@ -481,86 +397,9 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
     });
   }
 
-  Widget _buildTargetTable() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Table(
-        border: TableBorder.all(color: Colors.grey),
-        columnWidths: const {
-          0: FractionColumnWidth(0.5),
-          1: FractionColumnWidth(0.25),
-          2: FractionColumnWidth(0.25),
-        },
-        children: [
-          const TableRow(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(4.0),
-                child: Text(
-                  'Nutrient',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(4.0),
-                child: Text(
-                  'Bulking',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(4.0),
-                child: Text(
-                  'Cutting',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
-          ),
-          ...NutritionGoalModel.bulkingTarget.entries.map((entry) {
-            final nutrient = entry.key;
-            final bulkingValue = entry.value;
-            final cuttingValue =
-                NutritionGoalModel.cuttingTarget[nutrient] ?? 0;
-            return TableRow(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Text(nutrient),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Text(bulkingValue.toString(), textAlign: TextAlign.center),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Text(cuttingValue.toString(), textAlign: TextAlign.center),
-                ),
-              ],
-            );
-          }).toList(),
-        ],
-      ),
-    );
-  }
-
-  void _showAlert(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Notice'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Close'),
-            ),
-          ],
-        );
-      },
-    );
+  void clearEvents(){
+    setState(() {
+      _events.clear();
+    });
   }
 }
