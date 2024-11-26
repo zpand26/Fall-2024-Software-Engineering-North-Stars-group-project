@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:north_stars/models/data_entry_for_day_model.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../presenters/nutrition_goal_presenter.dart';
 import '../models/calorie_tracker_model.dart';
+import 'package:north_stars/views/data_entry_for_day_view.dart';
+import 'package:north_stars/presenters/data_entry_for_day_presenter.dart';
 
 class NutritionGoalView extends StatefulWidget {
   const NutritionGoalView({super.key});
@@ -15,8 +18,9 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   final Map<DateTime, List<String>> _events = {};
-  final NutritionGoalPresenter _presenter = NutritionGoalPresenter();
+  final NutritionGoalPresenter _nutritionGoalPresenter = NutritionGoalPresenter();
   final CalorieTrackerModel _calorieTracker = CalorieTrackerModel();
+  final DataEntryForDayModel _dataEntryForDayModel = DataEntryForDayModel();
 
   Future<void> _fetchDataForDay(DateTime day) async {
     try {
@@ -61,7 +65,6 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
       });
     } catch (e) {
       print('Error fetching data for day: $e');
-      // Handle error if needed
     }
   }
 
@@ -147,39 +150,87 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
               ],
             ),
           ),
-          // Positioned Daily Intake Summary Button
           Positioned(
             bottom: 20,
             left: 20,
-            child: ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+            right: 20,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Daily Intake Button
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 3 - 24,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    ),
+                    onPressed: _showIntakeSummary,
+                    icon: const Icon(Icons.summarize, color: Colors.white),
+                    label: Text(
+                      'Daily Intake',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              ),
-              onPressed: _showIntakeSummary,
-              icon: const Icon(Icons.summarize, color: Colors.white),
-              label: Text(
-                'Daily Intake',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 3 - 24,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    ),
+                    onPressed: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => DayEntryView(DataEntryForDayPresenter(
+                            _dataEntryForDayModel, (data) => print(data))))
+                      );
+                    },
+                    icon: const Icon(Icons.calendar_view_week, color: Colors.white),
+                    label: Text(
+                      'Weekly Data Entry',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                // Add Data Button
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 3 - 24,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    ),
+                    onPressed: _showAddEventDialog,
+                    icon: const Icon(Icons.add, color: Colors.white),
+                    label: const Text('Add Data'),
+                  ),
+                ),
+              ],
             ),
-          ),
+          )
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _showAddEventDialog,
-        icon: const Icon(Icons.add),
-        label: const Text('Add Data'),
-        backgroundColor: Colors.teal,
-      ),
+      floatingActionButton: null,
     );
   }
+
 
   void _showIntakeSummary() async {
     final calories = await _calorieTracker.getTotalCaloriesOnDay(_selectedDay.year, _selectedDay.month, _selectedDay.day);
@@ -201,7 +252,7 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
       Sugar: $sugar
       Protein: $protein
     ''';
-    final assessment = _presenter.evaluateIntake(nutritionData);
+    final assessment = _nutritionGoalPresenter.evaluateIntake(nutritionData);
 
     showDialog(
       context: context,
@@ -319,7 +370,6 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
                   }
                 } catch (e) {
                   print('Error adding event: $e');
-                  // Show error dialog or message if needed
                 }
               },
               child: const Text('Add'),
