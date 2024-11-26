@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../presenters/nutrition_goal_presenter.dart';
+import '../models/calorie_tracker_model.dart';
 
 class NutritionGoalView extends StatefulWidget {
   const NutritionGoalView({super.key});
@@ -15,6 +16,56 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
   DateTime _focusedDay = DateTime.now();
   final Map<DateTime, List<String>> _events = {};
   final NutritionGoalPresenter _presenter = NutritionGoalPresenter();
+  final CalorieTrackerModel _calorieTracker = CalorieTrackerModel();
+
+  Future<void> _fetchDataForDay(DateTime day) async {
+    try {
+      // Clear current events for the selected day
+      _events[day] = [];
+
+      // Fetch data for the selected day
+      final year = day.year;
+      final month = day.month;
+      final dayOfMonth = day.day;
+
+      final calories = await _calorieTracker.getTotalCaloriesOnDay(year, month, dayOfMonth);
+      final fat = await _calorieTracker.getTotalFatOnDay(year, month, dayOfMonth);
+      final cholesterol = await _calorieTracker.getTotalCholesterolOnDay(year, month, dayOfMonth);
+      final sodium = await _calorieTracker.getTotalSodiumOnDay(year, month, dayOfMonth);
+      final carbs = await _calorieTracker.getTotalCarbsOnDay(year, month, dayOfMonth);
+      final fiber = await _calorieTracker.getTotalFiberOnDay(year, month, dayOfMonth);
+      final sugar = await _calorieTracker.getTotalSugarOnDay(year, month, dayOfMonth);
+      final protein = await _calorieTracker.getTotalProteinOnDay(year, month, dayOfMonth);
+
+      // Check if all values are 0 or missing
+      if (calories == 0 && fat == 0 && cholesterol == 0 && sodium == 0 &&
+          carbs == 0 && fiber == 0 && sugar == 0 && protein == 0) {
+        return; // No data for this day, do not add an event
+      }
+
+      // Combine all data into a single string
+      final event = '''
+    Calories: $calories
+    Total Fat: $fat
+    Cholesterol: $cholesterol
+    Sodium: $sodium
+    Total Carbohydrate: $carbs
+    Fiber: $fiber
+    Total Sugar: $sugar
+    Protein: $protein
+    ''';
+
+      // Add the single event for this day
+      setState(() {
+        _events[day] = [event];
+      });
+    } catch (e) {
+      print('Error fetching data for day: $e');
+      // Handle error if needed
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +89,13 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
                   selectedDayPredicate: (day) {
                     return isSameDay(_selectedDay, day);
                   },
-                  onDaySelected: (selectedDay, focusedDay) {
+                  onDaySelected: (selectedDay, focusedDay) async {
                     setState(() {
                       _selectedDay = selectedDay;
                       _focusedDay = focusedDay;
                     });
+
+                    await _fetchDataForDay(selectedDay);
                   },
                   eventLoader: (day) {
                     return _events[day] ?? [];
@@ -128,12 +181,27 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
     );
   }
 
-  void _showIntakeSummary() {
-    final events = _getEventsForDay(_selectedDay);
-    final latestEvent = events.isNotEmpty ? events.last : null;
-    final assessment = latestEvent != null
-        ? _presenter.evaluateIntake(latestEvent)
-        : 'No events logged for this day.';
+  void _showIntakeSummary() async {
+    final calories = await _calorieTracker.getTotalCaloriesOnDay(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+    final fat = await _calorieTracker.getTotalFatOnDay(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+    final cholesterol = await _calorieTracker.getTotalCholesterolOnDay(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+    final sodium = await _calorieTracker.getTotalSodiumOnDay(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+    final carbs = await _calorieTracker.getTotalCarbsOnDay(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+    final fiber = await _calorieTracker.getTotalFiberOnDay(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+    final sugar = await _calorieTracker.getTotalSugarOnDay(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+    final protein = await _calorieTracker.getTotalProteinOnDay(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+
+    final nutritionData = ''' 
+      Calories: $calories
+      Fat: $fat
+      Cholesterol: $cholesterol
+      Sodium: $sodium
+      Carbohydrates: $carbs
+      Fiber: $fiber
+      Sugar: $sugar
+      Protein: $protein
+    ''';
+    final assessment = _presenter.evaluateIntake(nutritionData);
 
     showDialog(
       context: context,
@@ -143,17 +211,21 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (latestEvent == null)
-                const Text('No events logged for this day.')
-              else
-                ...events.map((event) => Text(event)).toList(),
+              Text('Calories: $calories'),
+              Text('Total Fat: $fat'),
+              Text('Cholesterol: $cholesterol'),
+              Text('Sodium: $sodium'),
+              Text('Total Carbohydrate: $carbs'),
+              Text('Fiber: $fiber'),
+              Text('Total Sugar: $sugar'),
+              Text('Protein: $protein'),
               const SizedBox(height: 16),
               Text(
                 assessment,
                 style: TextStyle(
-                  color: assessment.contains('bulking')
+                  color: assessment == 'Bulking'
                       ? Colors.green
-                      : assessment.contains('cutting')
+                      : assessment == 'Cutting'
                       ? Colors.blue
                       : Colors.red,
                   fontWeight: FontWeight.bold,
@@ -214,14 +286,41 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
-                if (controllers.any((controller) => controller.text.isNotEmpty)) {
-                  final event = labels.asMap().entries.map((entry) {
-                    return '${entry.value}: ${controllers[entry.key].text}';
-                  }).join('\n');
-                  _addEvent(event);
+              onPressed: () async {
+                try {
+                  if (controllers.any((controller) => controller.text.isNotEmpty)) {
+                    final int year = _selectedDay.year;
+                    final int month = _selectedDay.month;
+                    final int day = _selectedDay.day;
+
+                    await _calorieTracker.addCalories(
+                        int.tryParse(controllers[0].text) ?? 0, year, month, day);
+                    await _calorieTracker.addFat(
+                        int.tryParse(controllers[1].text) ?? 0, year, month, day);
+                    await _calorieTracker.addCholesterol(
+                        int.tryParse(controllers[2].text) ?? 0, year, month, day);
+                    await _calorieTracker.addSodium(
+                        int.tryParse(controllers[3].text) ?? 0, year, month, day);
+                    await _calorieTracker.addCarbs(
+                        int.tryParse(controllers[4].text) ?? 0, year, month, day);
+                    await _calorieTracker.addFiber(
+                        int.tryParse(controllers[5].text) ?? 0, year, month, day);
+                    await _calorieTracker.addSugar(
+                        int.tryParse(controllers[6].text) ?? 0, year, month, day);
+                    await _calorieTracker.addProtein(
+                        int.tryParse(controllers[7].text) ?? 0, year, month, day);
+
+                    final event = labels.asMap().entries.map((entry) {
+                      return '${entry.value}: ${controllers[entry.key].text}';
+                    }).join('\n');
+
+                    _addEvent(event);
+                    Navigator.of(context).pop();
+                  }
+                } catch (e) {
+                  print('Error adding event: $e');
+                  // Show error dialog or message if needed
                 }
-                Navigator.of(context).pop();
               },
               child: const Text('Add'),
             ),
@@ -230,6 +329,7 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
       },
     );
   }
+
 
   List<String> _getEventsForDay(DateTime day) {
     return _events[day] ?? [];
@@ -242,6 +342,12 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
       } else {
         _events[_selectedDay] = [event];
       }
+    });
+  }
+
+  void clearEvents(){
+    setState(() {
+      _events.clear();
     });
   }
 }
