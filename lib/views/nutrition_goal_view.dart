@@ -5,6 +5,7 @@ import '../models/data_entry_for_day_model.dart';
 import '../presenters/nutrition_goal_presenter.dart';
 import '../views/data_entry_for_day_view.dart';
 import '../presenters/data_entry_for_day_presenter.dart';
+import 'package:north_stars/models/nutrition_goal_model.dart';
 
 class NutritionGoalView extends StatefulWidget {
   const NutritionGoalView({Key? key}) : super(key: key);
@@ -69,6 +70,77 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
     }
   }
 
+  Widget _buildTargetTable() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Table(
+        border: TableBorder.all(color: Colors.grey),
+        columnWidths: const {
+          0: FractionColumnWidth(0.5),
+          1: FractionColumnWidth(0.25),
+          2: FractionColumnWidth(0.25),
+        },
+        children: [
+          const TableRow(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Text(
+                  'Nutrient',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Text(
+                  'Bulking',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Text(
+                  'Cutting',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
+          ...NutritionGoalModel.bulkingTarget.entries.map((entry) {
+            final nutrient = entry.key;
+            final bulkingValue = entry.value;
+            final cuttingValue =
+                NutritionGoalModel.cuttingTarget[nutrient] ?? 0;
+            return TableRow(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(nutrient),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    bulkingValue.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    cuttingValue.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            );
+          }).toList(),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,83 +148,90 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
         title: const Text('Nutrition Goal Tracker'),
         backgroundColor: Colors.teal,
       ),
-      body: Stack(
+      body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                // Calendar Section
-                TableCalendar(
-                  firstDay: DateTime.utc(2010, 10, 16),
-                  lastDay: DateTime.utc(2030, 3, 14),
-                  focusedDay: _focusedDay,
-                  calendarFormat: _calendarFormat,
-                  selectedDayPredicate: (day) {
-                    return isSameDay(_selectedDay, day);
-                  },
-                  onDaySelected: (selectedDay, focusedDay) async {
-                    setState(() {
-                      _selectedDay = selectedDay;
-                      _focusedDay = focusedDay;
-                    });
+          // Scrollable content
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    // Calendar Section
+                    TableCalendar(
+                      firstDay: DateTime.utc(2010, 10, 16),
+                      lastDay: DateTime.utc(2030, 3, 14),
+                      focusedDay: _focusedDay,
+                      calendarFormat: _calendarFormat,
+                      selectedDayPredicate: (day) {
+                        return isSameDay(_selectedDay, day);
+                      },
+                      onDaySelected: (selectedDay, focusedDay) async {
+                        setState(() {
+                          _selectedDay = selectedDay;
+                          _focusedDay = focusedDay;
+                        });
 
-                    await _fetchDataForDay(selectedDay);
-                  },
-                  eventLoader: (day) {
-                    return _events[day] ?? [];
-                  },
-                  calendarStyle: CalendarStyle(
-                    selectedDecoration: BoxDecoration(
-                      color: Colors.teal,
-                      shape: BoxShape.circle,
-                    ),
-                    todayDecoration: BoxDecoration(
-                      color: Colors.teal.withOpacity(0.5),
-                      shape: BoxShape.circle,
-                    ),
-                    markerDecoration: BoxDecoration(
-                      color: Colors.teal,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  headerStyle: const HeaderStyle(
-                    formatButtonVisible: false,
-                    titleCentered: true,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                // Events Section
-                Expanded(
-                  child: _events[_selectedDay]?.isEmpty ?? true
-                      ? const Center(
-                    child: Text(
-                      'No events logged for this day.',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                  )
-                      : ListView.builder(
-                    itemCount: _events[_selectedDay]?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      final event = _events[_selectedDay]![index];
-                      return Card(
-                        elevation: 2,
-                        margin: const EdgeInsets.symmetric(vertical: 8),
-                        child: ListTile(
-                          leading: const Icon(Icons.event, color: Colors.teal),
-                          title: Text(event),
+                        await _fetchDataForDay(selectedDay);
+                      },
+                      eventLoader: (day) {
+                        return _events[day] ?? [];
+                      },
+                      calendarStyle: CalendarStyle(
+                        selectedDecoration: BoxDecoration(
+                          color: Colors.teal,
+                          shape: BoxShape.circle,
                         ),
-                      );
-                    },
-                  ),
+                        todayDecoration: BoxDecoration(
+                          color: Colors.teal.withOpacity(0.5),
+                          shape: BoxShape.circle,
+                        ),
+                        markerDecoration: BoxDecoration(
+                          color: Colors.teal,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      headerStyle: const HeaderStyle(
+                        formatButtonVisible: false,
+                        titleCentered: true,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // Events Section
+                    if (_events[_selectedDay]?.isEmpty ?? true)
+                      const Center(
+                        child: Text(
+                          'No events logged for this day.',
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                      )
+                    else
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: _events[_selectedDay]?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          final event = _events[_selectedDay]![index];
+                          return Card(
+                            elevation: 2,
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            child: ListTile(
+                              leading: const Icon(Icons.event, color: Colors.teal),
+                              title: Text(event),
+                            ),
+                          );
+                        },
+                      ),
+                    // Static table at the bottom of the scrollable area
+                    _buildTargetTable(),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-          Positioned(
-            bottom: 20,
-            left: 20,
-            right: 20,
+          // Buttons Section
+          Padding(
+            padding: const EdgeInsets.all(20.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -165,11 +244,12 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                     ),
                     onPressed: _showIntakeSummary,
                     icon: const Icon(Icons.summarize, color: Colors.white),
-                    label: Text(
+                    label: const Text(
                       'Daily Intake',
                       style: TextStyle(
                         fontSize: 16,
@@ -186,17 +266,21 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                     ),
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => DayEntryView(DataEntryForDayPresenter(
-                              _dataEntryForDayModel, (data) => print(data))))
-                      );
+                          MaterialPageRoute(
+                              builder: (context) => DayEntryView(
+                                  DataEntryForDayPresenter(
+                                      _dataEntryForDayModel,
+                                          (data) => print(data)))));
                     },
-                    icon: const Icon(Icons.calendar_view_week, color: Colors.white),
-                    label: Text(
+                    icon: const Icon(Icons.calendar_view_week,
+                        color: Colors.white),
+                    label: const Text(
                       'Weekly Data Entry',
                       style: TextStyle(
                         fontSize: 14,
@@ -214,7 +298,8 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                     ),
                     onPressed: _showAddEventDialog,
                     icon: const Icon(Icons.add, color: Colors.white),
@@ -223,12 +308,13 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
-      floatingActionButton: null,
     );
   }
+
+
 
 
   void _showIntakeSummary() async {
