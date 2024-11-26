@@ -142,7 +142,8 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
     print(_selectedDay.year);
     print(_selectedDay.month);
     print(_selectedDay.day);
-    print(_calorieTracker.getTotalCaloriesOnDay(_selectedDay.year, _selectedDay.month, _selectedDay.day));
+    final printCalories = await _calorieTracker.getTotalCaloriesOnDay(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+    print('Calories: $printCalories');
     showDialog(
       context: context,
       builder: (context) {
