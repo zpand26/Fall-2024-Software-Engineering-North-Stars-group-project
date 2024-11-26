@@ -23,7 +23,7 @@ class _NotificationHomeState extends State<NotificationHome> {
       });
     });
 
-    // Correctly load the initial settings
+    // Load the initial settings
     _presenter.loadInitialSettings();
   }
 
@@ -60,37 +60,90 @@ class _NotificationHomeState extends State<NotificationHome> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Meal Reminders'),
+        centerTitle: true,
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SwitchListTile(
-              title: const Text('Enable Notifications'),
-              value: _areNotificationsEnabled,
-              onChanged: (bool value) {
-                _presenter.toggleNotifications(value);
-              },
+            // Notifications Switch
+            Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: ListTile(
+                leading: Icon(
+                  _areNotificationsEnabled ? Icons.notifications_active : Icons.notifications_off,
+                  color: _areNotificationsEnabled ? Colors.green : Colors.red,
+                  size: 32,
+                ),
+                title: const Text(
+                  'Enable Notifications',
+                  style: TextStyle(fontSize: 18),
+                ),
+                trailing: Switch(
+                  value: _areNotificationsEnabled,
+                  onChanged: (bool value) {
+                    _presenter.toggleNotifications(value);
+                  },
+                ),
+              ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _areNotificationsEnabled
-                  ? () {
-                _presenter.showInstantNotification(
-                  "Meal Reminder",
-                  "It's time for your meal!",
-                );
-              }
-                  : null, // Disable button if notifications are off
-              child: const Text('Show Instant Meal Reminder'),
+
+            // Instant Notification Button
+            Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: ListTile(
+                leading: const Icon(Icons.notifications, color: Colors.blue, size: 32),
+                title: const Text(
+                  'Show Instant Meal Reminder',
+                  style: TextStyle(fontSize: 18),
+                ),
+                onTap: _areNotificationsEnabled
+                    ? () {
+                  _presenter.showInstantNotification(
+                    "Meal Reminder",
+                    "It's time for your meal!",
+                  );
+                }
+                    : null,
+              ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _areNotificationsEnabled ? _pickDateTime : null, // Disable button if notifications are off
-              child: const Text('Pick Meal Reminder Time'),
+
+            // Pick Reminder Time
+            Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: ListTile(
+                leading: const Icon(Icons.schedule, color: Colors.orange, size: 32),
+                title: const Text(
+                  'Pick Meal Reminder Time',
+                  style: TextStyle(fontSize: 18),
+                ),
+                subtitle: _selectedDateTime != null
+                    ? Text(
+                  'Selected: ${_selectedDateTime.toString().substring(0, 16)}',
+                  style: const TextStyle(color: Colors.grey),
+                )
+                    : const Text('No time selected', style: TextStyle(color: Colors.grey)),
+                onTap: _areNotificationsEnabled ? _pickDateTime : null,
+              ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
+
+            // Schedule Reminder Button
+            ElevatedButton.icon(
+              icon: const Icon(Icons.check_circle),
+              label: const Text('Schedule Meal Reminder'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                textStyle: const TextStyle(fontSize: 18),
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
               onPressed: _areNotificationsEnabled
                   ? () {
                 if (_selectedDateTime != null) {
@@ -109,8 +162,7 @@ class _NotificationHomeState extends State<NotificationHome> {
                   );
                 }
               }
-                  : null, // Disable button if notifications are off
-              child: const Text('Schedule Meal Reminder'),
+                  : null,
             ),
           ],
         ),
