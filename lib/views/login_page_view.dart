@@ -9,9 +9,8 @@ import 'package:north_stars/models/nutrient_tracking_model.dart';
 import 'package:north_stars/models/nutrition_goal_model.dart';
 import '../models/photo_gallery_model.dart';
 import '../presenters/photo_gallery_presenter.dart';
+import '../views/google_sign_in_view.dart'; // Import Google Sign-In button
 import 'package:north_stars/views/nav_bar.dart';
-import 'package:north_stars/presenters/photo_gallery_presenter.dart';
-import 'package:north_stars/models/photo_gallery_model.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -25,21 +24,6 @@ class _AuthPageState extends State<AuthPage> implements AuthViewContract {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLogin = true;
-
-  // Future<void> _authenticate() async {
-  //   try {
-  //     UserCredential userCredential;
-  //     if (_isLogin) {
-  //       userCredential = await _auth.signInWithEmailAndPassword(
-  //         email: _emailController.text.trim(),
-  //         password: _passwordController.text.trim(),
-  //       );
-  //     } else {
-  //       userCredential = await _auth.createUserWithEmailAndPassword(
-  //         email: _emailController.text.trim(),
-  //         password: _passwordController.text.trim(),
-  //       );
-  //     }
 
   @override
   void initState() {
@@ -128,7 +112,8 @@ class _AuthPageState extends State<AuthPage> implements AuthViewContract {
                     onPressed: _authenticate,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blueAccent,
-                      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16.0, horizontal: 32.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),
@@ -139,25 +124,29 @@ class _AuthPageState extends State<AuthPage> implements AuthViewContract {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // ElevatedButton.icon(
-                  //   onPressed: () {
-                  //     _presenter.googleSignIn();
-                  //   },
-                  //   icon: Image.asset(
-                  //     'lib/assets/images/google_logo.jpg', // Add a Google logo image asset
-                  //     height: 24,
-                  //     width: 24,
-                  //   ),
-                  //   label: const Text("Sign in with Google"),
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: Colors.white,
-                  //     foregroundColor: Colors.black,
-                  //     padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(8.0),
-                  //     ),
-                  //   ),
-                  // ),
+                  // Google Sign-In Button
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      // Trigger Google Sign-In logic
+                    },
+                    icon: Image.asset(
+                      'lib/assets/images/google_signinwith.png', // Google logo image
+                      height: 24,
+                      width: 24,
+                    ),
+                    label: const Text('Sign in with Google'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16.0, horizontal: 32.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Toggle Login/Sign-Up
                   TextButton(
                     onPressed: () {
                       setState(() {
