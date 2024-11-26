@@ -1,4 +1,6 @@
 import '../models/profile_page_model.dart';
+import 'dart:io';
+
 
 typedef ViewUpdater = void Function();
 
@@ -9,12 +11,12 @@ class ProfilePagePresenter {
   ProfilePagePresenter(this.profileModel, this.updateView);
 
   // Fetch profile data automatically when the page is created
-  Future<void> fetchProfileData() async {
+  Future<Map<String, dynamic>> fetchProfileData() async {
     try {
-      final data = await profileModel.getProfile();  // Fetch profile data
-      updateView(); // Notify the view to refresh with fetched data
+      return await profileModel.getProfile();
     } catch (e) {
       print('Error fetching profile data: $e');
+      return {};
     }
   }
 
@@ -37,4 +39,9 @@ class ProfilePagePresenter {
       print('Error updating $field: $e');
     }
   }
+
+  Future<String> uploadProfilePicture(File photo) async {
+    return await profileModel.uploadProfilePicture(photo);
+  }
+
 }

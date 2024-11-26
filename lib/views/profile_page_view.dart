@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../presenters/profile_page_presenter.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+
 
 class ProfilePageView extends StatefulWidget {
   final ProfilePagePresenter profilePagePresenter;
@@ -27,21 +30,43 @@ class _ProfilePageViewState extends State<ProfilePageView> {
   }
 
   void _loadProfileData() async {
-    await widget.profilePagePresenter.fetchProfileData();
+    try {
+      final profileData = await widget.profilePagePresenter.fetchProfileData();
+      setState(() {
+        _nameController.text = profileData['username'] ?? '';
+        _mobilePhoneController.text = profileData['mobilePhone'] ?? '';
+        _selectedBirthday = profileData['birthday'] != null
+            ? DateTime.parse(profileData['birthday'])
+            : null;
+        _profilePictureUrl = profileData['profilePictureUrl']; // If you want to handle a picture.
+      });
+    } catch (e) {
+      setState(() {
+        _statusMessage = 'Failed to load profile data.';
+      });
+      print('Error loading profile data: $e');
+    }
   }
 
   void _saveProfile() async {
     final newProfile = {
-      'username': _nameController.text,
-      'mobilePhone': _mobilePhoneController.text,
+      'username': _nameController.text.trim(),
+      'mobilePhone': _mobilePhoneController.text.trim(),
       'birthday': _selectedBirthday?.toIso8601String(),
+      'profilePictureUrl': _profilePictureUrl,
     };
 
-    await widget.profilePagePresenter.saveProfile(newProfile);
-
-    setState(() {
-      _statusMessage = 'Profile saved!';
-    });
+    try {
+      await widget.profilePagePresenter.saveProfile(newProfile);
+      setState(() {
+        _statusMessage = 'Profile saved successfully!';
+      });
+    } catch (e) {
+      setState(() {
+        _statusMessage = 'Failed to save profile. Please try again.';
+      });
+      print('Error saving profile: $e');
+    }
   }
 
   Future<void> _selectBirthday(BuildContext context) async {
@@ -55,6 +80,36 @@ class _ProfilePageViewState extends State<ProfilePageView> {
       setState(() {
         _selectedBirthday = pickedDate;
       });
+    }
+  }
+
+  Future<void> _selectProfilePicture() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      final photoFile = File(pickedFile.path);
+
+      // Upload photo and get URL
+      try {
+        final profilePictureUrl = await widget.profilePagePresenter.uploadProfilePicture(photoFile);
+
+        // Update the view and save to Firestore
+        setState(() {
+          _profilePictureUrl = profilePictureUrl;
+        });
+
+        await widget.profilePagePresenter.updateField('profilePictureUrl', profilePictureUrl);
+
+        setState(() {
+          _statusMessage = 'Profile picture updated!';
+        });
+      } catch (e) {
+        setState(() {
+          _statusMessage = 'Failed to update profile picture. Please try again.';
+        });
+        print('Error uploading profile picture: $e');
+      }
     }
   }
 
@@ -74,9 +129,12 @@ class _ProfilePageViewState extends State<ProfilePageView> {
               radius: 60,
               backgroundImage:
               _profilePictureUrl != null ? NetworkImage(_profilePictureUrl!) : null,
-              child: _profilePictureUrl == null
-                  ? const Icon(Icons.person, size: 60)
-                  : null,
+              child: GestureDetector(
+                onTap: _selectProfilePicture, // Open gallery on tap
+                child: _profilePictureUrl == null
+                    ? const Icon(Icons.person, size: 60)
+                    : null,
+              ),
             ),
             const SizedBox(height: 20),
             // Name
