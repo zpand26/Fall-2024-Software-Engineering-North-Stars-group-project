@@ -1,22 +1,57 @@
 import '../models/profile_page_model.dart';
+import 'dart:io';
+
+
+typedef ViewUpdater = void Function();
 
 class ProfilePagePresenter {
-  final ProfilePageModel model;
-  void Function(String)? updateView;
+  final ProfilePageModel profileModel;
+  final ViewUpdater updateView;
 
-  ProfilePagePresenter({
-    required this.model,
-    this.updateView,
-  });
+  ProfilePagePresenter(this.profileModel, this.updateView);
 
-  // Load the initial username to display in the view
-  void loadUsername() {
-    updateView?.call(model.username);
+  // Fetch profile data automatically when the page is created
+  Future<Map<String, dynamic>> fetchProfileData() async {
+    try {
+      return await profileModel.getProfile();
+    } catch (e) {
+      print('Error fetching profile data: $e');
+      return {};
+    }
   }
 
-  // Save the updated username in the model and refresh the view
-  void saveUsername(String newUsername) {
-    model.username = newUsername;
-    updateView?.call(newUsername); // Trigger the view to update with the new username
+  // Save profile data
+  Future<void> saveProfile(Map<String, dynamic> newProfileData) async {
+    try {
+      await profileModel.updateProfile(newProfileData);
+      updateView();  // Refresh the view after saving profile data
+    } catch (e) {
+      print('Error saving profile: $e');
+    }
   }
+
+  // Update individual fields in the profile
+  Future<void> updateField(String field, dynamic value) async {
+    try {
+      await profileModel.setProfileField(field, value);
+      updateView();  // Notify the view to refresh after updating field
+    } catch (e) {
+      print('Error updating $field: $e');
+    }
+  }
+
+  Future<String> uploadProfilePicture(File photo) async {
+    return await profileModel.uploadProfilePicture(photo);
+  }
+
+  Future<List<String>> fetchPhotoGallery() async {
+    try {
+      return await profileModel.getPhotoGallery();
+    } catch (e) {
+      print('Error fetching photo gallery: $e');
+      return [];
+    }
+  }
+
+
 }

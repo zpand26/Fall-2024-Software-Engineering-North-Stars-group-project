@@ -5,7 +5,6 @@ import 'package:north_stars/presenters/camera_presenter.dart';
 import 'package:north_stars/presenters/data_entry_for_day_presenter.dart';
 import 'package:north_stars/presenters/photo_gallery_presenter.dart';
 import 'package:north_stars/views/calendar_view.dart';
-import 'calorie_tracker_view.dart';
 import 'data_entry_for_day_view.dart';
 import '../models/calorie_tracker_model.dart';
 import 'package:north_stars/models/data_entry_for_day_model.dart';
@@ -49,17 +48,15 @@ class NavBar extends StatefulWidget {
     required NutrientTrackerModel nutrientTrackerModel,
     required NutritionGoalModel nutritionGoalModel,
     required PhotoGalleryModel photoGalleryModel,
+    required ProfilePageModel profilePageModel,
   }) : calorieTrackerPresenter = CalorieTrackerPresenter(calorieTrackerModel, (data) => print(data)),
         dataEntryForDayPresenter = DataEntryForDayPresenter(dataEntryForDayModel, (data) => print(data)),
         nutrientTrackingPresenter = NutrientTrackingPresenter(nutrientTrackerModel, (data) => print(data)),
-        profilePagePresenter = ProfilePagePresenter(
-          model: ProfilePageModel(
-            username: 'User123',
-            email: 'user@example.com',
-            profilePictureUrl: 'https://example.com/image.png',
-          ),
-          updateView: (username) {},
-        ),
+        profilePagePresenter = ProfilePagePresenter(profilePageModel,
+              () {
+
+            print("Profile Page view updated");
+          },),
         nutritionGoalPresenter = NutritionGoalPresenter(),
         photoGalleryPresenter = PhotoGalleryPresenter(
     PhotoGalleryModel(),
@@ -87,7 +84,7 @@ class _NavBarState extends State<NavBar> {
     PhotoGalleryView(presenter: widget.photoGalleryPresenter),
       ProfilePageView(
         profilePagePresenter: widget.profilePagePresenter,
-        photoGalleryPresenter: widget.photoGalleryPresenter, // Added presenter
+        //photoGalleryPresenter: widget.photoGalleryPresenter, // Added presenter
       ),
       NotificationHome(),
     ];
@@ -114,7 +111,7 @@ class _NavBarState extends State<NavBar> {
             right: 20,
             child: FloatingActionButton.small(
               onPressed: _logout,
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.tealAccent,
               child: const Icon(Icons.logout),
             ),
           ),

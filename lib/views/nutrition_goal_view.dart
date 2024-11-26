@@ -1,4 +1,3 @@
-// views/calendar_view.dart
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../presenters/nutrition_goal_presenter.dart';
@@ -22,56 +21,119 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nutrition Goal Tracker'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.summarize),
-            onPressed: _showIntakeSummary,
-            padding: const EdgeInsets.only(right: 80,bottom: 20),
-          ),
-        ],
+        backgroundColor: Colors.teal,
       ),
-      body: Column(
+      body: Stack(
         children: [
-          TableCalendar(
-            firstDay: DateTime.utc(2010, 10, 16),
-            lastDay: DateTime.utc(2030, 3, 14),
-            focusedDay: _focusedDay,
-            calendarFormat: _calendarFormat,
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay;
-              });
-            },
-            eventLoader: (day) {
-              return _events[day] ?? [];
-            },
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                // Calendar Section
+                TableCalendar(
+                  firstDay: DateTime.utc(2010, 10, 16),
+                  lastDay: DateTime.utc(2030, 3, 14),
+                  focusedDay: _focusedDay,
+                  calendarFormat: _calendarFormat,
+                  selectedDayPredicate: (day) {
+                    return isSameDay(_selectedDay, day);
+                  },
+                  onDaySelected: (selectedDay, focusedDay) {
+                    setState(() {
+                      _selectedDay = selectedDay;
+                      _focusedDay = focusedDay;
+                    });
+                  },
+                  eventLoader: (day) {
+                    return _events[day] ?? [];
+                  },
+                  calendarStyle: CalendarStyle(
+                    selectedDecoration: BoxDecoration(
+                      color: Colors.teal,
+                      shape: BoxShape.circle,
+                    ),
+                    todayDecoration: BoxDecoration(
+                      color: Colors.teal.withOpacity(0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    markerDecoration: BoxDecoration(
+                      color: Colors.teal,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  headerStyle: const HeaderStyle(
+                    formatButtonVisible: false,
+                    titleCentered: true,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Events Section
+                Expanded(
+                  child: _events[_selectedDay]?.isEmpty ?? true
+                      ? const Center(
+                    child: Text(
+                      'No events logged for this day.',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                  )
+                      : ListView.builder(
+                    itemCount: _events[_selectedDay]?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      final event = _events[_selectedDay]![index];
+                      return Card(
+                        elevation: 2,
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        child: ListTile(
+                          leading: const Icon(Icons.event, color: Colors.teal),
+                          title: Text(event),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
-          ..._getEventsForDay(_selectedDay).map((event) => ListTile(
-                title: Text(event),
-              )),
+          // Positioned Daily Intake Summary Button
+          Positioned(
+            bottom: 20,
+            left: 20,
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              ),
+              onPressed: _showIntakeSummary,
+              icon: const Icon(Icons.summarize, color: Colors.white),
+              label: Text(
+                'Daily Intake',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: _showAddEventDialog,
-        child: const Icon(Icons.add),
+        icon: const Icon(Icons.add),
+        label: const Text('Add Data'),
+        backgroundColor: Colors.teal,
       ),
     );
-  }
-
-  List<String> _getEventsForDay(DateTime day) {
-    return _events[day] ?? [];
   }
 
   void _showIntakeSummary() {
     final events = _getEventsForDay(_selectedDay);
     final latestEvent = events.isNotEmpty ? events.last : null;
-    final assessment = latestEvent != null ? 
-      _presenter.evaluateIntake(latestEvent) 
-      : 'No events logged for this day.';
+    final assessment = latestEvent != null
+        ? _presenter.evaluateIntake(latestEvent)
+        : 'No events logged for this day.';
 
     showDialog(
       context: context,
@@ -89,9 +151,11 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
               Text(
                 assessment,
                 style: TextStyle(
-                  color: assessment.contains('bulking') ? Colors.green
-                   : assessment.contains('cutting') ? Colors.blue
-                   : Colors.red,
+                  color: assessment.contains('bulking')
+                      ? Colors.green
+                      : assessment.contains('cutting')
+                      ? Colors.blue
+                      : Colors.red,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -111,10 +175,17 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
   void _showAddEventDialog() {
     final controllers = List.generate(8, (_) => TextEditingController());
     final labels = [
-      'Calories', 'Total Fat', 'Cholesterol', 'Sodium',
-      'Total Carbohydrate', 'Fiber', 'Total Sugar', 'Protein'
+      'Calories',
+      'Total Fat',
+      'Cholesterol',
+      'Sodium',
+      'Total Carbohydrate',
+      'Fiber',
+      'Total Sugar',
+      'Protein'
     ];
-  showDialog(
+
+    showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -123,10 +194,16 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: List.generate(8, (index) {
-                return TextField(
-                  controller: controllers[index],
-                  decoration: InputDecoration(hintText: labels[index]),
-                  keyboardType: TextInputType.number,
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: TextField(
+                    controller: controllers[index],
+                    decoration: InputDecoration(
+                      hintText: labels[index],
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
                 );
               }),
             ),
@@ -152,6 +229,10 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
         );
       },
     );
+  }
+
+  List<String> _getEventsForDay(DateTime day) {
+    return _events[day] ?? [];
   }
 
   void _addEvent(String event) {

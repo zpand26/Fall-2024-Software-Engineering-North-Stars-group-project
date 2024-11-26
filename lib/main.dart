@@ -7,7 +7,6 @@ import 'package:north_stars/models/data_entry_for_day_model.dart';
 import 'models/calorie_tracker_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'presenters/calorie_tracker_presenter.dart';
-import 'views/home_page_view.dart';
 import 'package:galleryimage/galleryimage.dart';
 import 'models/photo_gallery_model.dart';
 import 'presenters/photo_gallery_presenter.dart';
