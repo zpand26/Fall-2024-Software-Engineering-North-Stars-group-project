@@ -190,11 +190,19 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
     final fiber = await _calorieTracker.getTotalFiberOnDay(_selectedDay.year, _selectedDay.month, _selectedDay.day);
     final sugar = await _calorieTracker.getTotalSugarOnDay(_selectedDay.year, _selectedDay.month, _selectedDay.day);
     final protein = await _calorieTracker.getTotalProteinOnDay(_selectedDay.year, _selectedDay.month, _selectedDay.day);
-    print(_selectedDay.year);
-    print(_selectedDay.month);
-    print(_selectedDay.day);
-    final printCalories = await _calorieTracker.getTotalCaloriesOnDay(_selectedDay.year, _selectedDay.month, _selectedDay.day);
-    print('Calories: $printCalories');
+
+    final nutritionData = ''' 
+      Calories: $calories
+      Fat: $fat
+      Cholesterol: $cholesterol
+      Sodium: $sodium
+      Carbohydrates: $carbs
+      Fiber: $fiber
+      Sugar: $sugar
+      Protein: $protein
+    ''';
+    final assessment = _presenter.evaluateIntake(nutritionData);
+
     showDialog(
       context: context,
       builder: (context) {
@@ -211,6 +219,18 @@ class _NutritionGoalViewState extends State<NutritionGoalView> {
               Text('Fiber: $fiber'),
               Text('Total Sugar: $sugar'),
               Text('Protein: $protein'),
+              const SizedBox(height: 16),
+              Text(
+                assessment,
+                style: TextStyle(
+                  color: assessment == 'Bulking'
+                      ? Colors.green
+                      : assessment == 'Cutting'
+                      ? Colors.blue
+                      : Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
           actions: [
